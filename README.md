@@ -1,4 +1,6 @@
-# Study Schedule for lgsa_team5(Dandies)
+#  Study Schedule for lgsa_team5(Dandies)
+
+### 2nd week study schedule
 
 > 6/20 Mon: 
  * ATAM(50 min) 
@@ -12,7 +14,7 @@
 > 6/23 Thu: 
  * Module Views-layered Style(27 min) + MVC,Data Modeling(23 min) 
  * reading #8, #9, #11 (Please see below)
-## Week 2 - required reading
+### required reading
 Due Saturday by 10:59pm Points None
 Required reading
 1. [Clements10] Sections P.1.1  (this is a repeat from week 0)  A short overview of SW Architecture
@@ -30,6 +32,9 @@ This is an excerpt from Chapter 8 of [Vernon21]. This book is available on O'Rei
 11. [Bass13] Section 13.2 (only sub-section "Model-View-Controller Pattern", pages 212-215).  13.2. Overview of the Patterns Catalog 
 In [Bass21] the description of MVC and other patterns has been shortened and does not contain a diagram. 🙁 Therefore, I'm here providing the link to the excerpt of [Bass13] that describes MVC. Please read that even if you have [Bass21]. 
 
+##
+### 3rd week study schedule
+
 > 6/27 Mon: 
  *  Runtime views - intro, pipe-and-filter(17 min), Runtime views - REST(34 min)
  *  
@@ -42,7 +47,7 @@ In [Bass21] the description of MVC and other patterns has been shortened and doe
 > 6/30 Thu: 
  * 
  * 
-## Week 3 - required reading
+### required reading
 Due Saturday by 10:59pm Points None
 
 Required reading
