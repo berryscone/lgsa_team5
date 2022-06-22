@@ -15,7 +15,7 @@
 ## Week 2 - required reading
 Due Saturday by 10:59pm Points None
 Required reading
-1. [Clements10] Sections P.1.1  (this is a repeat from week 0) A short overview of SW Architecture
+1. [Clements10] Sections P.1.1  (this is a repeat from week 0)  A short overview of SW Architecture
 2. [Bass13] Section 21.2    OR
    [Bass21] Section 21.5 The Architecture Tradeoff Analysis Method
 3. [Clements10] Section P.3 Architecture Views
@@ -30,7 +30,42 @@ This is an excerpt from Chapter 8 of [Vernon21]. This book is available on O'Rei
 11. [Bass13] Section 13.2 (only sub-section "Model-View-Controller Pattern", pages 212-215).  13.2. Overview of the Patterns Catalog 
 In [Bass21] the description of MVC and other patterns has been shortened and does not contain a diagram. 🙁 Therefore, I'm here providing the link to the excerpt of [Bass13] that describes MVC. Please read that even if you have [Bass21]. 
 
+> 6/27 Mon: 
+ *  Runtime views - intro, pipe-and-filter(17 min), Runtime views - REST(34 min)
+ *  
+> 6/28 Tue: 
+ * 
+ *  
+> 6/29 Wed: 
+ * 
+ * 
+> 6/30 Thu: 
+ * 
+ * 
+## Week 3 - required reading
+Due Saturday by 10:59pm Points None
 
+Required reading
+1. [Clements10] Section 3.1
+2. [Clements10] Section 3.2.1 (only first paragraph of the section and first two paragraphs of subitem Components)
+3. [Clements10] Sections  8.2.2 (only last 3 paragraphs of subitem Types of Communication)
+4. [Clements10] Section 4.1
+5. [Clements10] Section  4.2.1 
+6. [Bianco07] Section 4.1.2 
+7. [Clements10] Section 4.3.2
+8. [Clements10] Section 4.4.1 
+9. [Richardson18] excerpt (Section 3.7) about Transactional Outbox
+10. [Hohpe03] excerpt about Request-Reply (sync over async)
+11. [Hohpe03] excerpt about Dead Letter Channel
+12. [Clements10] Section 5.1
+13. [Clements10] Sections 5.2.1, 5.2.2 (only first two paragraphs of the section), 5.2.3, 5.2.4. 
+14. [Bass13] Sections  26.1, 26.2
+The discussion of cloud characteristics and service models is not present in the new edition [Bass21] 🙁.  Therefore, I'm providing hereto the link to the excerpt of [Bass13] that contains that information. Please read that even if you own a copy of [Bass21]. 
+15. [docker18]  This text is a short introduction to Docker, for those not familiar with this technology. Minimally you should read the "Docker Architecture" section and its subsections. If you're not familiar with Docker, I suggest watching the first 16 minutes of this online tutorial (Links to an external site.). 
+16. [flow.ci16] 
+17. [Merson15a] 
+18. [Merson15b]
+19. [Merson21] In the article titled "Principles for Microservice Design: Think IDEALS, Rather than SOLID", read section Deployability (is on you)  and subsection Achieving good deployability. 
 
 ## 1st week schedule
 I matched the lecture topic and the reading assignment topic.
