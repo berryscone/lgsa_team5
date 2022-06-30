@@ -1,0 +1,42 @@
+a. https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/modwsgi/
+b. https://soccerda.tistory.com/93
+c. https://medium.com/@deepankaracharyya/deploying-a-django-app-with-apache-mod-wsgi-windows-e9712dc07bba
+
+
+1. Install Apache
+    - https://www.apachelounge.com/download/
+    - 압축 해제
+    - 안에 있는 Apache24 폴더를 원하는 위치로 이동
+    - Apache24/conf/httpd.conf 파일 열고, Define SRVROOT "c:/Apache24" -> 이부분 찾아서 경로 본인 환경에 맞게 수정
+    - Apache24/bin 경로를 환경변수 PATH 에 추가
+    - Apache24 경로를 환경변수 MOD_WSGI_APACHE_ROOT_DIR 에 추가
+    - httpd.exe -k install -> 윈도우 서비스에 Apache24 추가 됨
+
+2. Install mod-wsgi
+    - pip install mod-wsgi
+    - mod_wsgi-express module-config 실행하면 나오는 설정 텍스트 확인
+    - Apache24/conf/httpd.conf 파일 열고, 맨 아래에 방금 나온 설정 텍스트 추가
+    - 아래 내용 httpd.conf 에 추가, 경로는 django 프로젝트 경로에 맞겨 변경
+
+        WSGIScriptAlias / C:/Users/blowi/Desktop/lgsa_team5/exp/comm/py_practice/django_demo/django_demo/wsgi.py
+        WSGIPythonPath C:/Users/blowi/Desktop/lgsa_team5/exp/comm/py_practice/django_demo
+        WSGIPassAuthorization On
+
+        <Directory C:/Users/blowi/Desktop/lgsa_team5/exp/comm/py_practice/django_demo/django_demo>
+        <Files wsgi.py>
+        Require all granted
+        </Files>
+        </Directory>
+
+3. Configure Apache to use SSL
+    - Apache24/conf/httpd.conf 파일 열고 아래 부분들 찾아서 주석 해제
+        1. Include conf/extra/httpd-ssl.conf
+        2. LoadModule ssl_module modules/mod_ssl.so
+        4. LoadModule socache_dbm_module modules/mod_socache_dbm.so
+        5. LoadModule socache_memcache_module modules/mod_socache_memcache.so
+        6. LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+
+    - Apache24/conf/extra/httpd-ssl.conf 파일 열고,
+        1. # ServerName www.example.com:443 => ServerName com.lge.sa.team5 으로 변경
+        2. # SSLCertificateFile "${SRVROOT}/conf/server.crt" => SSLCertificateFile "C:/Users/blowi/Desktop/lgsa_team5/exp/comm/py_practice/django_demo/demo_win.crt" (경로는 본인에게 맞게)
+        3. # SSLCertificateKeyFile "${SRVROOT}/conf/server.key" => SSLCertificateKeyFile "C:/Users/blowi/Desktop/lgsa_team5/exp/comm/py_practice/django_demo/demo.key" (경로는 본인에게 맞게)
