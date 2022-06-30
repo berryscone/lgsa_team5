@@ -8,8 +8,7 @@ qt_client::qt_client(QWidget *parent)
     connect(ui.push_query, &QPushButton::clicked, this, &qt_client::onQuery);
 
     manager = new QNetworkAccessManager(this);
-    // url.setUrl("http://localhost:8888");
-    url.setUrl("https://localhost");
+    ui.lineedit_ip->setText("https://localhost");
 }
 
 qt_client::~qt_client()
@@ -17,10 +16,16 @@ qt_client::~qt_client()
     delete manager;
 }
 
+QUrl qt_client::getUrl()
+{
+    QString url_str = ui.lineedit_ip->text();
+    QUrl url(ui.lineedit_ip->text());
+    return url;
+}
 
 void qt_client::onLogin()
 {
-    QUrl login_url(url);
+    QUrl login_url(getUrl());
     login_url.setPath("/login/");
 
     auto id = ui.lineedit_id->text();
@@ -61,7 +66,7 @@ void qt_client::onQuery()
     QUrlQuery query;
     query.addQueryItem("license-plate-number", plate_number);
 
-    QUrl query_url(url);
+    QUrl query_url(getUrl());
     query_url.setQuery(query.query());
 
     QString token_auth = "Token " + token;

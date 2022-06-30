@@ -16,9 +16,10 @@ public:
 private:
     Ui::qt_clientClass ui;
     QNetworkAccessManager* manager;
-    QUrl url;
     QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply;
     QString token;
+
+    QUrl getUrl();
 
     void onLogin();
     void onLoginReadReady();
