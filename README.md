@@ -2,6 +2,43 @@
 https://learning.oreilly.com/home/ 
 login info: sunhyun.park@lge.com / agile1234
 
+##4th week study schedule
+
+> 7/4 Mon: 
+* NoSQL databases - intro (46 min), types of DB(20 min),Interfaces(18 min)
+* reading : [Clements10] Section 7.1, 7.2.1(Documenting SW Interface)
+
+> 7/5 Tue: 
+* Behavior - intro, sequence diagram(22 min),activity diagram, BPMN, state machine diagram (41 min)
+* reading : [Clements10] Section 8.1, 8.3.1, 8.3.2(Documenting Behavior),Section A.5.1, A.5.2, A.5.6(Behavior by UML)
+
+> 7/6 Wed: 
+
+* Architecture view template(15min), Documenting rationale, ADR (14 min)
+* reading - Section 10.1.1(standard organization for Doc)
+
+> 7/7 Thu: 
+ * Product lines - intro(13 min),variability(19 min)
+ * reading - Section 6.5.5(The payback for Documenting Architecutral decision), Sections 6.4.1, 6.4.2(variability)
+
+## Required reading
+
+[Newman21] Excerpt about CAP
+
+[Clements10] Section 7.1
+
+[Clements10] Sections 7.2.1 (including the "ADVICE" boxes) 
+[Clements10] First 3 paragraphs of Chapter 8,  Section 8.1
+[Clements10] Section 8.1
+[Clements10] Section 8.3.1 (only subsections Sequence Diagrams and Activity Diagrams)
+[Clements10] Section 8.3.2 (only subsection UML State Machine Diagram)
+[Clements10] Section A.5.1, A.5.2, A.5.6
+[Clements10] Section 10.1.1
+[Keeling17b] Excerpt about ADR
+[Clements10] Section 6.5.5 (only the last 7 paragraphs, that is, the bulleted list of "paybacks you can expect")
+[Clements10] Sections 6.4.1, 6.4.2
+
+
 ## 3rd week study schedule
 
 > 6/27 Mon: 
