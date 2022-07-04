@@ -15,6 +15,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'demo_app',
+    'health_check',
+    'health_check.db',
 ]
 
 MIDDLEWARE = [
