@@ -1,0 +1,12 @@
+lib/precomplied/zlib.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libjpeg.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libopenalpr.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libpng.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libtesseract-DLL.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libtesseract-static.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/opencv_world455d.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/giflib.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/liblept-DLL.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/liblept-static.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/libtiff.lib filter=lfs diff=lfs merge=lfs -text
+lib/precomplied/opencv_world455.lib filter=lfs diff=lfs merge=lfs -text
