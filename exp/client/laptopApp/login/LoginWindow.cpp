@@ -4,7 +4,7 @@
 #include <QTime>
 #include <QDebug>
 
-#define LOGIN_SKIP 0
+#define LOGIN_SKIP 1
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent)

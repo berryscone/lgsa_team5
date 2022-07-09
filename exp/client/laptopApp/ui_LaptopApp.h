@@ -36,10 +36,7 @@ public:
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *openButton;
-    QPushButton *startButton;
-    QPushButton *stopButton;
-    QPushButton *pauseButton;
-    QPushButton *resumeButton;
+    QPushButton *toggleButton;
     QFrame *frame_4;
     QLabel *vehicleInfo;
     QLabel *playbackTextTitle_3;
@@ -106,25 +103,11 @@ public:
 
         horizontalLayout->addWidget(openButton);
 
-        startButton = new QPushButton(horizontalLayoutWidget);
-        startButton->setObjectName(QString::fromUtf8("startButton"));
+        toggleButton = new QPushButton(horizontalLayoutWidget);
+        toggleButton->setObjectName(QString::fromUtf8("toggleButton"));
+        toggleButton->setCheckable(true);
 
-        horizontalLayout->addWidget(startButton);
-
-        stopButton = new QPushButton(horizontalLayoutWidget);
-        stopButton->setObjectName(QString::fromUtf8("stopButton"));
-
-        horizontalLayout->addWidget(stopButton);
-
-        pauseButton = new QPushButton(horizontalLayoutWidget);
-        pauseButton->setObjectName(QString::fromUtf8("pauseButton"));
-
-        horizontalLayout->addWidget(pauseButton);
-
-        resumeButton = new QPushButton(horizontalLayoutWidget);
-        resumeButton->setObjectName(QString::fromUtf8("resumeButton"));
-
-        horizontalLayout->addWidget(resumeButton);
+        horizontalLayout->addWidget(toggleButton);
 
         frame_4 = new QFrame(centralwidget);
         frame_4->setObjectName(QString::fromUtf8("frame_4"));
@@ -189,10 +172,7 @@ public:
         playbackTextTitle->setText(QCoreApplication::translate("LaptopApp", "PlayBack View", nullptr));
         playbackTextTitle_2->setText(QCoreApplication::translate("LaptopApp", "Recent Plates", nullptr));
         openButton->setText(QCoreApplication::translate("LaptopApp", "Open", nullptr));
-        startButton->setText(QCoreApplication::translate("LaptopApp", "Start", nullptr));
-        stopButton->setText(QCoreApplication::translate("LaptopApp", "Stop", nullptr));
-        pauseButton->setText(QCoreApplication::translate("LaptopApp", "Pause", nullptr));
-        resumeButton->setText(QCoreApplication::translate("LaptopApp", "Resume", nullptr));
+        toggleButton->setText(QCoreApplication::translate("LaptopApp", "Pause", nullptr));
         vehicleInfo->setText(QCoreApplication::translate("LaptopApp", "No license plate information recognized yet", nullptr));
         playbackTextTitle_3->setText(QCoreApplication::translate("LaptopApp", "Vehicle Info", nullptr));
         label_2->setText(QCoreApplication::translate("LaptopApp", "Network Status", nullptr));

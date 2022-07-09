@@ -4,7 +4,9 @@
 LaptopApp::LaptopApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::LaptopApp)
+    , mbIsStart(false)
 {
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
     ui->setupUi(this);
 
     ui->playbackView->setScene(new QGraphicsScene(this));
@@ -12,10 +14,7 @@ LaptopApp::LaptopApp(QWidget *parent)
     ui->vehicleInfo->setWordWrap(true);
 
     connect(ui->openButton, &QPushButton::clicked, this, &LaptopApp::onOpen);
-    connect(ui->startButton, &QPushButton::clicked, this, &LaptopApp::onStart);
-    connect(ui->stopButton, &QPushButton::clicked, this, &LaptopApp::onStop);
-    connect(ui->pauseButton, &QPushButton::clicked, this, &LaptopApp::onPause);
-    connect(ui->resumeButton, &QPushButton::clicked, this, &LaptopApp::onResume);
+    connect(ui->toggleButton, SIGNAL(toggled(bool)), this, SLOT(onToggle(bool)));
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
     mFrameMsgHandler = std::make_unique<FrameMsgHandler>();
@@ -28,11 +27,6 @@ LaptopApp::LaptopApp(QWidget *parent)
     mMsgHandlerManager->AddMsgHandler(mVehicleInfoMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
 
-    mFrameGenerator = std::make_unique<FrameGenerator>();
-
-    connect(mFrameMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
-            this, SLOT(UpdatePlaybackView(QImage)));
-
     connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
             this, SLOT(UpdateRecentPlatesView(QImage)));
 
@@ -41,11 +35,39 @@ LaptopApp::LaptopApp(QWidget *parent)
 
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateDebugInfoView(QString)));
+
+//    TODO : frameModel, frameMsgHandler 사용하지 않을 경우 추후 삭제
+//    connect(mFrameMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
+//            this, SLOT(UpdatePlaybackView(QImage)));
+
+    //NOTE : frameGenerator runs in a separate thread
+    makeFrameGeneratorThread();
 }
 
-void LaptopApp::UpdatePlaybackView(QImage frame)
+void LaptopApp::makeFrameGeneratorThread()
+{
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+
+    mFrameGeneratorThread = new QThread();
+    mFrameGenerator = std::make_unique<FrameGenerator>();
+
+    connect(mFrameGenerator.get(), SIGNAL(UpdateLaptopAppUi(QPixmap)),
+            this, SLOT(UpdatePlaybackView(QPixmap)));
+
+    connect(mFrameGeneratorThread, SIGNAL(started()), mFrameGenerator.get(), SLOT(Start()));
+    connect(mFrameGeneratorThread, SIGNAL(finished()), mFrameGenerator.get(), SLOT(Stop()));
+
+    connect(this, SIGNAL(startFrameGenerator()), mFrameGenerator.get(), SLOT(Start()));
+    connect(this, SIGNAL(pauseFrameGenerator()), mFrameGenerator.get(), SLOT(Pause()));
+    connect(this, SIGNAL(resumeFrameGenerator()), mFrameGenerator.get(), SLOT(Resume()));
+    connect(this, SIGNAL(stopFrameGenerator()), mFrameGenerator.get(), SLOT(Stop()));
+
+    mFrameGenerator->moveToThread(mFrameGeneratorThread);
+}
+
+void LaptopApp::UpdatePlaybackView(QPixmap pixmap)
 {   
-    mPlaybackPixmap.setPixmap(QPixmap::fromImage(frame));
+    mPlaybackPixmap.setPixmap(pixmap);
     ui->playbackView->fitInView(&mPlaybackPixmap, Qt::KeepAspectRatio);
 
     qApp->processEvents();
@@ -90,44 +112,45 @@ void LaptopApp::onOpen()
     QString strFileName = fd.selectedFiles().at(0);
     mFilePath = strFileName.toStdString();
 #endif
+    mFrameGenerator->SetOpenFilePath(mFilePath);
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
-}
 
-void LaptopApp::onStart()
-{
-    qDebug() << "call onStart tid:" << QThread::currentThreadId();
-
-    mFrameGenerator->Start(mFilePath);
+    mFrameGeneratorThread->start();
+    emit startFrameGenerator();
     mMsgHandlerManager->Start();
+
+    mbIsStart = true;
+
+    //TODO : 사용자가 open 버튼을 다시 눌러서 다른 파일을 선택하려고 할 경우 동작 지원을 하려면 추가 수정 필요
+    //       일단 UX로 해결 : 재생이 시작되면 open button을 비활성화
+    ui->openButton->setEnabled(false);
 }
 
-void LaptopApp::onStop()
+void LaptopApp::onToggle(bool bIsPause)
 {
-    mFrameGenerator->Stop();
-    mMsgHandlerManager->Stop();
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    QApplication::quit();
-}
+    if (bIsPause) {
+        emit pauseFrameGenerator();
+        mMsgHandlerManager->Stop();
+        ui->toggleButton->setText("Resume");
 
-void LaptopApp::onPause()
-{
-    mFrameGenerator->Pause();
-    mMsgHandlerManager->Stop();
-}
-
-void LaptopApp::onResume()
-{
-    mFrameGenerator->Resume();
-    mMsgHandlerManager->Start();
+    } else {
+        emit resumeFrameGenerator();
+        mMsgHandlerManager->Start();
+        ui->toggleButton->setText("Pause");
+    }
 }
 
 void LaptopApp::closeEvent(QCloseEvent *event)
 {
     qDebug() << "call closeEvent tid:" << QThread::currentThreadId();
 
-    mFrameGenerator->Stop();
+    emit stopFrameGenerator();
     mMsgHandlerManager->Stop();
+
+    QApplication::quit();
 }
 
 LaptopApp::~LaptopApp()

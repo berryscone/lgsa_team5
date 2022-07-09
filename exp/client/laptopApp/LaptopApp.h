@@ -38,20 +38,28 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 
+private:
+    void makeFrameGeneratorThread();
+
+signals:
+    void startFrameGenerator();
+    void pauseFrameGenerator();
+    void resumeFrameGenerator();
+    void stopFrameGenerator();
+
 private slots:
     void onOpen();
-    void onStart();
-    void onStop();
-    void onPause();
-    void onResume();
+    void onToggle(bool bIsPause);
 
-    void UpdatePlaybackView(QImage frame);
+    void UpdatePlaybackView(QPixmap pixmap);
     void UpdateRecentPlatesView(QImage frame);
     void UpdateVehicleInfoView(QString info);
     void UpdateDebugInfoView(QString info);
 
 private:
     Ui::LaptopApp *ui;
+    QThread *mFrameGeneratorThread;
+    bool mbIsStart;
 
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;

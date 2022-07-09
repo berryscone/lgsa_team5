@@ -553,6 +553,12 @@ release\moc_LaptopApp.cpp: LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTimer \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qtimer.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qbasictimer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMainWindow \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmainwindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -560,11 +566,6 @@ release\moc_LaptopApp.cpp: LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qwidget.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpalette.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qbrush.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfont.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfontmetrics.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfontinfo.h \
@@ -598,7 +599,6 @@ release\moc_LaptopApp.cpp: LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qthread.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdeadlinetimer.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qelapsedtimer.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QCloseEvent \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMessageBox \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmessagebox.h \
@@ -1163,6 +1163,12 @@ release\moc_FrameGenerator.cpp: generator\FrameGenerator.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdatastream.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qiodevice.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qline.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		release\moc_predefs.h \
 		C:\Qt5\5.15.2\msvc2019_64\bin\moc.exe
 	C:\Qt5\5.15.2\msvc2019_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include D:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/release/moc_predefs.h -IC:/Qt5/5.15.2/msvc2019_64/mkspecs/win32-msvc -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/include -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/libs/dependencies/include/tesseract -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/lib/libopenalpr -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/lib/precomplied -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/lib/precomplied -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/lib/precomplied -ID:/hjh_world/CMU/StudioProject/QtAlpr/team5Project/exp/client/laptopApp/lib/precomplied -IC:/Qt5/5.15.2/msvc2019_64/include -IC:/Qt5/5.15.2/msvc2019_64/include/QtWidgets -IC:/Qt5/5.15.2/msvc2019_64/include/QtGui -IC:/Qt5/5.15.2/msvc2019_64/include/QtANGLE -IC:/Qt5/5.15.2/msvc2019_64/include/QtNetwork -IC:/Qt5/5.15.2/msvc2019_64/include/QtCore -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\cppwinrt" generator\FrameGenerator.h -o release\moc_FrameGenerator.cpp
@@ -2295,6 +2301,7 @@ release\moc_LoginWindow.cpp: login\LoginWindow.h \
 		lib\libopenalpr\alpr.h \
 		alpr\AlprAdapter.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTimer \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDebug \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QGraphicsScene \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsscene.h \
@@ -2303,7 +2310,6 @@ release\moc_LoginWindow.cpp: login\LoginWindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsitem.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpainterpath.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QThread \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QCloseEvent \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMessageBox \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmessagebox.h \
@@ -2518,7 +2524,20 @@ release\AlprAdapter.obj: alpr\AlprAdapter.cpp alpr\AlprAdapter.h \
 		lib\libopenalpr\alpr.h \
 		model\RecentPlatesModel.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QVector \
-		model\VehicleInfoModel.h
+		model\VehicleInfoModel.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDebug \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdebug.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qmap.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qtextstream.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qiodevice.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qlocale.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qvariant.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qset.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h
 
 release\OpenCvAdapter.obj: generator\OpenCvAdapter.cpp generator\OpenCvAdapter.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QObject \
@@ -2903,27 +2922,33 @@ release\FrameGenerator.obj: generator\FrameGenerator.cpp generator\FrameGenerato
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdatastream.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qiodevice.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qline.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		model\DebugInfoModel.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QVector \
 		model\FrameModel.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDebug \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdebug.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qmap.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qtextstream.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qlocale.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qvariant.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qset.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qcontiguouscache.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDir \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdir.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qfileinfo.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qfile.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qfiledevice.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTextStream
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTextStream \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QThread \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qthread.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qelapsedtimer.h
 
 release\LoginWindow.obj: login\LoginWindow.cpp login\LoginWindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMainWindow \
@@ -3356,6 +3381,7 @@ release\LoginWindow.obj: login\LoginWindow.cpp login\LoginWindow.h \
 		lib\libopenalpr\alpr.h \
 		alpr\AlprAdapter.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTimer \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDebug \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QGraphicsScene \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsscene.h \
@@ -3364,7 +3390,6 @@ release\LoginWindow.obj: login\LoginWindow.cpp login\LoginWindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsitem.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpainterpath.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QThread \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QCloseEvent \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMessageBox \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmessagebox.h \
@@ -3805,6 +3830,7 @@ release\main.obj: main.cpp login\LoginWindow.h \
 		lib\libopenalpr\alpr.h \
 		alpr\AlprAdapter.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTimer \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QDebug \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QGraphicsScene \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsscene.h \
@@ -3813,7 +3839,6 @@ release\main.obj: main.cpp login\LoginWindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qgraphicsitem.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpainterpath.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QThread \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QCloseEvent \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMessageBox \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmessagebox.h \
@@ -4036,6 +4061,12 @@ release\LaptopApp.obj: LaptopApp.cpp LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\QTimer \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qtimer.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qbasictimer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
+		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMainWindow \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmainwindow.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -4043,11 +4074,6 @@ release\LaptopApp.obj: LaptopApp.cpp LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qwidget.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpalette.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qbrush.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qpixmap.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qshareddata.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qhash.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfont.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfontmetrics.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\qfontinfo.h \
@@ -4081,7 +4107,6 @@ release\LaptopApp.obj: LaptopApp.cpp LaptopApp.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qthread.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qdeadlinetimer.h \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtCore\qelapsedtimer.h \
-		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QPixmap \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtGui\QCloseEvent \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\QMessageBox \
 		C:\Qt5\5.15.2\msvc2019_64\include\QtWidgets\qmessagebox.h \

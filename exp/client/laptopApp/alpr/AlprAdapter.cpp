@@ -2,6 +2,8 @@
 #include "model/RecentPlatesModel.h"
 #include "model/VehicleInfoModel.h" //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
 
+#include <QDebug>
+
 using namespace alpr;
 using namespace std;
 using namespace cv;
@@ -25,7 +27,8 @@ void AlprAdapter::Create(std::string &country, std::string &configFile, std::str
 
 void AlprAdapter::Destroy()
 {
-
+    qDebug() << "AlprAdapter::Destroy";
+    mAlpr.release();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)

@@ -151,30 +151,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="startButton">
-       <property name="text">
-        <string>Start</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stopButton">
-       <property name="text">
-        <string>Stop</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pauseButton">
+      <widget class="QPushButton" name="toggleButton">
        <property name="text">
         <string>Pause</string>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="resumeButton">
-       <property name="text">
-        <string>Resume</string>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -289,7 +271,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Assets.qrc">:/assets/images/greenButton.png</pixmap>
+      <pixmap>:/assets/images/greenButton.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -322,7 +304,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Assets.qrc">:/assets/images/powerButton.png</pixmap>
+     <pixmap>:/assets/images/powerButton.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -359,8 +341,6 @@
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="Assets.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -6,6 +6,7 @@
 
 #include <QTimer>
 #include <QImage>
+#include <QPixmap>
 
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::steady_clock::time_point;
@@ -18,18 +19,29 @@ public:
     FrameGenerator();
     ~FrameGenerator() = default;
 
-    void Start(std::string &filePath);
+    void SetOpenFilePath(std::string &filePath);
+
+signals :
+    void UpdateLaptopAppUi(QPixmap pixmap);
+
+public slots:
+    void Start();
     void Resume();
     void Pause();
     void Stop();
-
-public slots:
     void processFrameAndUpdateGUI();
 
 private :
-    QTimer* mQtimer;
+    void Initialize();
+    void Finalize();
+
+    std::unique_ptr<QTimer> mQtimer;
     std::unique_ptr<OpenCvAdapter> mOpenCvAdapter;
     std::unique_ptr<AlprAdapter> mAlprAdapter;
+
+    std::string mFilePath;
+    QPixmap mVideoFrame;
+    bool mIsInitialized;
 
     //to check FPS
     Clock mClock;
