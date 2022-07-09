@@ -26,17 +26,9 @@ FrameGenerator::FrameGenerator() :
 void FrameGenerator::Start(std::string &filePath)
 {
     std::string country = "us";
-    std::string buildType = "";
-
-#ifdef QT_DEBUG
-    buildType = "/debug";
-#else
-    buildType = "/release";
-#endif
-
     std::string currentPath = QDir::currentPath().toStdString();
-    std::string configFile = currentPath + buildType + "/openalpr.conf";
-    std::string runtimeDir = currentPath + buildType + "/runtime_data";
+    std::string configFile = currentPath + "/data/openalpr.conf";
+    std::string runtimeDir = currentPath + "/data/runtime_data";
 
     mOpenCvAdapter->Create(filePath);
     mAlprAdapter->Create(country, configFile, runtimeDir);

@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ SOURCES += \
     alpr/AlprAdapter.cpp \
     generator/OpenCvAdapter.cpp \
     generator/FrameGenerator.cpp \
+    login/LoginWindow.cpp \
     main.cpp \
     LaptopApp.cpp \
     model/DebugInfoModel.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     handler/MsgHandlerManager.h \
     handler/RecentPlatesMsgHandler.h \
     handler/VehicleInfoMsgHandler.h \
+    login/LoginWindow.h \
     model/DebugInfoModel.h \
     model/FrameModel.h \
     model/RecentPlatesModel.h \
@@ -71,7 +73,8 @@ DEFINES += "_UNICODE"
 DEFINES += "UNICODE"
 
 FORMS += \
-    LaptopApp.ui
+    LaptopApp.ui \
+    LoginWindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
