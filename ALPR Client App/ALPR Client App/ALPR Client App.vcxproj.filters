@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AlprClientApp.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="handler\DebugInfoMsgHandler.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\FrameMsgHandler.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\MsgHandlerManager.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\RecentPlatesMsgHandler.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\VehicleInfoMsgHandler.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="generator\FrameGenerator.cpp">
+      <Filter>Generator</Filter>
+    </ClCompile>
+    <ClCompile Include="generator\OpenCvAdapter.cpp">
+      <Filter>Generator</Filter>
+    </ClCompile>
+    <ClCompile Include="model\DebugInfoModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\FrameModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\RecentPlatesModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\VehicleInfoModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="alpr\AlprAdapter.cpp">
+      <Filter>Alpr</Filter>
+    </ClCompile>
+    <ClCompile Include="login\LoginWindow.cpp">
+      <Filter>Login</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="AlprClientApp.h" />
+    <QtMoc Include="handler\DebugInfoMsgHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="handler\FrameMsgHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="handler\IMsgHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="handler\MsgHandlerManager.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="handler\RecentPlatesMsgHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="handler\VehicleInfoMsgHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
+    <QtMoc Include="generator\FrameGenerator.h">
+      <Filter>Generator</Filter>
+    </QtMoc>
+    <QtMoc Include="generator\OpenCvAdapter.h">
+      <Filter>Generator</Filter>
+    </QtMoc>
+    <QtMoc Include="alpr\AlprAdapter.h">
+      <Filter>Alpr</Filter>
+    </QtMoc>
+    <QtMoc Include="login\LoginWindow.h">
+      <Filter>Login</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="AlprClientApp.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="AlprClientApp.ui" />
+    <QtUic Include="LoginWindow.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Model">
+      <UniqueIdentifier>{ae7312be-456a-4711-b0b3-97811080f1f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generator">
+      <UniqueIdentifier>{108ee767-8f26-40eb-87a8-e776c08eef20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handler">
+      <UniqueIdentifier>{dbc55267-6a99-4616-a50b-82d4c848e13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Alpr">
+      <UniqueIdentifier>{7287d9ae-5e29-49a1-b971-281a0edfb49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Login">
+      <UniqueIdentifier>{b918cc77-3a78-4f71-918a-68c572de82a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="model\DebugInfoModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\FrameModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\RecentPlatesModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\VehicleInfoModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
