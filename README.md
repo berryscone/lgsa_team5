@@ -1,6 +1,26 @@
 #  Study Schedule for lgsa_team5(Dandies)
-https://learning.oreilly.com/home/ 
-login info: sunhyun.park@lge.com / agile1234
+
+##5th week study schedule
+
+> 7/11 Mon: 
+* Distributed Systems I - Fundamentals (46 min)
+* reading : Reference_Architectures_for_the_Internet_of_Things.pdf
+
+> 7/12 Tue: 
+*Distributed Systems - Fundamentals II (42 min),Fundamentals III (23 min)
+* reading : practicing-continuous-integration-continuous-delivery.pdf
+
+> 7/13 Wed: 
+
+* CICD - Pipelines(37 min), DevOps Basics(27 min)
+* reading -Senapathi18.pdf Download Senapathi18.pdf
+
+> 7/14 Thu: 
+ * Embedded I - Patterns(44 min),Internet of Things I - Fundamentals(24 min)
+ * reading - Armoush21.pdf
+
+## Required reading
+
 
 ##4th week study schedule
 
