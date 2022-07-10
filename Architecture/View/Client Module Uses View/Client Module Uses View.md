@@ -27,8 +27,10 @@ N/A
 <hr>
 
 ## ADRs
-[ADR1]()
+- [ADR1](ADR1.md)
+- [ADR2](ADR2.md)
+- [ADR3](ADR3.md)
 <hr>
 
 ## Related Views 
-[tip #7](seven-tips-design-diagrams.md).
+- [ALPR Client Runtime View](../Client%20Runtime%20View/Client%20Runtime%20View.md)

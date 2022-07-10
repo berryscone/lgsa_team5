@@ -1,11 +1,11 @@
 # ADR 1: Adapt MVC pattern using Qt C++ framework
-ALPR client application requires to provide GUI to the users and needs high level functionality like HTTPS communication.
+ALPR client application requires to provide GUI to the users and needs high level functionality.
 
 ## Decision 
 We will use Qt framework for ALPR client application development.
 
 ## Rationale 
-- As most of the team members have experience in application development using Qt framework, it would lead to faster development.
+- As some of the team members have experience in application development using Qt framework, it would lead to faster development.
 - Qt provides many high level functionalities such as network, authentication and multimedia. These fetures are required to develop ALPR client application.
 
 ## Status
