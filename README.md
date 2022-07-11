@@ -13,7 +13,7 @@
 > 7/13 Wed: 
 
 * CICD - Pipelines(37 min), DevOps Basics(27 min)
-* reading -Senapathi18.pdf Download Senapathi18.pdf
+* reading -Senapathi18.pdf 
 
 > 7/14 Thu: 
  * Embedded I - Patterns(44 min),Internet of Things I - Fundamentals(24 min), Internet of Things II - Architecture(37 min)
@@ -23,7 +23,7 @@
 * Reference_Architectures_for_the_Internet_of_Things.pdf Download Reference_Architectures_for_the_Internet_of_Things.pdf
 * practicing-continuous-integration-continuous-delivery.pdf Download practicing-continuous-integration-continuous-delivery.pdf
 * Armoush21.pdf  Download Armoush21.pdf Read Sections 1, 2, 3 and 8
-* Senapathi18.pdf Download Senapathi18.pdf
+* Senapathi18.pdf 
 
 ## 4th week study schedule
 
