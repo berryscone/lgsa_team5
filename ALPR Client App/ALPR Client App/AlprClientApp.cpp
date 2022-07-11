@@ -7,6 +7,7 @@ AlprClientApp::AlprClientApp(QWidget *parent)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
     ui->setupUi(this);
+    this->setWindowTitle("ALPR Client App");
 
     ui->playbackView->setScene(new QGraphicsScene(this));
     ui->playbackView->scene()->addItem(&mPlaybackPixmap);

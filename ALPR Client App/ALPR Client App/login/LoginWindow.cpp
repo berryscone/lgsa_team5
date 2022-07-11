@@ -11,6 +11,8 @@ LoginWindow::LoginWindow(QWidget *parent)
     , ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("ALPR Client App");
+
     //connect(ui->loginBtn, &QPushButton::clicked, this, &LoginWindow::onLogin); //TODO : 서버 테스트 환경 준비되면 enable
     connect(ui->loginBtn, &QPushButton::clicked, this, &LoginWindow::onLoginDemo);
 
