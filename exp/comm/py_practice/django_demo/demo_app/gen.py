@@ -117,15 +117,13 @@ def set_vehicle_detail_in_video(i, vehicle):
         else:
             random_num_for_status = 10
     else:
-        plate = fake.license_plate().replace(" ", "")
-        plate = plate.replace("-", "")
+        plate = fake.bothify('???####', letters='ABCDEFGHJKLMNPRSTVWXYZ')
         random_num_for_status = fake.pyint(1, 100)
     set_vehicle_detail_more(plate, random_num_for_status, vehicle)
 
 
 def set_vehicle_detail(vehicle):
-    plate = fake.license_plate().replace(" ", "")
-    plate = plate.replace("-", "")
+    plate = fake.bothify('???####', letters='ABCDEFGHJKLMNPRSTVWXYZ')
     random_num_for_status = fake.pyint(1, 100)
     set_vehicle_detail_more(plate, random_num_for_status, vehicle)
 
@@ -144,8 +142,7 @@ def set_vehicle_detail_more(plate, random_num_for_status, vehicle):
     vehicle.reg_exp = fake.date_between_dates(date_start=datetime(2022, 1, 1),
                                               date_end=datetime(2024, 5, 1)).strftime("%m/%d/%Y")
     vehicle.owner = fake.name()
-    vehicle.birth = fake.date_between_dates(date_start=datetime(1932, 1, 1),
-                                            date_end=datetime(2004, 1, 1)).strftime("%m/%d/%Y")
+    vehicle.birth = fake.date_of_birth().strftime("%m/%d/%Y")
     vehicle.address = fake.address()
     vehicle.year = fake.vehicle_year()
     vehicle.make = fake.vehicle_make()
