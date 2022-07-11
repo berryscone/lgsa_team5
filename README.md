@@ -1,6 +1,6 @@
 #  Study Schedule for lgsa_team5(Dandies)
 
-##5th week study schedule
+## 5th week study schedule
 
 > 7/11 Mon: 
 * Distributed Systems I - Fundamentals (46 min)
@@ -16,13 +16,16 @@
 * reading -Senapathi18.pdf Download Senapathi18.pdf
 
 > 7/14 Thu: 
- * Embedded I - Patterns(44 min),Internet of Things I - Fundamentals(24 min)
+ * Embedded I - Patterns(44 min),Internet of Things I - Fundamentals(24 min), Internet of Things II - Architecture(37 min)
  * reading - Armoush21.pdf
 
-## Required reading
+## 5th Required reading
+* Reference_Architectures_for_the_Internet_of_Things.pdf Download Reference_Architectures_for_the_Internet_of_Things.pdf
+* practicing-continuous-integration-continuous-delivery.pdf Download practicing-continuous-integration-continuous-delivery.pdf
+* Armoush21.pdf  Download Armoush21.pdf Read Sections 1, 2, 3 and 8
+* Senapathi18.pdf Download Senapathi18.pdf
 
-
-##4th week study schedule
+## 4th week study schedule
 
 > 7/4 Mon: 
 * NoSQL databases - intro (46 min), types of DB(20 min),Interfaces(18 min)
@@ -41,7 +44,7 @@
  * Product lines - intro(13 min),variability(19 min)
  * reading - Section 6.5.5(The payback for Documenting Architecutral decision), Sections 6.4.1, 6.4.2(variability)
 
-## Required reading
+## 4th Required reading
 
 [Newman21] Excerpt about CAP
 
@@ -86,7 +89,7 @@
  * #17: https://insights.sei.cmu.edu/blog/defining-microservices/
  * #18: https://insights.sei.cmu.edu/blog/microservices-beyond-the-hype-what-you-gain-and-what-you-lose/
  
-### required reading
+### 3rd required reading
 Due Saturday by 10:59pm Points None
 
 Required reading
@@ -111,7 +114,7 @@ The discussion of cloud characteristics and service models is not present in the
 18. [Merson15b]
 19. [Merson21] In the article titled "Principles for Microservice Design: Think IDEALS, Rather than SOLID", read section Deployability (is on you)  and subsection Achieving good deployability. 
 
-##
+
 ## 2nd week study schedule
 
 > 6/20 Mon: 
@@ -126,7 +129,8 @@ The discussion of cloud characteristics and service models is not present in the
 > 6/23 Thu: 
  * Module Views-layered Style(27 min) + MVC,Data Modeling(23 min) 
  * reading #8, #9, #11 (Please see below)
-### required reading
+ 
+### 2nd Required Reading
 Due Saturday by 10:59pm Points None
 Required reading
 1. [Clements10] Sections P.1.1  (this is a repeat from week 0)  A short overview of SW Architecture
@@ -152,6 +156,8 @@ lecture is marked as a title, and reading assignments are marked with A#. For ex
 * 6/14 Tue : performance(29min)+availability(44min) + A7 + A3 + A4
 * 6/15 Wed: security(36min) + usability(25min)+ A8 + A9
 * 6/16 Thu: Modifiability(16min) +  Energy efficiency(15min) + A5 + A6 + A10
+
+## 1st Required Reading
 
 1, [Wojcik06] Section 3.1
 
