@@ -1,12 +1,15 @@
 #include "AlprAdapter.h"
 #include "model/RecentPlatesModel.h"
-#include "model/VehicleInfoModel.h" //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
+//#include "model/VehicleInfoModel.h" //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
+
+#include <QDebug>
 
 using namespace alpr;
 using namespace std;
 using namespace cv;
 
 AlprAdapter::AlprAdapter()
+    : mNetworkManagerCount(0)
 {
 
 }
@@ -25,7 +28,8 @@ void AlprAdapter::Create(std::string &country, std::string &configFile, std::str
 
 void AlprAdapter::Destroy()
 {
-
+    qDebug() << "AlprAdapter::Destroy";
+    mAlpr.release();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
@@ -45,12 +49,46 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
     if (detectedRectLists.size() > 0) {
         RecentPlatesModel::GetInstance().SetRecentPlatesData(frame, detectedRectLists);
 
+#if 1
+        //TODO : LoginModel에 설정된 IP 정보 가져오기
+        AsyncRequestQuery("http://localhost", "LKY1360");
+#else
         //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
         //       네트워크 모듈 구현되면 거기에서 vehicleInfoModel에 업데이트해줘야함
         static unsigned int plateCount = 0;
         std::string vehicleInfo = "DEMO PlateCount : " + std::to_string(plateCount++) + "\nLKY1360\nOwner Wanted\n08/22/2023\nJennifer Green\n08/01/2001\n5938 Juan Throughway Apt. 948\nWest Corey, TX 43780\n2006\nAudi";
         VehicleInfoModel::GetInstance().SetVehicleInfoData(vehicleInfo);
+ #endif
     }
+}
+
+void AlprAdapter::AsyncRequestQuery(QString url, QString licensePlate)
+{
+    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", mNetworkManagerCount:" << mNetworkManagerCount;
+
+    mNetworkManagerThread[mNetworkManagerCount] = std::make_unique<QThread>();
+    mNetworkManager[mNetworkManagerCount] = std::make_unique<NetworkManager>();
+
+    connect(mNetworkManagerThread[mNetworkManagerCount].get(), SIGNAL(started()),
+            mNetworkManager[mNetworkManagerCount].get(), SLOT(OnStart()));
+    connect(mNetworkManager[mNetworkManagerCount].get(), SIGNAL(Finished()),
+            mNetworkManagerThread[mNetworkManagerCount].get(), SLOT(quit()));
+
+    //automatically delete thread and task object when work is done
+    connect(mNetworkManager[mNetworkManagerCount].get(), SIGNAL(Finished()),
+            mNetworkManager[mNetworkManagerCount].get(), SLOT(deleteLater()));
+    connect(mNetworkManagerThread[mNetworkManagerCount].get(), SIGNAL(finished()),
+            mNetworkManagerThread[mNetworkManagerCount].get(), SLOT(deleteLater()));
+
+    connect(this, SIGNAL(signalRequestQuery(QString,QString)),
+            mNetworkManager[mNetworkManagerCount].get(), SLOT(OnRequestQuery(QString,QString)));
+
+    mNetworkManager[mNetworkManagerCount]->moveToThread(mNetworkManagerThread[mNetworkManagerCount].get());
+    mNetworkManagerThread[mNetworkManagerCount]->start();
+
+    emit signalRequestQuery(url, licensePlate);
+
+    mNetworkManagerCount++;
 }
 
 bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
@@ -60,6 +98,7 @@ bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat 
     timespec endTime;
     getTimeMonotonic(&startTime);
     unsigned short SendPlateStringLength;
+    ssize_t result;
     std::vector<AlprRegionOfInterest> regionsOfInterest;
     AlprResults results;
 

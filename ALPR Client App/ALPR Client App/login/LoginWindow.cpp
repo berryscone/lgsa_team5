@@ -17,6 +17,8 @@ LoginWindow::LoginWindow(QWidget *parent)
     manager = new QNetworkAccessManager(this);
     ui->lineEdit_ip->setText("https://localhost");
     ui->lineEdit_pw->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_id->setText("team5"); //dummy
+    ui->lineEdit_pw->setText("1234"); //dummy
 }
 
 LoginWindow::~LoginWindow()
@@ -79,7 +81,11 @@ void LoginWindow::onLogin()
 
 void LoginWindow::onLoginReadReady()
 {
-
+    QByteArray data = reply->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
+    token = obj["token"].toString();
+    //ui.lineedit_token->setText(token);
 }
 
 void LoginWindow::onLoginFinished()

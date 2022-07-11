@@ -3,7 +3,9 @@
 AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
+    , mbIsStart(false)
 {
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
     ui->setupUi(this);
 
     ui->playbackView->setScene(new QGraphicsScene(this));
@@ -11,10 +13,7 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     ui->vehicleInfo->setWordWrap(true);
 
     connect(ui->openButton, &QPushButton::clicked, this, &AlprClientApp::onOpen);
-    connect(ui->startButton, &QPushButton::clicked, this, &AlprClientApp::onStart);
-    connect(ui->stopButton, &QPushButton::clicked, this, &AlprClientApp::onStop);
-    connect(ui->pauseButton, &QPushButton::clicked, this, &AlprClientApp::onPause);
-    connect(ui->resumeButton, &QPushButton::clicked, this, &AlprClientApp::onResume);
+    connect(ui->toggleButton, SIGNAL(toggled(bool)), this, SLOT(onToggle(bool)));
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
     mFrameMsgHandler = std::make_unique<FrameMsgHandler>();
@@ -27,24 +26,47 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     mMsgHandlerManager->AddMsgHandler(mVehicleInfoMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
 
-    mFrameGenerator = std::make_unique<FrameGenerator>();
-
-    connect(mFrameMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
-        this, SLOT(UpdatePlaybackView(QImage)));
-
     connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
-        this, SLOT(UpdateRecentPlatesView(QImage)));
+            this, SLOT(UpdateRecentPlatesView(QImage)));
 
     connect(mVehicleInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
-        this, SLOT(UpdateVehicleInfoView(QString)));
+            this, SLOT(UpdateVehicleInfoView(QString)));
 
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
-        this, SLOT(UpdateDebugInfoView(QString)));
+            this, SLOT(UpdateDebugInfoView(QString)));
+
+//    TODO : frameModel, frameMsgHandler 사용하지 않을 경우 추후 삭제
+//    connect(mFrameMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
+//            this, SLOT(UpdatePlaybackView(QImage)));
+
+    //NOTE : frameGenerator runs in a separate thread
+    makeFrameGeneratorThread();
 }
 
-void AlprClientApp::UpdatePlaybackView(QImage frame)
+void AlprClientApp::makeFrameGeneratorThread()
 {
-    mPlaybackPixmap.setPixmap(QPixmap::fromImage(frame));
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+
+    mFrameGeneratorThread = new QThread();
+    mFrameGenerator = std::make_unique<FrameGenerator>();
+
+    connect(mFrameGenerator.get(), SIGNAL(UpdateLaptopAppUi(QPixmap)),
+            this, SLOT(UpdatePlaybackView(QPixmap)));
+
+    connect(mFrameGeneratorThread, SIGNAL(started()), mFrameGenerator.get(), SLOT(Start()));
+    connect(mFrameGeneratorThread, SIGNAL(finished()), mFrameGenerator.get(), SLOT(Stop()));
+
+    connect(this, SIGNAL(startFrameGenerator()), mFrameGenerator.get(), SLOT(Start()));
+    connect(this, SIGNAL(pauseFrameGenerator()), mFrameGenerator.get(), SLOT(Pause()));
+    connect(this, SIGNAL(resumeFrameGenerator()), mFrameGenerator.get(), SLOT(Resume()));
+    connect(this, SIGNAL(stopFrameGenerator()), mFrameGenerator.get(), SLOT(Stop()));
+
+    mFrameGenerator->moveToThread(mFrameGeneratorThread);
+}
+
+void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
+{   
+    mPlaybackPixmap.setPixmap(pixmap);
     ui->playbackView->fitInView(&mPlaybackPixmap, Qt::KeepAspectRatio);
 
     qApp->processEvents();
@@ -89,44 +111,45 @@ void AlprClientApp::onOpen()
     QString strFileName = fd.selectedFiles().at(0);
     mFilePath = strFileName.toStdString();
 #endif
+    mFrameGenerator->SetOpenFilePath(mFilePath);
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
-}
 
-void AlprClientApp::onStart()
-{
-    qDebug() << "call onStart tid:" << QThread::currentThreadId();
-
-    mFrameGenerator->Start(mFilePath);
+    mFrameGeneratorThread->start();
+    emit startFrameGenerator();
     mMsgHandlerManager->Start();
+
+    mbIsStart = true;
+
+    //TODO : 사용자가 open 버튼을 다시 눌러서 다른 파일을 선택하려고 할 경우 동작 지원을 하려면 추가 수정 필요
+    //       일단 UX로 해결 : 재생이 시작되면 open button을 비활성화
+    ui->openButton->setEnabled(false);
 }
 
-void AlprClientApp::onStop()
+void AlprClientApp::onToggle(bool bIsPause)
 {
-    mFrameGenerator->Stop();
-    mMsgHandlerManager->Stop();
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    QApplication::quit();
-}
+    if (bIsPause) {
+        emit pauseFrameGenerator();
+        mMsgHandlerManager->Stop();
+        ui->toggleButton->setText("Resume");
 
-void AlprClientApp::onPause()
-{
-    mFrameGenerator->Pause();
-    mMsgHandlerManager->Stop();
-}
-
-void AlprClientApp::onResume()
-{
-    mFrameGenerator->Resume();
-    mMsgHandlerManager->Start();
+    } else {
+        emit resumeFrameGenerator();
+        mMsgHandlerManager->Start();
+        ui->toggleButton->setText("Pause");
+    }
 }
 
 void AlprClientApp::closeEvent(QCloseEvent* event)
 {
     qDebug() << "call closeEvent tid:" << QThread::currentThreadId();
 
-    mFrameGenerator->Stop();
+    emit stopFrameGenerator();
     mMsgHandlerManager->Stop();
+
+    QApplication::quit();
 }
 
 AlprClientApp::~AlprClientApp()

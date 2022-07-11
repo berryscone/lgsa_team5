@@ -44,9 +44,11 @@ void VehicleInfoModel::UnSubscribeListener(IVehicleInfoListener *pListener)
 
 void VehicleInfoModel::SetVehicleInfoData(std::string &info)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
+    //TODO : 여기서 mutex lock 처리하면 networkManager에서 호출 시 여기서 block됨
+    //       일단 GetVehicleInfoData를 사용하는 시나리오는 없어서 임시로 mutex lock 부분 주석 처리함
+    //std::unique_lock<std::mutex> lock(mMutex);
     mVehicleInfo = info;
-    mMutex.unlock();
+    //mMutex.unlock();
 
     NotifyDataChanged(info);
 }
