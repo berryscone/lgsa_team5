@@ -79,7 +79,11 @@ void LoginWindow::onLogin()
 
 void LoginWindow::onLoginReadReady()
 {
-
+    QByteArray data = reply->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
+    token = obj["token"].toString();
+    //ui.lineedit_token->setText(token);
 }
 
 void LoginWindow::onLoginFinished()

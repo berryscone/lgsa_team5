@@ -92,6 +92,8 @@ void LaptopApp::UpdateRecentPlatesView(QImage frame)
 
 void LaptopApp::UpdateVehicleInfoView(QString info)
 {
+    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", vehicleInfo: " << info;
+
     ui->vehicleInfo->setText(info);
     ui->vehicleInfo->setWordWrap(true);
 }

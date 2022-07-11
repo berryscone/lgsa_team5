@@ -23,7 +23,8 @@ SOURCES += \
     handler/DebugInfoMsgHandler.cpp \
     handler/FrameMsgHandler.cpp \
     handler/RecentPlatesMsgHandler.cpp \
-    handler/VehicleInfoMsgHandler.cpp
+    handler/VehicleInfoMsgHandler.cpp \
+    network/NetworkManager.cpp
 
 HEADERS += \
     LaptopApp.h \
@@ -46,7 +47,8 @@ HEADERS += \
     MsgHandler/PlaybackMsgHandler.h \
     MsgHandler/RecentPlatesMsgHandler.h \
     MsgHandler/MsgHandlerManager.h \
-    MsgHandler/VehicleInfoMsgHandler.h
+    MsgHandler/VehicleInfoMsgHandler.h \
+    network/NetworkManager.h
 
 INCLUDEPATH +=  $$PWD \
                 $$PWD/include \

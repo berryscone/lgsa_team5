@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QRect>
 
+#include "network/NetworkManager.h"
+
 #include "support/timing.h"
 #include "motiondetector.h"
 #include "alpr.h"
@@ -16,6 +18,9 @@ class AlprAdapter : public QObject
 {
     Q_OBJECT
 
+signals:
+    void signalRequestQuery(QString url, QString licensePlate);
+
 public:
     AlprAdapter();
     ~AlprAdapter() = default;
@@ -25,6 +30,8 @@ public:
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:
+    void AsyncRequestQuery(QString url, QString licensePlate);
+
     bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                            std::string region, bool writeJson, QVector<QRect> &detectedRectLists);
 
@@ -33,6 +40,11 @@ private:
     bool mUseMotiondetection;
     int mFrameno;
     char mText[1024] = "";
+
+    //TODO : QThreadPool 이용하도록 수정 필요
+    std::unique_ptr<QThread> mNetworkManagerThread[4096];
+    std::unique_ptr<NetworkManager> mNetworkManager[4096];
+    int mNetworkManagerCount;
 };
 
 #endif // ALPRADAPTER_H
