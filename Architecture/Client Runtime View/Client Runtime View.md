@@ -28,6 +28,9 @@
 
 ### Vehicle Query Sequence Diagram
 ![](query_seq_diagram.png)
+
+### User Interface Scenario
+![](user_interface.jpg)
 <hr>
 
 ## ADRs
