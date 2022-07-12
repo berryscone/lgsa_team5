@@ -35,7 +35,8 @@ private:
     void OnSslErrors(const QList<QSslError>& errors);
 
     std::unique_ptr<QNetworkAccessManager> mManager;
-    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> mReply;
+    QQueue<QNetworkReply*> mQueryReplyQueue;
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> mLoginReply;
 
     QString mToken;
 };

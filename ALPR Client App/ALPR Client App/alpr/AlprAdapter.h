@@ -28,7 +28,11 @@ public:
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:
+    //TODO : networkManager instance 생성을 main.cpp에서 하도록 추후 수정 예정 --- START
+    void CreateNetworkManager();
+    void DestroyNetworkManager();
     void AsyncRequestQuery(QString url, QString licensePlate);
+    //END
 
     bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                            std::string region, bool writeJson, QVector<QRect> &detectedRectLists);
@@ -39,8 +43,6 @@ private:
     int mFrameno;
     char mText[1024] = "";
 
-    //TODO : QThreadPool 이용하도록 수정 필요
-    std::unique_ptr<QThread> mNetworkManagerThread[4096];
-    std::unique_ptr<NetworkManager> mNetworkManager[4096];
-    int mNetworkManagerCount;
+    std::unique_ptr<QThread> mNetworkManagerThread;
+    std::unique_ptr<NetworkManager> mNetworkManager;
 };

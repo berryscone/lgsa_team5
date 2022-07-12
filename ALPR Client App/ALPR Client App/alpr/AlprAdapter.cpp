@@ -9,7 +9,7 @@ using namespace std;
 using namespace cv;
 
 AlprAdapter::AlprAdapter()
-    : mNetworkManagerCount(0), mUseMotiondetection(0)
+    : mUseMotiondetection(0)
 {
 
 }
@@ -24,12 +24,15 @@ void AlprAdapter::Create(std::string &country, std::string &configFile, std::str
         std::cerr << "Error loading OpenALPR" << std::endl;
         return;
     }
+
+    CreateNetworkManager();
 }
 
 void AlprAdapter::Destroy()
 {
     qDebug() << "AlprAdapter::Destroy";
     mAlpr.release();
+    DestroyNetworkManager();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
@@ -62,33 +65,41 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
     }
 }
 
-void AlprAdapter::AsyncRequestQuery(QString url, QString licensePlate)
+void AlprAdapter::CreateNetworkManager()
 {
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", mNetworkManagerCount:" << mNetworkManagerCount;
+    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    mNetworkManagerThread[mNetworkManagerCount] = std::make_unique<QThread>();
-    mNetworkManager[mNetworkManagerCount] = std::make_unique<NetworkManager>();
+    mNetworkManagerThread = std::make_unique<QThread>();
+    mNetworkManager = std::make_unique<NetworkManager>();
 
-    connect(mNetworkManagerThread[mNetworkManagerCount].get(), SIGNAL(started()),
-            mNetworkManager[mNetworkManagerCount].get(), SLOT(OnStart()));
-    connect(mNetworkManager[mNetworkManagerCount].get(), SIGNAL(Finished()),
-            mNetworkManagerThread[mNetworkManagerCount].get(), SLOT(quit()));
+    connect(mNetworkManagerThread.get(), SIGNAL(started()),
+            mNetworkManager.get(), SLOT(OnStart()));
+    connect(mNetworkManager.get(), SIGNAL(Finished()),
+            mNetworkManagerThread.get(), SLOT(quit()));
 
     //automatically delete thread and task object when work is done
-    connect(mNetworkManager[mNetworkManagerCount].get(), SIGNAL(Finished()),
-            mNetworkManager[mNetworkManagerCount].get(), SLOT(deleteLater()));
-    connect(mNetworkManagerThread[mNetworkManagerCount].get(), SIGNAL(finished()),
-            mNetworkManagerThread[mNetworkManagerCount].get(), SLOT(deleteLater()));
+    connect(mNetworkManager.get(), SIGNAL(Finished()),
+            mNetworkManager.get(), SLOT(deleteLater()));
+    connect(mNetworkManagerThread.get(), SIGNAL(finished()),
+            mNetworkManagerThread.get(), SLOT(deleteLater()));
 
     connect(this, SIGNAL(signalRequestQuery(QString,QString)),
-            mNetworkManager[mNetworkManagerCount].get(), SLOT(OnRequestQuery(QString,QString)));
+            mNetworkManager.get(), SLOT(OnRequestQuery(QString,QString)));
 
-    mNetworkManager[mNetworkManagerCount]->moveToThread(mNetworkManagerThread[mNetworkManagerCount].get());
-    mNetworkManagerThread[mNetworkManagerCount]->start();
+    mNetworkManager->moveToThread(mNetworkManagerThread.get());
+    mNetworkManagerThread->start();
+}
+
+void AlprAdapter::DestroyNetworkManager()
+{
+    mNetworkManagerThread->terminate();
+}
+
+void AlprAdapter::AsyncRequestQuery(QString url, QString licensePlate)
+{
+    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
     emit signalRequestQuery(url, licensePlate);
-
-    mNetworkManagerCount++;
 }
 
 bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,

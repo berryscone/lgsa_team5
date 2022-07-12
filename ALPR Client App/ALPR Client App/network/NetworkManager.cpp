@@ -37,7 +37,7 @@ void NetworkManager::OnRequestLogin(QString url, QString id, QString pw)
     QUrl login_url("http://localhost");
 
     QNetworkRequest request(login_url);
-    mReply.reset(mManager->get(request));
+    mLoginReply.reset(mManager->get(request));
 #else
     //TODO : 서버에 로그인 요청
     QUrl login_url(url);
@@ -52,12 +52,12 @@ void NetworkManager::OnRequestLogin(QString url, QString id, QString pw)
     request.setRawHeader("Authorization", basic_auth.toLocal8Bit());
 
     QByteArray data;
-    mReply.reset(mManager->post(request, data));
+    mLoginReply.reset(mManager->post(request, data));
 #endif
 
-    connect(mReply.get(), &QNetworkReply::finished, this, &NetworkManager::OnLoginFinished);
-    connect(mReply.get(), &QNetworkReply::sslErrors, this, &NetworkManager::OnSslErrors);
-    connect(mReply.get(), &QIODevice::readyRead, this, &NetworkManager::OnLoginReadReady);
+    connect(mLoginReply.get(), &QNetworkReply::finished, this, &NetworkManager::OnLoginFinished);
+    connect(mLoginReply.get(), &QNetworkReply::sslErrors, this, &NetworkManager::OnSslErrors);
+    connect(mLoginReply.get(), &QIODevice::readyRead, this, &NetworkManager::OnLoginReadReady);
 }
 
 void NetworkManager::OnRequestQuery(QString url, QString licensePlate)
@@ -82,25 +82,25 @@ void NetworkManager::OnRequestQuery(QString url, QString licensePlate)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
     request.setRawHeader("Authorization", token_auth.toLocal8Bit());
 #endif
+    QNetworkReply *reply = mManager->get(request);
 
-    mReply.reset(mManager->get(request));
+    connect(reply, &QNetworkReply::finished, this, &NetworkManager::OnQueryFinished);
+    connect(reply, &QIODevice::readyRead, this, &NetworkManager::OnQueryReadReady);
+    connect(reply, &QNetworkReply::sslErrors, this, &NetworkManager::OnSslErrors);
 
-    connect(mReply.get(), &QNetworkReply::finished, this, &NetworkManager::OnQueryFinished);
-    connect(mReply.get(), &QIODevice::readyRead, this, &NetworkManager::OnQueryReadReady);
+    mQueryReplyQueue.enqueue(reply);
 }
 
 void NetworkManager::OnLoginReadReady()
 {
 #ifdef USE_LOCALHOST_TEST
-    QString answer = mReply->readAll();
+    QString answer = mLoginReply->readAll();
 
     //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    //qDebug() << "managerReadReady:" << answer;
-
-    OnStop();
+    qDebug() << "managerReadReady:" << answer;
 #else
     //TODO : 서버에서 인증된 경우 ID, Token 정보를 LoginModel에 업데이트
-    QByteArray data = mReply->readAll();
+    QByteArray data = mLoginReply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject obj = doc.object();
     mToken = obj["token"].toString();
@@ -119,21 +119,31 @@ void NetworkManager::OnLoginFinished()
 void NetworkManager::OnQueryReadReady()
 {
 #ifdef USE_LOCALHOST_TEST
-    QString answer = mReply->readAll();
+    if (mQueryReplyQueue.empty()) {
+        qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", QueryReplyQueue is empty!";
+        return;
+    }
 
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", server query delay test. wait 1 sec... in here";
+    QString answer = mQueryReplyQueue.dequeue()->readAll();
+
     //qDebug() << "managerReadReady:" << answer;
+
+    if( answer.isEmpty() ) {
+        //qDebug() << "read data is null!!!!";
+        return;
+    }
+
+    //NOTE : server query 지연 시뮬레이션 (지연 발생 시에도 playback view는 25FPS 이상 유지하는지 확인)
+    //QThread::msleep(3000);
 
     static unsigned int plateCount = 0;
     plateCount++;
     std::string vehicleInfo = "NetworkManager DEMO PlateCount : " + std::to_string(plateCount) + "\n" + answer.toStdString();
     VehicleInfoModel::GetInstance().SetVehicleInfoData(vehicleInfo);
-
-    OnStop();
 #else
     //TODO : 서버에서 번호판 쿼리 결과오면 VehicleInfo 정보를 VehicleInfoModel에 업데이트
     //       쿼리 결과는 하나만 온다고 가정해도 되려나?
-    QByteArray data = mReply->readAll();
+    QByteArray data = mQueryReplyQueue.dequeue()->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QString json = doc.toJson(QJsonDocument::Indented);
 
