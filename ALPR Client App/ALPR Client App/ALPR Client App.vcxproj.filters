@@ -42,6 +42,7 @@
     <ClCompile Include="login\LoginWindow.cpp">
       <Filter>Login</Filter>
     </ClCompile>
+    <ClCompile Include="network\NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -75,6 +76,7 @@
     <QtMoc Include="login\LoginWindow.h">
       <Filter>Login</Filter>
     </QtMoc>
+    <QtMoc Include="network\NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />

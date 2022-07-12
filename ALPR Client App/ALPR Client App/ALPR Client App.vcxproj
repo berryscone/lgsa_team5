@@ -36,9 +36,9 @@
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;network;networkauth;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtInstall>5.15.2_msvc</QtInstall>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
     <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
@@ -111,6 +111,7 @@
     <ClCompile Include="model\FrameModel.cpp" />
     <ClCompile Include="model\RecentPlatesModel.cpp" />
     <ClCompile Include="model\VehicleInfoModel.cpp" />
+    <ClCompile Include="network\NetworkManager.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
     <QtMoc Include="AlprClientApp.h" />
@@ -150,6 +151,7 @@
     <QtMoc Include="generator\OpenCvAdapter.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="network\NetworkManager.h" />
     <QtMoc Include="login\LoginWindow.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />
     <ClInclude Include="model\DebugInfoModel.h" />
