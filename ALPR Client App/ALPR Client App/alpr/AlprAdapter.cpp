@@ -9,7 +9,7 @@ using namespace std;
 using namespace cv;
 
 AlprAdapter::AlprAdapter()
-    : mNetworkManagerCount(0)
+    : mNetworkManagerCount(0), mUseMotiondetection(0)
 {
 
 }
