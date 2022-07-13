@@ -44,10 +44,10 @@ void DebugInfoModel::UnSubscribeListener(IDebugInfoListener *pListener)
 
 void DebugInfoModel::SetDebugInfoData(std::string &info)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    mDebugInfo = info;
-    mMutex.unlock();
-
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        mDebugInfo = info;
+    }
     NotifyDataChanged(info);
 }
 

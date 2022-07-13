@@ -44,10 +44,10 @@ void VehicleInfoModel::UnSubscribeListener(IVehicleInfoListener *pListener)
 
 void VehicleInfoModel::SetVehicleInfoData(std::string &info)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    mVehicleInfo = info;
-    mMutex.unlock();
-
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        mVehicleInfo = info;
+    }
     NotifyDataChanged(info);
 }
 
