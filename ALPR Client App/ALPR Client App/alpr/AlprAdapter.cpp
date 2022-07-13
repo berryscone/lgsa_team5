@@ -42,7 +42,7 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         mFrameno++;
     }
 
-    DetectAndShowCore(mAlpr, frame, "", false, detectedRectLists);
+    AlprResults results = DetectAndShowCore(mAlpr, frame, "", false, detectedRectLists);
 
     cv::putText(frame, mText,
         cv::Point(10, frame.rows - 10), //top-left position
@@ -53,8 +53,11 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         RecentPlatesModel::GetInstance().SetRecentPlatesData(frame, detectedRectLists);
 
 #if 1
-        //TODO : LoginModel에 설정된 IP 정보 가져오기
-        AsyncRequestQuery("http://localhost", "LKY1360");
+        for (int i = 0; i < results.plates.size(); i++) {
+            //TODO : LoginModel에 설정된 IP 정보 가져오기
+            AsyncRequestQuery("http://localhost", results.plates[i].bestPlate.characters.c_str());
+        }
+
 #else
         //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
         //       네트워크 모듈 구현되면 거기에서 vehicleInfoModel에 업데이트해줘야함
@@ -102,7 +105,7 @@ void AlprAdapter::AsyncRequestQuery(QString url, QString licensePlate)
     emit signalRequestQuery(url, licensePlate);
 }
 
-bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
+AlprResults AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                                     std::string region, bool writeJson, QVector<QRect> &detectedRectLists)
 {
     timespec startTime;
@@ -175,5 +178,5 @@ bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat 
 #endif
         }
     }
-    return results.plates.size() > 0;
+    return results;
 }
