@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>798</width>
+    <width>1087</width>
     <height>600</height>
    </rect>
   </property>
@@ -271,7 +271,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="AlprClientApp.qrc">:/assets/images/greenButton.png</pixmap>
+      <pixmap resource="Assets.qrc">:/assets/images/greenButton.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -304,7 +304,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="AlprClientApp.qrc">:/assets/images/powerButton.png</pixmap>
+     <pixmap resource="Assets.qrc">:/assets/images/powerButton.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -339,10 +339,73 @@
      </property>
     </widget>
    </widget>
+   <widget class="QFrame" name="frame_7">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>80</y>
+      <width>271</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QGraphicsView" name="alertLicensePlateView">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>251</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="alertInfo">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>241</width>
+       <height>391</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Alert Information</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="playbackTextTitle_4">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>30</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Alert Info</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources>
-  <include location="AlprClientApp.qrc"/>
+  <include location="Assets.qrc"/>
  </resources>
  <connections/>
 </ui>

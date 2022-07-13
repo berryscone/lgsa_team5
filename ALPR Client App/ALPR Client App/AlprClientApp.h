@@ -8,6 +8,7 @@
 #include "handler/RecentPlatesMsgHandler.h"
 #include "handler/VehicleInfoMsgHandler.h"
 #include "handler/DebugInfoMsgHandler.h"
+#include "handler/AlertInfoMsgHandler.h"
 #include "generator/FrameGenerator.h"
 
 #include <memory>
@@ -57,6 +58,7 @@ private slots:
     void UpdateRecentPlatesView(QImage frame);
     void UpdateVehicleInfoView(QString info);
     void UpdateDebugInfoView(QString info);
+    void UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo);
 
 private:
     Ui::AlprClientAppClass *ui;
@@ -65,6 +67,7 @@ private:
 
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;
+    QGraphicsPixmapItem mAlertLicensePlatePixmap;
     std::string mFilePath;
 
     MsgHandlerManagerPtr mMsgHandlerManager;
@@ -72,5 +75,6 @@ private:
     std::unique_ptr<RecentPlatesMsgHandler> mRecentPlatesMsgHandler;
     std::unique_ptr<VehicleInfoMsgHandler> mVehicleInfoMsgHandler;
     std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
+    std::unique_ptr<AlertInfoMsgHandler> mAlertInfoMsgHandler;
     std::unique_ptr<FrameGenerator> mFrameGenerator;
 };

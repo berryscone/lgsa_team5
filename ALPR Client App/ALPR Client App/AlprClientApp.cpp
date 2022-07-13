@@ -11,7 +11,12 @@ AlprClientApp::AlprClientApp(QWidget *parent)
 
     ui->playbackView->setScene(new QGraphicsScene(this));
     ui->playbackView->scene()->addItem(&mPlaybackPixmap);
+
+    ui->alertLicensePlateView->setScene(new QGraphicsScene(this));
+    ui->alertLicensePlateView->scene()->addItem(&mAlertLicensePlatePixmap);
+
     ui->vehicleInfo->setWordWrap(true);
+    ui->alertInfo->setWordWrap(true);
 
     connect(ui->openButton, &QPushButton::clicked, this, &AlprClientApp::onOpen);
     connect(ui->toggleButton, SIGNAL(toggled(bool)), this, SLOT(onToggle(bool)));
@@ -21,11 +26,13 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     mRecentPlatesMsgHandler = std::make_unique<RecentPlatesMsgHandler>();
     mVehicleInfoMsgHandler = std::make_unique<VehicleInfoMsgHandler>();
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
+    mAlertInfoMsgHandler = std::make_unique<AlertInfoMsgHandler>();
 
     mMsgHandlerManager->AddMsgHandler(mFrameMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mRecentPlatesMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mVehicleInfoMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
+    mMsgHandlerManager->AddMsgHandler(mAlertInfoMsgHandler.get());
 
     connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
             this, SLOT(UpdateRecentPlatesView(QImage)));
@@ -36,9 +43,8 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateDebugInfoView(QString)));
 
-//    TODO : frameModel, frameMsgHandler 사용하지 않을 경우 추후 삭제
-//    connect(mFrameMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
-//            this, SLOT(UpdatePlaybackView(QImage)));
+    connect(mAlertInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage, QString)),
+            this, SLOT(UpdateAlertInfoView(QImage, QString)));
 
     //NOTE : frameGenerator runs in a separate thread
     makeFrameGeneratorThread();
@@ -99,6 +105,13 @@ void AlprClientApp::UpdateVehicleInfoView(QString info)
 void AlprClientApp::UpdateDebugInfoView(QString info)
 {
     ui->debugInfo->setText(info);
+}
+
+void AlprClientApp::UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo)
+{
+    mAlertLicensePlatePixmap.setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+    ui->alertLicensePlateView->fitInView(ui->alertLicensePlateView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    ui->alertInfo->setText(alertInfo);
 }
 
 void AlprClientApp::onOpen()

@@ -1,5 +1,6 @@
 #include "NetworkManager.h"
 #include "model/VehicleInfoModel.h"
+#include "model/AlertInfoModel.h"
 
 #include <QThread>
 
@@ -147,6 +148,17 @@ void NetworkManager::OnQueryReadReady()
     plateCount++;
     std::string vehicleInfo = "NetworkManager DEMO PlateCount : " + std::to_string(plateCount) + "\n" + answer.toStdString();
     VehicleInfoModel::GetInstance().SetVehicleInfoData(vehicleInfo);
+
+    //NOTE : server query 결과 alert이 필요한 경우 alprAdapter에서 받은 crop된 license plate 이미지를
+    //       alertInfoModel에 업데이트 해준다
+    //       아래 코드는 alertInfoView에 제대로 전달이 되는지 확인을 위한 샘플 코드이므로 추후 삭제해야함
+    QImage *alertLicensePlateImage = new QImage();
+    QString imagePath = QDir::currentPath() + "/assets/images/alertLicensePlate.png";
+    std::string alertInfo = "LKY-1360 Wanted!!!";
+
+    if (alertLicensePlateImage->load(imagePath)) {
+        AlertInfoModel::GetInstance().SetAlertInfoData(*alertLicensePlateImage, alertInfo);
+    }
 #else
     //TODO : 서버에서 번호판 쿼리 결과오면 VehicleInfo 정보를 VehicleInfoModel에 업데이트
     //       쿼리 결과는 하나만 온다고 가정해도 되려나?
