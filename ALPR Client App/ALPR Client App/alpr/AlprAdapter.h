@@ -34,7 +34,7 @@ private:
     void AsyncRequestQuery(QString url, QString licensePlate);
     //END
 
-    AlprResults DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
+    bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                            std::string region, bool writeJson, QVector<QRect> &detectedRectLists);
 
     std::unique_ptr<alpr::Alpr> mAlpr;
