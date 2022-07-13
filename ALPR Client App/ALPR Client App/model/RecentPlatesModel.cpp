@@ -43,11 +43,11 @@ void RecentPlatesModel::UnSubscribeListener(IRecentPlatesListener *pListener)
 
 void RecentPlatesModel::SetRecentPlatesData(const cv::Mat &frame, const QVector<QRect> &rectLists)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    mFrame = frame;
-    mRecentPlates = rectLists;
-    mMutex.unlock();
-
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        mFrame = frame;
+        mRecentPlates = rectLists;
+    }
     NotifyDataChanged(frame, rectLists);
 }
 

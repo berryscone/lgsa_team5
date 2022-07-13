@@ -43,10 +43,11 @@ void FrameModel::UnSubscribeListener(IFrameListener *pListener)
 
 void FrameModel::SetFrameData(const QImage &frame)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    mFrame = frame;
-    mMutex.unlock();
-
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        mFrame = frame;
+        mMutex.unlock();
+    }
     NotifyDataChanged(frame);
 }
 
