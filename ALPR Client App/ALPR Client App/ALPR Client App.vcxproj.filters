@@ -42,7 +42,9 @@
     <ClCompile Include="login\LoginWindow.cpp">
       <Filter>Login</Filter>
     </ClCompile>
-    <ClCompile Include="network\NetworkManager.cpp" />
+    <ClCompile Include="network\NetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -76,7 +78,9 @@
     <QtMoc Include="login\LoginWindow.h">
       <Filter>Login</Filter>
     </QtMoc>
-    <QtMoc Include="network\NetworkManager.h" />
+    <QtMoc Include="network\NetworkManager.h">
+      <Filter>Network</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />
@@ -100,6 +104,9 @@
     </Filter>
     <Filter Include="Login">
       <UniqueIdentifier>{b918cc77-3a78-4f71-918a-68c572de82a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ccf12306-af39-4b48-976c-be0f8944244e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
