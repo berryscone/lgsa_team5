@@ -94,10 +94,17 @@ void NetworkManager::OnRequestQuery(QString url, QString licensePlate)
 void NetworkManager::OnLoginReadReady()
 {
 #ifdef USE_LOCALHOST_TEST
+    bool isSuccess = false;
     QString answer = mLoginReply->readAll();
 
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    qDebug() << "managerReadReady:" << answer;
+//    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+    qDebug() << "loginReply:" << answer;
+
+    //TODO : 여기에서 실제 서버 인증 결과 json 파일을 parsing해서 인증 여부 isSuccess에 채워줌
+    //       그 외에 LoginInModel에 token 업데이트
+    isSuccess = true;
+
+    emit ResponseLoginResult(isSuccess);
 #else
     //TODO : 서버에서 인증된 경우 ID, Token 정보를 LoginModel에 업데이트
     QByteArray data = mLoginReply->readAll();

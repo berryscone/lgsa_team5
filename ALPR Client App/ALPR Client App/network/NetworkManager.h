@@ -18,6 +18,7 @@ public:
 
 signals:
     void Finished();
+    void ResponseLoginResult(bool isLoginSuccess);
 
 public slots:
     void OnStart();

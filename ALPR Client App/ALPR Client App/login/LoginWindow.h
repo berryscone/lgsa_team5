@@ -3,10 +3,9 @@
 #include <QMainWindow>
 #include <QString>
 #include <QtWidgets/QMainWindow>
-#include <QtNetwork>
-#include <QNetworkAccessManager>
 
 #include "AlprClientApp.h"
+#include "network/NetworkManager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginWindow; }
@@ -16,24 +15,25 @@ class LoginWindow : public QMainWindow
 {
     Q_OBJECT
 
+signals:
+    void signalStartNetworkManager();
+    void signalStopNetworkManager();
+    void signalRequestLogin(QString url, QString id, QString pw);
+
+public slots:
+    void OnResponseLoginResult(bool isLoginSuccess);
+
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 
 private:
-    void onLoginDemo();
-    void launchProgram();
+    void OnLogin();
+    void LaunchProgram();
 
 private:
     Ui::LoginWindow *ui;
+    std::unique_ptr<NetworkManager> mNetworkManager;
 
-    QNetworkAccessManager* manager;
-    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply;
-    QString token;
-
-    QUrl getUrl();
-    void onLogin();
-    void onLoginReadReady();
-    void onLoginFinished();
-    void onSslErrors(const QList<QSslError>& errors);
+    void RequestLogin(QString url, QString id, QString pw);
 };
