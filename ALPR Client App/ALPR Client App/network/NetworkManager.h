@@ -7,6 +7,7 @@
 #include <QtNetwork>
 
 #include "NetworkInterfaces.h"
+#include <network/VehicleCache.h>
 
 
 class NetworkManager :
@@ -55,4 +56,6 @@ private:
     const int mMaxRetry = 3;
     std::unique_ptr<QTimer> mStatusTimer;   // QTimer create, start, stop must be done in the same thread
     QNetworkReply::NetworkError mCurrentStatus = QNetworkReply::NetworkError::NoError;
+    
+    VehicleCache mCache;
 };
