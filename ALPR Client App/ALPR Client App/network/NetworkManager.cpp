@@ -1,8 +1,9 @@
+#include <QThread>
+
 #include "NetworkManager.h"
 #include "model/VehicleInfoModel.h"
 #include "model/AlertInfoModel.h"
-
-#include <QThread>
+#include "handler/VehicleDetailHandler.h"
 
 
 NetworkManager& NetworkManager::GetInstance()
@@ -15,6 +16,9 @@ NetworkManager::NetworkManager()
 {
     // TODO: 데모용 배포할 때 URL 바꿀 것 또는 외부에서 입력 가능하게 export
     mUrl.setUrl("https://peaceful-atoll-24696.herokuapp.com/");
+    connect(this, &NetworkManager::SignalVehicleDetailProvide,
+        &VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::OnVehicleDetailProvided,
+        Qt::QueuedConnection);
 }
 
 void NetworkManager::RequestLogin(const QString id, const QString pw, LoginCallback callback)
@@ -108,7 +112,12 @@ void NetworkManager::OnVehicleQueryReadReady(const cv::Mat plate_image, const QS
     QVariant status_code_var = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     const int status_code = status_code_var.toInt();
 
-    // TODO: send result to appropriate handler
+    if (status_code == 200) {
+        emit SignalVehicleDetailProvide(plate_image, obj);
+    }
+    else {
+        // TODO: handle error
+    }
 }
 
 void NetworkManager::OnVehicleQueryError(QNetworkReply::NetworkError error, QNetworkReply* reply)

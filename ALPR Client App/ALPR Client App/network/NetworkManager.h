@@ -22,6 +22,7 @@ public:
 
 signals:
     void SignalLoginCallback(const bool success, const QString detail);
+    void SignalVehicleDetailProvide(const cv::Mat plate_image, const QJsonObject vehicle_detail);
 
 public slots:
     virtual void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number);
