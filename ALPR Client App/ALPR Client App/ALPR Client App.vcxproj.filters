@@ -42,9 +42,9 @@
     <ClCompile Include="login\LoginWindow.cpp">
       <Filter>Login</Filter>
     </ClCompile>
-    <ClCompile Include="network\NetworkManager.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
+    <ClCompile Include="network\NetworkManager.cpp" />
+    <ClCompile Include="model\AlertInfoModel.cpp" />
+    <ClCompile Include="handler\AlertInfoMsgHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -84,6 +84,7 @@
     <QtMoc Include="network\NetworkInterfaces.h">
       <Filter>Network</Filter>
     </QtMoc>
+    <QtMoc Include="handler\AlertInfoMsgHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />
@@ -108,9 +109,6 @@
     <Filter Include="Login">
       <UniqueIdentifier>{b918cc77-3a78-4f71-918a-68c572de82a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network">
-      <UniqueIdentifier>{ccf12306-af39-4b48-976c-be0f8944244e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model\DebugInfoModel.h">
@@ -125,5 +123,9 @@
     <ClInclude Include="model\VehicleInfoModel.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="model\AlertInfoModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\images\alertLicensePlate.png" />
   </ItemGroup>
 </Project>

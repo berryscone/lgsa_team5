@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>assets/images/greenButton.png</file>
         <file>assets/images/powerButton.png</file>
+        <file>assets/images/alertLicensePlate.png</file>
     </qresource>
 </RCC>
