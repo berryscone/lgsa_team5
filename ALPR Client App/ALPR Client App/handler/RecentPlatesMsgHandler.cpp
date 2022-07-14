@@ -24,17 +24,7 @@ void RecentPlatesMsgHandler::OnStopHandler()
     RecentPlatesModel::GetInstance().UnSubscribeListener(this);
 }
 
-void RecentPlatesMsgHandler::OnRecentPlatesUpdated(const cv::Mat &frame, const QVector<QRect> &rectLists)
+void RecentPlatesMsgHandler::OnRecentPlatesUpdated(const QImage &licensePlateImage, const QString &vehicleInfo)
 {
-    if (rectLists.size() == 0)
-        return;
-
-    QRect rect = rectLists.at(0);
-
-    if (rect.width() != 0 || rect.height() != 0) {
-        QImage qImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
-        QImage croppedImg = qImage.copy(rect);
-
-        emit UpdateLaptopAppUi(croppedImg);
-    }
+    emit UpdateLaptopAppUi(licensePlateImage, vehicleInfo);
 }

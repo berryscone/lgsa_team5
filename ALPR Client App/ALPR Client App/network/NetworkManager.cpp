@@ -109,6 +109,14 @@ void NetworkManager::OnVehicleQueryReadReady(const cv::Mat plate_image, const QS
     const int status_code = status_code_var.toInt();
 
     // TODO: send result to appropriate handler
+    //NOTE : 아래 코드는 alertInfoView에 제대로 전달이 되는지 확인을 위한 샘플 코드이므로 추후 삭제해야함
+    QImage *alertLicensePlateImage = new QImage();
+    QString imagePath = QDir::currentPath() + "/assets/images/alertLicensePlate.png";
+    std::string alertInfo = plate_number.toStdString() + " Wanted!!!";
+
+    if (alertLicensePlateImage->load(imagePath)) {
+        AlertInfoModel::GetInstance().SetAlertInfoData(*alertLicensePlateImage, alertInfo);
+    }
 }
 
 void NetworkManager::OnVehicleQueryError(QNetworkReply::NetworkError error, QNetworkReply* reply)

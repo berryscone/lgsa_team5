@@ -22,8 +22,8 @@ public :
     void OnStopHandler() override;
 
     // IRecentPlatesListener interface
-    void OnRecentPlatesUpdated(const cv::Mat &frame, const QVector<QRect> &rectLists) override;
+    void OnRecentPlatesUpdated(const QImage &licensePlateImage, const QString &vehicleInfo) override;
 
 signals :
-    void UpdateLaptopAppUi(QImage qImage);
+    void UpdateLaptopAppUi(QImage licensePlateImage, QString vehicleInfo);
 };

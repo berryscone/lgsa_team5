@@ -41,23 +41,27 @@ void RecentPlatesModel::UnSubscribeListener(IRecentPlatesListener *pListener)
                             mListenerVector.end());
 }
 
-void RecentPlatesModel::SetRecentPlatesData(const cv::Mat &frame, const QVector<QRect> &rectLists)
+void RecentPlatesModel::SetRecentPlatesData(const QImage &licensePlateImage, const QString &vehicleInfo)
 {
     {
         std::unique_lock<std::mutex> lock(mMutex);
-        mFrame = frame;
-        mRecentPlates = rectLists;
+        mLicensePlateImage = licensePlateImage;
+        mVehicleInfo = vehicleInfo;
     }
-    NotifyDataChanged(frame, rectLists);
+    NotifyDataChanged(mLicensePlateImage, mVehicleInfo);
 }
 
-QVector<QRect> RecentPlatesModel::GetRecentPlatesData()
+QImage RecentPlatesModel::GetRecentPlateImage()
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    return mRecentPlates;
+    return mLicensePlateImage;
 }
 
-void RecentPlatesModel::NotifyDataChanged(const cv::Mat &frame, const QVector<QRect> &rectLists)
+QString RecentPlatesModel::GetVehicleInfo()
+{
+    return mVehicleInfo;
+}
+
+void RecentPlatesModel::NotifyDataChanged(const QImage &licensePlateImage, const QString &vehicleInfo)
 {
     std::unique_lock<std::mutex> lock(mListenerVectorMutex);
     if (mListenerVector.size() <= 0) {
@@ -67,6 +71,6 @@ void RecentPlatesModel::NotifyDataChanged(const cv::Mat &frame, const QVector<QR
     }
 
     for (const auto &listener : mListenerVector) {
-        listener->OnRecentPlatesUpdated(frame, mRecentPlates);
+        listener->OnRecentPlatesUpdated(licensePlateImage, vehicleInfo);
     }
 }

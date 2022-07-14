@@ -34,8 +34,8 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mAlertInfoMsgHandler.get());
 
-    connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage)),
-            this, SLOT(UpdateRecentPlatesView(QImage)));
+    connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage, QString)),
+            this, SLOT(UpdateRecentPlatesView(QImage, QString)));
 
     connect(mVehicleInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateVehicleInfoView(QString)));
@@ -79,14 +79,20 @@ void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
     qApp->processEvents();
 }
 
-void AlprClientApp::UpdateRecentPlatesView(QImage frame)
+void AlprClientApp::UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo)
 {
     QLabel* label = new QLabel;
-    label->setPixmap(QPixmap(QPixmap::fromImage(frame)));
+    int itemWidth = 140;
+    int itemHeight = 50;
+
+    licensePlateImage = licensePlateImage.scaled(itemWidth, itemHeight);
+    label->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
     QListWidgetItem* plate = new QListWidgetItem;
-    auto size = label->sizeHint();
-    plate->setSizeHint(label->sizeHint());
-    size = plate->sizeHint();
+    plate->setSizeHint(QSize(itemWidth, itemHeight));
+    plate->setText(vehicleInfo);
+    plate->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
     ui->recentPlatesListView->addItem(plate);
     ui->recentPlatesListView->setItemWidget(plate, label);
     ui->recentPlatesListView->setSpacing(3);
@@ -138,6 +144,7 @@ void AlprClientApp::onOpen()
     //TODO : 사용자가 open 버튼을 다시 눌러서 다른 파일을 선택하려고 할 경우 동작 지원을 하려면 추가 수정 필요
     //       일단 UX로 해결 : 재생이 시작되면 open button을 비활성화
     ui->openButton->setEnabled(false);
+    ui->toggleButton->setText("Pause");
 }
 
 void AlprClientApp::onToggle(bool bIsPause)
@@ -147,7 +154,7 @@ void AlprClientApp::onToggle(bool bIsPause)
     if (bIsPause) {
         emit pauseFrameGenerator();
         mMsgHandlerManager->Stop();
-        ui->toggleButton->setText("Resume");
+        ui->toggleButton->setText("Play");
 
     } else {
         emit resumeFrameGenerator();

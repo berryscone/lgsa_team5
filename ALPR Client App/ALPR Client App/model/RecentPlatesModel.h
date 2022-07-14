@@ -5,13 +5,14 @@
 
 #include <QVector>
 #include <QRect>
+#include <QImage>
 
 #include <opencv2/opencv.hpp>
 
 class IRecentPlatesListener {
 public:
     virtual ~IRecentPlatesListener() = default;
-    virtual void OnRecentPlatesUpdated(const cv::Mat &frame, const QVector<QRect> &rectLists) = 0;
+    virtual void OnRecentPlatesUpdated(const QImage &licensePlateImage, const QString &vehicleInfo) = 0;
 };
 
 class RecentPlatesModel
@@ -24,19 +25,20 @@ public:
     void SubscribeListener(IRecentPlatesListener *pListener);
     void UnSubscribeListener(IRecentPlatesListener *pListener);
 
-    void SetRecentPlatesData(const cv::Mat &frame, const QVector<QRect> &rectLists);
-    QVector<QRect> GetRecentPlatesData();
+    void SetRecentPlatesData(const QImage &licensePlateImage, const QString &vehicleInfo);
+    QImage GetRecentPlateImage();
+    QString GetVehicleInfo();
 
 private:
     RecentPlatesModel();
 
-    void NotifyDataChanged(const cv::Mat &frame, const QVector<QRect> &rectLists);
+    void NotifyDataChanged(const QImage &licensePlateImage, const QString &vehicleInfo);
 
     std::mutex mMutex;
     std::mutex mListenerVectorMutex;
 
     std::vector<IRecentPlatesListener*> mListenerVector;
 
-    cv::Mat mFrame;
-    QVector<QRect> mRecentPlates;
+    QImage mLicensePlateImage;
+    QString mVehicleInfo;
 };

@@ -55,7 +55,7 @@ private slots:
     void onToggle(bool bIsPause);
 
     void UpdatePlaybackView(QPixmap pixmap);
-    void UpdateRecentPlatesView(QImage frame);
+    void UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo);
     void UpdateVehicleInfoView(QString info);
     void UpdateDebugInfoView(QString info);
     void UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo);
