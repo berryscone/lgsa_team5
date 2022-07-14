@@ -49,6 +49,7 @@ signals:
 private slots:
     void onOpen();
     void onToggle(bool bIsPause);
+    void OnRecentPlatesViewItemClicked(QListWidgetItem* item);
 
     void UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail);
     void UpdatePlaybackView(QPixmap pixmap);

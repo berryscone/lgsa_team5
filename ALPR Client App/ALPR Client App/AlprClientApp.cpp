@@ -1,6 +1,7 @@
 #include "AlprClientApp.h"
-
 #include "handler/VehicleDetailHandler.h"
+
+#include <QMessageBox>
 
 AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
@@ -27,6 +28,9 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
 
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
+
+    connect(ui->recentPlatesListView, SIGNAL(itemClicked(QListWidgetItem*)),
+            this, SLOT(OnRecentPlatesViewItemClicked(QListWidgetItem*)));
 
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateDebugInfoView(QString)));
@@ -164,6 +168,18 @@ void AlprClientApp::onToggle(bool bIsPause)
         mMsgHandlerManager->Start();
         ui->toggleButton->setText("Pause");
     }
+}
+
+void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
+{
+    //TODO : item에 존재하는 label도 같이 그려줄 수 있는지 검토 필요
+    //QWidget* itemWidget = ui->recentPlatesListView->itemWidget(item);
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Detail Vehicle Information");
+    msgBox.setText(item->text());
+    msgBox.setStandardButtons(QMessageBox::Close);
+    msgBox.exec();
 }
 
 void AlprClientApp::closeEvent(QCloseEvent* event)
