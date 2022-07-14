@@ -31,7 +31,8 @@ public:
 
 private:
     bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
-                           std::string region, bool writeJson, QVector<QRect> &detectedRectLists);
+                           std::string region, bool writeJson, QVector<QRect> &detectedRectLists,
+                           alpr::AlprResults &results);
 
     std::unique_ptr<alpr::Alpr> mAlpr;
     alpr::MotionDetector mMotiondetector;

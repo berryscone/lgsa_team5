@@ -36,12 +36,14 @@ void AlprAdapter::Destroy()
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
 {
+    alpr::AlprResults alprResults;
+
     if (mFrameno == 0) {
         mMotiondetector.ResetMotionDetection(&frame);
         mFrameno++;
     }
 
-    DetectAndShowCore(mAlpr, frame, "", false, detectedRectLists);
+    DetectAndShowCore(mAlpr, frame, "", false, detectedRectLists, alprResults);
 
     cv::putText(frame, mText,
         cv::Point(10, frame.rows - 10), //top-left position
@@ -53,12 +55,17 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         // TODO: crop 된 이미지와 plate number 전달
         cv::Mat img(100, 100, CV_8UC3);
         cv::randu(img, Scalar(0, 0, 0), Scalar(255, 255, 255));
-        emit SignalRequestVehicleQuery(img, "ABC1234");
+        for (int i = 0; i < alprResults.plates.size(); ++i) {
+            qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
+            emit SignalRequestVehicleQuery(img, 
+                alprResults.plates[i].bestPlate.characters.c_str());
+        }
     }
 }
 
 bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
-                                    std::string region, bool writeJson, QVector<QRect> &detectedRectLists)
+                                    std::string region, bool writeJson, QVector<QRect> &detectedRectLists, 
+                                    alpr::AlprResults& results)
 {
     timespec startTime;
     timespec endTime;
@@ -66,7 +73,6 @@ bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat 
     unsigned short SendPlateStringLength;
     ssize_t result;
     std::vector<AlprRegionOfInterest> regionsOfInterest;
-    AlprResults results;
 
     if (mUseMotiondetection) {
         cv::Rect rectan = mMotiondetector.MotionDetect(&frame);
