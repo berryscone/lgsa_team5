@@ -51,17 +51,17 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         Scalar(0, 255, 0), 0, LINE_AA, false);
 
     if (detectedRectLists.size() > 0) {
-        QImage qImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
-        QImage licensePlateImage = qImage.copy(detectedRectLists.at(0));
+        Rect cropRect{detectedRectLists.at(0).x(), detectedRectLists.at(0).y(), detectedRectLists.at(0).width(), detectedRectLists.at(0).height()};
+        cv::Mat licensePlateImage = frame(cropRect);
         QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
-        RecentPlatesModel::GetInstance().SetRecentPlatesData(licensePlateImage, licensePlateStr);
+
+        QImage qImage(licensePlateImage.data, licensePlateImage.cols, licensePlateImage.rows, licensePlateImage.step, QImage::Format_BGR888);
+        RecentPlatesModel::GetInstance().SetRecentPlatesData(qImage, licensePlateStr);
 
         // TODO: crop 된 이미지와 plate number 전달
-        cv::Mat img(100, 100, CV_8UC3);
-        cv::randu(img, Scalar(0, 0, 0), Scalar(255, 255, 255));
         for (int i = 0; i < alprResults.plates.size(); ++i) {
             //qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
-            emit SignalRequestVehicleQuery(img, 
+            emit SignalRequestVehicleQuery(licensePlateImage,
                 alprResults.plates[i].bestPlate.characters.c_str());
         }
     }
