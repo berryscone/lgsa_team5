@@ -1,5 +1,7 @@
 #include "AlprClientApp.h"
 
+#include "handler/VehicleDetailHandler.h"
+
 AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
@@ -29,6 +31,9 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateDebugInfoView(QString)));
 
+    connect(&VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::SignalVehicleDetailPublish,
+            this, &AlprClientApp::UpdateUI);
+
     //NOTE : frameGenerator runs in a separate thread
     makeFrameGeneratorThread();
 }
@@ -52,6 +57,21 @@ void AlprClientApp::makeFrameGeneratorThread()
     connect(this, SIGNAL(stopFrameGenerator()), mFrameGenerator.get(), SLOT(Stop()));
 
     mFrameGenerator->moveToThread(mFrameGeneratorThread);
+}
+
+void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
+{
+    //UpdateRecentPltesView
+    QString licensePlatesNumber = vehicle_detail["plate_number"].toString();
+    UpdateRecentPlatesView(plate_image, licensePlatesNumber);
+
+    //UpdateVehicleInfoView
+    QString vehicleDetailInfo = licensePlatesNumber + " Detail Info!";
+    UpdateVehicleInfoView(licensePlatesNumber);
+
+    //UpdateAlertInfoView
+    QString alertInfo = licensePlatesNumber + " Wanted!!!";
+    UpdateAlertInfoView(plate_image, alertInfo);
 }
 
 void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
@@ -85,15 +105,15 @@ void AlprClientApp::UpdateRecentPlatesView(QImage licensePlateImage, QString veh
     ui->recentPlatesListView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
 }
 
-void AlprClientApp::UpdateVehicleInfoView(QString info)
+void AlprClientApp::UpdateVehicleInfoView(QString vehicleInfo)
 {
-    ui->vehicleInfo->setText(info);
+    ui->vehicleInfo->setText(vehicleInfo);
     ui->vehicleInfo->setWordWrap(true);
 }
 
-void AlprClientApp::UpdateDebugInfoView(QString info)
+void AlprClientApp::UpdateDebugInfoView(QString debugInfo)
 {
-    ui->debugInfo->setText(info);
+    ui->debugInfo->setText(debugInfo);
 }
 
 void AlprClientApp::UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo)

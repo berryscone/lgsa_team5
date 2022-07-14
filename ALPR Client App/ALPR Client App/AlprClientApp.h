@@ -50,13 +50,15 @@ private slots:
     void onOpen();
     void onToggle(bool bIsPause);
 
+    void UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail);
     void UpdatePlaybackView(QPixmap pixmap);
-    void UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo);
-    void UpdateVehicleInfoView(QString info);
-    void UpdateDebugInfoView(QString info);
-    void UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo);
+    void UpdateDebugInfoView(QString debugInfo);
 
 private:
+    void UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo);
+    void UpdateVehicleInfoView(QString vehicleInfo);
+    void UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo);
+
     Ui::AlprClientAppClass *ui;
     QThread *mFrameGeneratorThread;
     bool mbIsStart;
