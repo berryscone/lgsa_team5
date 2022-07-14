@@ -1,45 +1,44 @@
-#ifndef NETWORKMANAGER_H
-#define NETWORKMANAGER_H
-
-#include "memory.h"
+#pragma once
+#include <memory>
 
 #include <QDebug>
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QtNetwork>
 
-class NetworkManager : public QObject
+#include "NetworkInterfaces.h"
+
+
+class NetworkManager :
+    public IVehicleQueryProvider,
+    public ILoginProvider
 {
     Q_OBJECT
 
 public:
-    NetworkManager(QObject *parent = nullptr);
-    ~NetworkManager();
+    static NetworkManager& GetInstance();
+    virtual ~NetworkManager() = default;
+    virtual void RequestLogin(const QString id, const QString pw, LoginCallback callback);
 
 signals:
-    void Finished();
-    void ResponseLoginResult(bool isLoginSuccess);
+    void SignalLoginCallback(const bool success, const QString detail);
 
 public slots:
-    void OnStart();
-    void OnStop();
-    void OnRequestLogin(QString url, QString id, QString pw);
-    void OnRequestQuery(QString url, QString licensePlate);
+    virtual void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number);
 
 private:
-    void OnLoginReadReady();
-    void OnLoginFinished();
+    NetworkManager();
 
-    void OnQueryReadReady();
-    void OnQueryFinished();
+    void OnLoginReadReady(LoginCallback callback, QNetworkReply* reply);
+    void OnLoginError(QNetworkReply::NetworkError error, QNetworkReply* reply);
 
-    void OnSslErrors(const QList<QSslError>& errors);
+    void OnVehicleQueryReadReady(const cv::Mat plate_image, const QString plate_number, QNetworkReply* reply);
+    void OnVehicleQueryError(QNetworkReply::NetworkError error, QNetworkReply* reply);
 
-    std::unique_ptr<QNetworkAccessManager> mManager;
-    QQueue<QNetworkReply*> mQueryReplyQueue;
-    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> mLoginReply;
+    void OnSslErrors(const QList<QSslError>& errors, QNetworkReply* reply);
 
+    QThread mThread;
+    QNetworkAccessManager mManager;
+    QUrl mUrl;
     QString mToken;
 };
-
-#endif // NETWORKMANAGER_H

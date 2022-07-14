@@ -86,29 +86,6 @@
      <string>Login Result : </string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_ip">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>40</y>
-      <width>48</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>IP</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_ip">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>40</y>
-      <width>411</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>

@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QRect>
 
-#include "network/NetworkManager.h"
 #include <openalpr/support/timing.h>
 #include <openalpr/motiondetector.h>
 #include <openalpr/alpr.h>
@@ -12,12 +11,15 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
+#include "network/NetworkInterfaces.h"
+#include "network/NetworkManager.h"
+
 class AlprAdapter : public QObject
 {
     Q_OBJECT
 
 signals:
-    void signalRequestQuery(QString url, QString licensePlate);
+    void SignalRequestVehicleQuery(const cv::Mat plate_image, const QString plate_number);
 
 public:
     AlprAdapter();
@@ -28,12 +30,6 @@ public:
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:
-    //TODO : networkManager instance 생성을 main.cpp에서 하도록 추후 수정 예정 --- START
-    void CreateNetworkManager();
-    void DestroyNetworkManager();
-    void AsyncRequestQuery(QString url, QString licensePlate);
-    //END
-
     bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                            std::string region, bool writeJson, QVector<QRect> &detectedRectLists);
 
@@ -43,6 +39,5 @@ private:
     int mFrameno;
     char mText[1024] = "";
 
-    std::unique_ptr<QThread> mNetworkManagerThread;
-    std::unique_ptr<NetworkManager> mNetworkManager;
+    IVehicleQueryProvider& mVehicleQueryProvider;
 };

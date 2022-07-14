@@ -151,6 +151,7 @@
     <QtMoc Include="generator\OpenCvAdapter.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="network\NetworkInterfaces.h" />
     <QtMoc Include="network\NetworkManager.h" />
     <QtMoc Include="login\LoginWindow.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />

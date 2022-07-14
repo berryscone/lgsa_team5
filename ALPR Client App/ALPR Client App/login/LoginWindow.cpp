@@ -4,27 +4,15 @@
 #include <QTime>
 #include <QDebug>
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::LoginWindow)
+LoginWindow::LoginWindow(QWidget *parent) :
+    QMainWindow(parent),
+    mLoginProvider(NetworkManager::GetInstance()),
+    ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
-
-    mNetworkManager = std::make_unique<NetworkManager>();
+    ui->lineEdit_pw->setEchoMode(QLineEdit::Password);
 
     connect(ui->loginBtn, &QPushButton::clicked, this, &LoginWindow::OnLogin);
-
-    connect(this, SIGNAL(signalStartNetworkManager()),
-                mNetworkManager.get(), SLOT(OnStart()));
-    connect(this, SIGNAL(signalStopNetworkManager()),
-                mNetworkManager.get(), SLOT(OnStop()));
-    connect(this, SIGNAL(signalRequestLogin(QString,QString,QString)),
-                mNetworkManager.get(), SLOT(OnRequestLogin(QString,QString,QString)));
-    connect(mNetworkManager.get(), SIGNAL(ResponseLoginResult(bool)),
-                this, SLOT(OnResponseLoginResult(bool)));
-
-    ui->lineEdit_ip->setText("https://peaceful-atoll-24696.herokuapp.com");
-    ui->lineEdit_pw->setEchoMode(QLineEdit::Password);
 }
 
 LoginWindow::~LoginWindow()
@@ -34,8 +22,27 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::OnLogin()
 {
-    emit signalStartNetworkManager();
-    RequestLogin(ui->lineEdit_ip->text(), ui->lineEdit_id->text(), ui->lineEdit_pw->text());
+    mLoginProvider.RequestLogin(
+        ui->lineEdit_id->text(),
+        ui->lineEdit_pw->text(),
+        std::bind(&LoginWindow::OnLoginFinished, this, std::placeholders::_1, std::placeholders::_2));
+
+    // TODO: UI 에 모래시계 처럼 백그라운드 동작을 알릴 수 있는 표현 추가
+}
+
+void LoginWindow::OnLoginFinished(const bool success, const QString detail)
+{
+    // TODO: OnLogin 에서 동작시킨 백그라운드 동작 UI 를 제거
+
+    if (success) {
+        ui->label_result->setText("Success");
+        LaunchProgram();
+    }
+    else {
+        ui->label_result->setText(detail);
+        ui->lineEdit_id->clear();
+        ui->lineEdit_pw->clear();
+    }
 }
 
 void LoginWindow::LaunchProgram()
@@ -43,23 +50,4 @@ void LoginWindow::LaunchProgram()
     AlprClientApp* alprClientAppWindow = new AlprClientApp();
     this->hide();
     alprClientAppWindow->show();
-}
-
-void LoginWindow::RequestLogin(QString url, QString id, QString pw)
-{
-    emit signalRequestLogin(url, id, pw);
-}
-
-void LoginWindow::OnResponseLoginResult(bool isLoginSuccess)
-{
-    emit signalStopNetworkManager();
-
-    if (isLoginSuccess) {
-        ui->label_result->setText("Login Result : success!");
-        LaunchProgram();
-    } else {
-        ui->label_result->setText("Login Result : failed!");
-        ui->lineEdit_id->clear();
-        ui->lineEdit_pw->clear();
-    }
 }

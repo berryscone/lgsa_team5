@@ -81,6 +81,9 @@
     <QtMoc Include="network\NetworkManager.h">
       <Filter>Network</Filter>
     </QtMoc>
+    <QtMoc Include="network\NetworkInterfaces.h">
+      <Filter>Network</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />

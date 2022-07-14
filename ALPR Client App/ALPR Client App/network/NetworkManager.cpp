@@ -3,44 +3,21 @@
 
 #include <QThread>
 
-#define USE_LOCALHOST_TEST
 
-NetworkManager::NetworkManager(QObject *parent)
+NetworkManager& NetworkManager::GetInstance()
 {
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+    static NetworkManager instance;
+    return instance;
 }
 
-NetworkManager::~NetworkManager()
+NetworkManager::NetworkManager()
 {
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+    mUrl.setUrl("https://peaceful-atoll-24696.herokuapp.com/");
 }
 
-void NetworkManager::OnStart()
+void NetworkManager::RequestLogin(const QString id, const QString pw, LoginCallback callback)
 {
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-    mManager = std::make_unique<QNetworkAccessManager>();
-}
-
-void NetworkManager::OnStop()
-{
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-    emit Finished();
-}
-
-void NetworkManager::OnRequestLogin(QString url, QString id, QString pw)
-{
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-#ifdef USE_LOCALHOST_TEST
-    QUrl login_url("http://localhost");
-
-    QNetworkRequest request(login_url);
-    mLoginReply.reset(mManager->get(request));
-#else
-    //TODO : 서버에 로그인 요청
-    QUrl login_url(url);
+    QUrl login_url(mUrl);
     login_url.setPath("/login/");
 
     QString auth = id + ":" + pw;
@@ -52,120 +29,92 @@ void NetworkManager::OnRequestLogin(QString url, QString id, QString pw)
     request.setRawHeader("Authorization", basic_auth.toLocal8Bit());
 
     QByteArray data;
-    mLoginReply.reset(mManager->post(request, data));
-#endif
+    // TODO: reply 메모리 관리 따로 안해도 되는지 확인
+    QNetworkReply* reply = mManager.post(request, data);
 
-    connect(mLoginReply.get(), &QNetworkReply::finished, this, &NetworkManager::OnLoginFinished);
-    connect(mLoginReply.get(), &QNetworkReply::sslErrors, this, &NetworkManager::OnSslErrors);
-    connect(mLoginReply.get(), &QIODevice::readyRead, this, &NetworkManager::OnLoginReadReady);
+    connect(reply, &QNetworkReply::sslErrors, 
+        this, [this, reply](const QList<QSslError>& errors) { this->OnSslErrors(errors, reply); });
+
+    connect(reply, &QIODevice::readyRead, this, 
+        [this, reply, callback]() { this->OnLoginReadReady(callback, reply); });
+
+    connect(reply, &QNetworkReply::errorOccurred, 
+        this, [this, reply](QNetworkReply::NetworkError error) { this->OnLoginError(error, reply); });
 }
 
-void NetworkManager::OnRequestQuery(QString url, QString licensePlate)
+void NetworkManager::OnLoginReadReady(LoginCallback callback, QNetworkReply* reply)
 {
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+    QByteArray data = reply->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
 
-#ifdef USE_LOCALHOST_TEST
-    QUrl query_url("http://localhost");
+    QVariant status_code_var = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    const int status_code = status_code_var.toInt();
 
-    QNetworkRequest request(query_url);
-#else
-    //TODO : 서버에 번호판 쿼리 요청
+    if (status_code == 200) {
+        mToken = obj["token"].toString();
+        qDebug() << "Authentication Token: " << mToken;
+        callback(true, "");
+
+        this->moveToThread(&mThread);
+        mManager.moveToThread(&mThread);
+        mThread.start();
+    }
+    else {
+        const QString detail = obj["detail"].toString();
+        qDebug() << "Authentication Failed: " << detail;
+        callback(false, detail);
+    }
+}
+
+void NetworkManager::OnLoginError(QNetworkReply::NetworkError error, QNetworkReply* reply)
+{
+    // TODO: handle error
+}
+
+void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number)
+{
     QUrlQuery query;
-    query.addQueryItem("license-plate-number", licensePlate);
+    query.addQueryItem("license-plate-number", plate_number);
 
-    QUrl query_url(url);
+    QUrl query_url(mUrl);
     query_url.setQuery(query.query());
 
-    QString token_auth = "Token " + mToken; //TODO : LoginModel로 부터 token을 가져오도록 수정 필요
+    QString token_auth = "Token " + mToken;
 
     QNetworkRequest request(query_url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
     request.setRawHeader("Authorization", token_auth.toLocal8Bit());
-#endif
-    QNetworkReply *reply = mManager->get(request);
+    QNetworkReply* reply = mManager.get(request);
 
-    connect(reply, &QNetworkReply::finished, this, &NetworkManager::OnQueryFinished);
-    connect(reply, &QIODevice::readyRead, this, &NetworkManager::OnQueryReadReady);
-    connect(reply, &QNetworkReply::sslErrors, this, &NetworkManager::OnSslErrors);
+    connect(reply, &QIODevice::readyRead,
+        this, [this, plate_image, plate_number, reply]() { this->OnVehicleQueryReadReady(plate_image, plate_number, reply); });
 
-    mQueryReplyQueue.enqueue(reply);
+    connect(reply, &QNetworkReply::errorOccurred,
+        this, [this, reply](QNetworkReply::NetworkError error) { this->OnVehicleQueryError(error, reply); });
+
+    connect(reply, &QNetworkReply::sslErrors,
+        this, [this, reply](const QList<QSslError>& errors) { this->OnSslErrors(errors, reply); });
 }
 
-void NetworkManager::OnLoginReadReady()
+void NetworkManager::OnVehicleQueryReadReady(const cv::Mat plate_image, const QString plate_number, QNetworkReply* reply)
 {
-#ifdef USE_LOCALHOST_TEST
-    bool isSuccess = false;
-    QString answer = mLoginReply->readAll();
-
-//    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    qDebug() << "loginReply:" << answer;
-
-    //TODO : 여기에서 실제 서버 인증 결과 json 파일을 parsing해서 인증 여부 isSuccess에 채워줌
-    //       그 외에 LoginInModel에 token 업데이트
-    isSuccess = true;
-
-    emit ResponseLoginResult(isSuccess);
-#else
-    //TODO : 서버에서 인증된 경우 ID, Token 정보를 LoginModel에 업데이트
-    QByteArray data = mLoginReply->readAll();
+    QByteArray data = reply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject obj = doc.object();
-    mToken = obj["token"].toString();
 
-    qDebug() << "Token : " << mToken;
+    QVariant status_code_var = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    const int status_code = status_code_var.toInt();
 
-    //TODO : update LoginModel (id : token) pair 조합
-#endif
+    // TODO: send result to appropriate handler
 }
 
-void NetworkManager::OnLoginFinished()
+void NetworkManager::OnVehicleQueryError(QNetworkReply::NetworkError error, QNetworkReply* reply)
 {
-
+    // TODO: handle error
 }
 
-void NetworkManager::OnQueryReadReady()
+void NetworkManager::OnSslErrors(const QList<QSslError> &errors, QNetworkReply* reply)
 {
-#ifdef USE_LOCALHOST_TEST
-    if (mQueryReplyQueue.empty()) {
-        qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId() << ", QueryReplyQueue is empty!";
-        return;
-    }
-
-    QString answer = mQueryReplyQueue.dequeue()->readAll();
-
-    //qDebug() << "managerReadReady:" << answer;
-
-    if( answer.isEmpty() ) {
-        //qDebug() << "read data is null!!!!";
-        return;
-    }
-
-    //NOTE : server query 지연 시뮬레이션 (지연 발생 시에도 playback view는 25FPS 이상 유지하는지 확인)
-    //QThread::msleep(3000);
-
-    static unsigned int plateCount = 0;
-    plateCount++;
-    std::string vehicleInfo = "NetworkManager DEMO PlateCount : " + std::to_string(plateCount) + "\n" + answer.toStdString();
-    VehicleInfoModel::GetInstance().SetVehicleInfoData(vehicleInfo);
-#else
-    //TODO : 서버에서 번호판 쿼리 결과오면 VehicleInfo 정보를 VehicleInfoModel에 업데이트
-    //       쿼리 결과는 하나만 온다고 가정해도 되려나?
-    QByteArray data = mQueryReplyQueue.dequeue()->readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QString json = doc.toJson(QJsonDocument::Indented);
-
-    qDebug() << "Query result : " << json;
-
-    //TODO : Update VehicleInfoModel
-#endif
-}
-
-void NetworkManager::OnQueryFinished()
-{
-
-}
-
-void NetworkManager::OnSslErrors(const QList<QSslError> &errors)
-{
-
+    reply->ignoreSslErrors();
 }

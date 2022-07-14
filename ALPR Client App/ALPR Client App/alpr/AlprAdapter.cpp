@@ -8,10 +8,12 @@ using namespace alpr;
 using namespace std;
 using namespace cv;
 
-AlprAdapter::AlprAdapter()
-    : mUseMotiondetection(0)
+AlprAdapter::AlprAdapter() :
+    mUseMotiondetection(0),
+    mVehicleQueryProvider(NetworkManager::GetInstance())
 {
-
+    connect(this, &AlprAdapter::SignalRequestVehicleQuery, 
+        &mVehicleQueryProvider, &IVehicleQueryProvider::RequestVehicleQuery);
 }
 
 void AlprAdapter::Create(std::string &country, std::string &configFile, std::string &runtimeDir)
@@ -24,15 +26,12 @@ void AlprAdapter::Create(std::string &country, std::string &configFile, std::str
         std::cerr << "Error loading OpenALPR" << std::endl;
         return;
     }
-
-    CreateNetworkManager();
 }
 
 void AlprAdapter::Destroy()
 {
     qDebug() << "AlprAdapter::Destroy";
     mAlpr.release();
-    DestroyNetworkManager();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
@@ -51,55 +50,11 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
 
     if (detectedRectLists.size() > 0) {
         RecentPlatesModel::GetInstance().SetRecentPlatesData(frame, detectedRectLists);
-
-#if 1
-        //TODO : LoginModel에 설정된 IP 정보 가져오기
-        AsyncRequestQuery("http://localhost", "LKY1360");
-#else
-        //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
-        //       네트워크 모듈 구현되면 거기에서 vehicleInfoModel에 업데이트해줘야함
-        static unsigned int plateCount = 0;
-        std::string vehicleInfo = "DEMO PlateCount : " + std::to_string(plateCount++) + "\nLKY1360\nOwner Wanted\n08/22/2023\nJennifer Green\n08/01/2001\n5938 Juan Throughway Apt. 948\nWest Corey, TX 43780\n2006\nAudi";
-        VehicleInfoModel::GetInstance().SetVehicleInfoData(vehicleInfo);
- #endif
+        // TODO: crop 된 이미지와 plate number 전달
+        cv::Mat img(100, 100, CV_8UC3);
+        cv::randu(img, Scalar(0, 0, 0), Scalar(255, 255, 255));
+        emit SignalRequestVehicleQuery(img, "ABC1234");
     }
-}
-
-void AlprAdapter::CreateNetworkManager()
-{
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-    mNetworkManagerThread = std::make_unique<QThread>();
-    mNetworkManager = std::make_unique<NetworkManager>();
-
-    connect(mNetworkManagerThread.get(), SIGNAL(started()),
-            mNetworkManager.get(), SLOT(OnStart()));
-    connect(mNetworkManager.get(), SIGNAL(Finished()),
-            mNetworkManagerThread.get(), SLOT(quit()));
-
-    //automatically delete thread and task object when work is done
-    connect(mNetworkManager.get(), SIGNAL(Finished()),
-            mNetworkManager.get(), SLOT(deleteLater()));
-    connect(mNetworkManagerThread.get(), SIGNAL(finished()),
-            mNetworkManagerThread.get(), SLOT(deleteLater()));
-
-    connect(this, SIGNAL(signalRequestQuery(QString,QString)),
-            mNetworkManager.get(), SLOT(OnRequestQuery(QString,QString)));
-
-    mNetworkManager->moveToThread(mNetworkManagerThread.get());
-    mNetworkManagerThread->start();
-}
-
-void AlprAdapter::DestroyNetworkManager()
-{
-    mNetworkManagerThread->terminate();
-}
-
-void AlprAdapter::AsyncRequestQuery(QString url, QString licensePlate)
-{
-    //qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-    emit signalRequestQuery(url, licensePlate);
 }
 
 bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
