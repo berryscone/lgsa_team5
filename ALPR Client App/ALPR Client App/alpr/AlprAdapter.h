@@ -19,7 +19,7 @@ class AlprAdapter : public QObject
     Q_OBJECT
 
 signals:
-    void SignalRequestVehicleQuery(const cv::Mat plate_image, const QString plate_number);
+    void SignalRequestVehicleQuery(const cv::Mat plate_image, const QString plate_number, const int retry_cnt = 0);
 
 public:
     AlprAdapter();

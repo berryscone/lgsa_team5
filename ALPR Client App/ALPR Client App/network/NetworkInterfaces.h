@@ -20,7 +20,7 @@ class IVehicleQueryProvider : public QObject
 {
 	Q_OBJECT
 public slots:
-	virtual void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number) {
+	virtual void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number, const int retry_cnt = 0) {
 		throw std::logic_error("RequestVehicleQuery must be implemented by derived class!");
 	}
 };
