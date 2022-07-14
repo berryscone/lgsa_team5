@@ -13,6 +13,7 @@ NetworkManager& NetworkManager::GetInstance()
 
 NetworkManager::NetworkManager()
 {
+    // TODO: 데모용 배포할 때 URL 바꿀 것 또는 외부에서 입력 가능하게 export
     mUrl.setUrl("https://peaceful-atoll-24696.herokuapp.com/");
 }
 
