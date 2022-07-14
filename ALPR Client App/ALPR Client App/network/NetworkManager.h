@@ -7,6 +7,7 @@
 #include <QtNetwork>
 
 #include "NetworkInterfaces.h"
+#include <network/VehicleCache.h>
 
 
 class NetworkManager :
@@ -42,4 +43,6 @@ private:
     QNetworkAccessManager mManager;
     QUrl mUrl;
     QString mToken;
+
+    VehicleCache mCache;
 };

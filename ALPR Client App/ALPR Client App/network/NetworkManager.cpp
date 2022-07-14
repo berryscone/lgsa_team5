@@ -4,6 +4,9 @@
 #include "handler/VehicleDetailHandler.h"
 
 
+// TODO: 캐시 사용 유무 정하기. 활성화 할 거면 내부 qDebug() 코드 다 지우기
+//#define USE_VEHICLE_QUERY_CACHE
+
 NetworkManager& NetworkManager::GetInstance()
 {
     static NetworkManager instance;
@@ -78,6 +81,24 @@ void NetworkManager::OnLoginError(QNetworkReply::NetworkError error, QNetworkRep
 
 void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number)
 {
+#ifdef USE_VEHICLE_QUERY_CACHE
+    if (mCache.isRequestedQuery(plate_number)) {
+        qDebug() << "Already Requested for " << plate_number;
+        QJsonObject obj = mCache.getQueryResult(plate_number);
+        if (obj.isEmpty()) {
+            qDebug() << "[Progress..] Query is in progress. Cache is empty!!";
+        } else {
+            qDebug() << "[Finish!!] Query was finished. Use Cache data!!";
+            qDebug() << "Cache data: " << obj;
+            // TODO: send result to appropriate handler
+        }
+        return;
+    } else {
+        mCache.addRequestedList(plate_number);
+        qDebug() << "New query start for " << plate_number;
+    }
+#endif
+
     QUrlQuery query;
     query.addQueryItem("license-plate-number", plate_number);
 
@@ -111,6 +132,9 @@ void NetworkManager::OnVehicleQueryReadReady(const cv::Mat plate_image, const QS
     const int status_code = status_code_var.toInt();
 
     if (status_code == 200) {
+#ifdef USE_VEHICLE_QUERY_CACHE
+        mCache.putQueryResult(obj["plate_number"].toString(), obj);
+#endif
         emit SignalVehicleDetailProvide(plate_image, obj);
     }
     else {
