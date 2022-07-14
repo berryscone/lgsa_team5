@@ -1,6 +1,5 @@
 #include "FrameGenerator.h"
 #include "model/DebugInfoModel.h"
-#include "model/FrameModel.h"
 
 #include <climits>
 

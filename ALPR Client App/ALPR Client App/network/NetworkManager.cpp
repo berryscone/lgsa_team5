@@ -1,8 +1,6 @@
 #include <QThread>
 
 #include "NetworkManager.h"
-#include "model/VehicleInfoModel.h"
-#include "model/AlertInfoModel.h"
 #include "handler/VehicleDetailHandler.h"
 
 
