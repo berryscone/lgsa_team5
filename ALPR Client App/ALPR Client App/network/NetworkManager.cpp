@@ -90,7 +90,7 @@ void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QStrin
         } else {
             qDebug() << "[Finish!!] Query was finished. Use Cache data!!";
             qDebug() << "Cache data: " << obj;
-            // TODO: send result to appropriate handler
+            emit SignalVehicleDetailProvide(plate_image, obj);
         }
         return;
     } else {
