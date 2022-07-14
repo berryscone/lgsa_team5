@@ -30,6 +30,9 @@
     <ClCompile Include="handler\VehicleDetailHandler.cpp">
       <Filter>Handler</Filter>
     </ClCompile>
+    <ClCompile Include="network\VehicleCache.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -94,6 +97,9 @@
   <ItemGroup>
     <ClInclude Include="model\DebugInfoModel.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="network\VehicleCache.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

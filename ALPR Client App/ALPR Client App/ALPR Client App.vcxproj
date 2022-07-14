@@ -110,6 +110,7 @@
     <ClCompile Include="login\LoginWindow.cpp" />
     <ClCompile Include="model\DebugInfoModel.cpp" />
     <ClCompile Include="network\NetworkManager.cpp" />
+    <ClCompile Include="network\VehicleCache.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
     <QtMoc Include="AlprClientApp.h" />
@@ -137,6 +138,7 @@
     <QtMoc Include="generator\OpenCvAdapter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="network\VehicleCache.h" />
     <QtMoc Include="network\NetworkInterfaces.h" />
     <QtMoc Include="network\NetworkManager.h" />
     <QtMoc Include="login\LoginWindow.h" />
