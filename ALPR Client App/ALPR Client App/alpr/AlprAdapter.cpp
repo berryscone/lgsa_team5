@@ -50,6 +50,8 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
 
     if (detectedRectLists.size() > 0) {
         Rect cropRect{detectedRectLists.at(0).x(), detectedRectLists.at(0).y(), detectedRectLists.at(0).width(), detectedRectLists.at(0).height()};
+
+        AdjustCropRect(frame, cropRect);
         cv::Mat licensePlateImage = frame(cropRect);
         QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
 
@@ -59,6 +61,16 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
                 alprResults.plates[i].bestPlate.characters.c_str());
         }
     }
+}
+
+void AlprAdapter::AdjustCropRect(cv::Mat &frame, Rect &rect)
+{
+    if (rect.x < 0) rect.x = 0;
+    if (rect.y < 0) rect.y = 0;
+    if (rect.width > frame.cols) rect.width = frame.cols;
+    if (rect.height > frame.rows) rect.height = frame.rows;
+    if (rect.x + rect.width > frame.cols) rect.width = frame.cols - rect.x;
+    if (rect.y + rect.height > frame.rows) rect.height = frame.rows - rect.y;
 }
 
 bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,

@@ -30,6 +30,7 @@ public:
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:
+    void AdjustCropRect(cv::Mat &frame, cv::Rect &rect);
     bool DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat frame,
                            std::string region, bool writeJson, QVector<QRect> &detectedRectLists,
                            alpr::AlprResults &results);
