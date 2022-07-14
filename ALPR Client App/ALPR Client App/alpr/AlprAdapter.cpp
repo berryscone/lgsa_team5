@@ -1,6 +1,4 @@
 #include "AlprAdapter.h"
-#include "model/RecentPlatesModel.h"
-//#include "model/VehicleInfoModel.h" //TODO : 임시 테스트용. 추후 NetworkManager에서 사용해야함
 
 #include <QDebug>
 
@@ -55,10 +53,6 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         cv::Mat licensePlateImage = frame(cropRect);
         QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
 
-        QImage qImage(licensePlateImage.data, licensePlateImage.cols, licensePlateImage.rows, licensePlateImage.step, QImage::Format_BGR888);
-        RecentPlatesModel::GetInstance().SetRecentPlatesData(qImage, licensePlateStr);
-
-        // TODO: crop 된 이미지와 plate number 전달
         for (int i = 0; i < alprResults.plates.size(); ++i) {
             //qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
             emit SignalRequestVehicleQuery(licensePlateImage,

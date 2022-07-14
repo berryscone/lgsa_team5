@@ -106,14 +106,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="alpr\AlprAdapter.cpp" />
-    <ClCompile Include="handler\AlertInfoMsgHandler.cpp" />
     <ClCompile Include="handler\VehicleDetailHandler.cpp" />
     <ClCompile Include="login\LoginWindow.cpp" />
-    <ClCompile Include="model\AlertInfoModel.cpp" />
     <ClCompile Include="model\DebugInfoModel.cpp" />
-    <ClCompile Include="model\FrameModel.cpp" />
-    <ClCompile Include="model\RecentPlatesModel.cpp" />
-    <ClCompile Include="model\VehicleInfoModel.cpp" />
     <ClCompile Include="network\NetworkManager.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
@@ -122,10 +117,7 @@
     <ClCompile Include="generator\FrameGenerator.cpp" />
     <ClCompile Include="generator\OpenCvAdapter.cpp" />
     <ClCompile Include="handler\DebugInfoMsgHandler.cpp" />
-    <ClCompile Include="handler\FrameMsgHandler.cpp" />
     <ClCompile Include="handler\MsgHandlerManager.cpp" />
-    <ClCompile Include="handler\RecentPlatesMsgHandler.cpp" />
-    <ClCompile Include="handler\VehicleInfoMsgHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="LoginWindow.ui" />
   </ItemGroup>
@@ -133,19 +125,10 @@
     <QtMoc Include="handler\DebugInfoMsgHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="handler\FrameMsgHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="handler\IMsgHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="handler\MsgHandlerManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="handler\RecentPlatesMsgHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="handler\VehicleInfoMsgHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="generator\FrameGenerator.h" />
@@ -158,13 +141,8 @@
     <QtMoc Include="network\NetworkManager.h" />
     <QtMoc Include="login\LoginWindow.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />
-    <QtMoc Include="handler\AlertInfoMsgHandler.h" />
     <QtMoc Include="handler\VehicleDetailHandler.h" />
-    <ClInclude Include="model\AlertInfoModel.h" />
     <ClInclude Include="model\DebugInfoModel.h" />
-    <ClInclude Include="model\FrameModel.h" />
-    <ClInclude Include="model\RecentPlatesModel.h" />
-    <ClInclude Include="model\VehicleInfoModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png" />

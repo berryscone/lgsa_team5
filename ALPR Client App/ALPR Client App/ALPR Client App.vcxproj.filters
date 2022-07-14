@@ -6,16 +6,7 @@
     <ClCompile Include="handler\DebugInfoMsgHandler.cpp">
       <Filter>Handler</Filter>
     </ClCompile>
-    <ClCompile Include="handler\FrameMsgHandler.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
     <ClCompile Include="handler\MsgHandlerManager.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="handler\RecentPlatesMsgHandler.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="handler\VehicleInfoMsgHandler.cpp">
       <Filter>Handler</Filter>
     </ClCompile>
     <ClCompile Include="generator\FrameGenerator.cpp">
@@ -27,15 +18,6 @@
     <ClCompile Include="model\DebugInfoModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="model\FrameModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="model\RecentPlatesModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="model\VehicleInfoModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="alpr\AlprAdapter.cpp">
       <Filter>Alpr</Filter>
     </ClCompile>
@@ -44,12 +26,6 @@
     </ClCompile>
     <ClCompile Include="network\NetworkManager.cpp">
       <Filter>Network</Filter>
-    </ClCompile>
-    <ClCompile Include="handler\AlertInfoMsgHandler.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="model\AlertInfoModel.cpp">
-      <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="handler\VehicleDetailHandler.cpp">
       <Filter>Handler</Filter>
@@ -60,19 +36,10 @@
     <QtMoc Include="handler\DebugInfoMsgHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
-    <QtMoc Include="handler\FrameMsgHandler.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
     <QtMoc Include="handler\IMsgHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
     <QtMoc Include="handler\MsgHandlerManager.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
-    <QtMoc Include="handler\RecentPlatesMsgHandler.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
-    <QtMoc Include="handler\VehicleInfoMsgHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
     <QtMoc Include="generator\FrameGenerator.h">
@@ -89,9 +56,6 @@
     </QtMoc>
     <QtMoc Include="network\NetworkInterfaces.h">
       <Filter>Network</Filter>
-    </QtMoc>
-    <QtMoc Include="handler\AlertInfoMsgHandler.h">
-      <Filter>Handler</Filter>
     </QtMoc>
     <QtMoc Include="network\NetworkManager.h">
       <Filter>Network</Filter>
@@ -129,18 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model\DebugInfoModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model\FrameModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model\RecentPlatesModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model\VehicleInfoModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model\AlertInfoModel.h">
       <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>

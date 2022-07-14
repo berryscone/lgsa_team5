@@ -4,11 +4,7 @@
 #include "ui_AlprClientApp.h"
 
 #include "handler/MsgHandlerManager.h"
-#include "handler/FrameMsgHandler.h"
-#include "handler/RecentPlatesMsgHandler.h"
-#include "handler/VehicleInfoMsgHandler.h"
 #include "handler/DebugInfoMsgHandler.h"
-#include "handler/AlertInfoMsgHandler.h"
 #include "generator/FrameGenerator.h"
 
 #include <memory>
@@ -71,10 +67,6 @@ private:
     std::string mFilePath;
 
     MsgHandlerManagerPtr mMsgHandlerManager;
-    std::unique_ptr<FrameMsgHandler> mFrameMsgHandler;
-    std::unique_ptr<RecentPlatesMsgHandler> mRecentPlatesMsgHandler;
-    std::unique_ptr<VehicleInfoMsgHandler> mVehicleInfoMsgHandler;
     std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
-    std::unique_ptr<AlertInfoMsgHandler> mAlertInfoMsgHandler;
     std::unique_ptr<FrameGenerator> mFrameGenerator;
 };

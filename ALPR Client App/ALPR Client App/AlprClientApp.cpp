@@ -22,29 +22,12 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     connect(ui->toggleButton, SIGNAL(toggled(bool)), this, SLOT(onToggle(bool)));
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
-    mFrameMsgHandler = std::make_unique<FrameMsgHandler>();
-    mRecentPlatesMsgHandler = std::make_unique<RecentPlatesMsgHandler>();
-    mVehicleInfoMsgHandler = std::make_unique<VehicleInfoMsgHandler>();
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
-    mAlertInfoMsgHandler = std::make_unique<AlertInfoMsgHandler>();
 
-    mMsgHandlerManager->AddMsgHandler(mFrameMsgHandler.get());
-    mMsgHandlerManager->AddMsgHandler(mRecentPlatesMsgHandler.get());
-    mMsgHandlerManager->AddMsgHandler(mVehicleInfoMsgHandler.get());
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
-    mMsgHandlerManager->AddMsgHandler(mAlertInfoMsgHandler.get());
-
-    connect(mRecentPlatesMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage, QString)),
-            this, SLOT(UpdateRecentPlatesView(QImage, QString)));
-
-    connect(mVehicleInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
-            this, SLOT(UpdateVehicleInfoView(QString)));
 
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
             this, SLOT(UpdateDebugInfoView(QString)));
-
-    connect(mAlertInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QImage, QString)),
-            this, SLOT(UpdateAlertInfoView(QImage, QString)));
 
     //NOTE : frameGenerator runs in a separate thread
     makeFrameGeneratorThread();
