@@ -51,6 +51,9 @@
     <ClCompile Include="model\AlertInfoModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="handler\VehicleDetailHandler.cpp">
+      <Filter>Handler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -93,6 +96,9 @@
     <QtMoc Include="network\NetworkManager.h">
       <Filter>Network</Filter>
     </QtMoc>
+    <QtMoc Include="handler\VehicleDetailHandler.h">
+      <Filter>Handler</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />
@@ -134,7 +140,9 @@
     <ClInclude Include="model\VehicleInfoModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="model\AlertInfoModel.h" />
+    <ClInclude Include="model\AlertInfoModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png" />

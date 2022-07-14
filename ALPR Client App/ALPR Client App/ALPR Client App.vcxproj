@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClCompile Include="alpr\AlprAdapter.cpp" />
     <ClCompile Include="handler\AlertInfoMsgHandler.cpp" />
+    <ClCompile Include="handler\VehicleDetailHandler.cpp" />
     <ClCompile Include="login\LoginWindow.cpp" />
     <ClCompile Include="model\AlertInfoModel.cpp" />
     <ClCompile Include="model\DebugInfoModel.cpp" />
@@ -158,6 +159,7 @@
     <QtMoc Include="login\LoginWindow.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />
     <QtMoc Include="handler\AlertInfoMsgHandler.h" />
+    <QtMoc Include="handler\VehicleDetailHandler.h" />
     <ClInclude Include="model\AlertInfoModel.h" />
     <ClInclude Include="model\DebugInfoModel.h" />
     <ClInclude Include="model\FrameModel.h" />
