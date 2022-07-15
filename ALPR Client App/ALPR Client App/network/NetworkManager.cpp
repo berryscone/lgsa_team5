@@ -30,6 +30,8 @@ NetworkManager::NetworkManager()
     connect(&mThread, &QThread::started, 
         this, &NetworkManager::StartStatusTimer, 
         Qt::QueuedConnection);
+
+    mManager.setTransferTimeout(3000);
 }
 
 void NetworkManager::RequestLogin(const QString id, const QString pw, LoginCallback callback)
@@ -76,6 +78,10 @@ void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QStrin
         qDebug() << "New query start for " << plate_number;
     }
 #endif
+
+    if (mCurrentStatus != QNetworkReply::NetworkError::NoError && retry_cnt == 0) {
+        return;
+    }
 
     QUrlQuery query;
     query.addQueryItem("license-plate-number", plate_number);
@@ -169,8 +175,11 @@ void NetworkManager::OnVehicleQueryFinished(const cv::Mat plate_image, const QSt
         emit SignalVehicleDetailProvide(plate_image, json_data);
     }
     else if (retry_cnt <= mMaxRetry) {
-        qDebug() << __FUNCTION__ << " : retry query (" << retry_cnt << ")";
-        emit SignalRetryVehicleDetail(plate_image, plate_number, retry_cnt + 1);
+        const int retry_delay = (retry_cnt + 1) * 500;
+        QTimer::singleShot(retry_delay, this, [this, plate_image, plate_number, retry_cnt]() {
+            qDebug() << __FUNCTION__ << " : retry query (" << retry_cnt << ")";
+            emit SignalRetryVehicleDetail(plate_image, plate_number, retry_cnt + 1);
+            });
     }
     else {
         UpdateStatus(error);

@@ -53,7 +53,7 @@ private:
     QString mToken;
 
     const int mStatusTimeoutMs = 3000;
-    const int mMaxRetry = 3;
+    const int mMaxRetry = 2;
     std::unique_ptr<QTimer> mStatusTimer;   // QTimer create, start, stop must be done in the same thread
     QNetworkReply::NetworkError mCurrentStatus = QNetworkReply::NetworkError::NoError;
     
