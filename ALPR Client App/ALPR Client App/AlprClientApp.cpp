@@ -7,6 +7,8 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
     , mbIsStart(false)
+    , mLicensePlateImageWidth(140)
+    , mLicensePlateImageHeight(50)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
     ui->setupUi(this);
@@ -14,9 +16,6 @@ AlprClientApp::AlprClientApp(QWidget *parent)
 
     ui->playbackView->setScene(new QGraphicsScene(this));
     ui->playbackView->scene()->addItem(&mPlaybackPixmap);
-
-    ui->alertLicensePlateView->setScene(new QGraphicsScene(this));
-    ui->alertLicensePlateView->scene()->addItem(&mAlertLicensePlatePixmap);
 
     ui->vehicleInfo->setWordWrap(true);
     ui->alertInfo->setWordWrap(true);
@@ -69,21 +68,22 @@ void AlprClientApp::makeFrameGeneratorThread()
 void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
 {
     QJsonArray vehicleDetailArray = vehicle_detail["vehicle_details"].toArray();
+    QImage resizePlateImage = plate_image;
+    resizePlateImage = resizePlateImage.scaled(mLicensePlateImageWidth, mLicensePlateImageHeight);
 
-//    qDebug() << "vehicle_details count:" << vehicle_detail["count"].toString();
-//    qDebug() << "vehicle_details size:" << vehicleDetailArray.size();
+    if (vehicleDetailArray.size() > 0) {
+        QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(0).toObject();
 
-    //UpdateRecentPltesView
-    QString licensePlatesNumber = vehicle_detail["plate_number"].toString();
-    UpdateRecentPlatesView(plate_image, licensePlatesNumber);
+        //UpdateRecentPltesView
+        QString licensePlatesNumber = vehicleDetailJsonObject["plate_number"].toString();
+        UpdateRecentPlatesView(resizePlateImage, licensePlatesNumber);
 
-    //UpdateVehicleInfoView
-    QString vehicleDetailInfo = licensePlatesNumber + " Detail Info!";
-    UpdateVehicleInfoView(licensePlatesNumber);
+        //UpdateVehicleInfoView
+        UpdateVehicleInfoView(resizePlateImage, vehicleDetailJsonObject);
 
-    //UpdateAlertInfoView
-    QString alertInfo = licensePlatesNumber + " Wanted!!!";
-    UpdateAlertInfoView(plate_image, alertInfo);
+        //UpdateAlertInfoView
+        UpdateAlertInfoView(resizePlateImage, vehicleDetailJsonObject);
+    }
 }
 
 void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
@@ -94,16 +94,13 @@ void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
     qApp->processEvents();
 }
 
-void AlprClientApp::UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo)
+void AlprClientApp::UpdateRecentPlatesView(QImage &licensePlateImage, QString &vehicleInfo)
 {
     QLabel* label = new QLabel;
-    int itemWidth = 140;
-    int itemHeight = 50;
 
-    licensePlateImage = licensePlateImage.scaled(itemWidth, itemHeight);
     label->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
     QListWidgetItem* plate = new QListWidgetItem;
-    plate->setSizeHint(QSize(itemWidth, itemHeight));
+    plate->setSizeHint(QSize(mLicensePlateImageWidth, mLicensePlateImageHeight));
     plate->setText(vehicleInfo);
     plate->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -117,9 +114,17 @@ void AlprClientApp::UpdateRecentPlatesView(QImage licensePlateImage, QString veh
     ui->recentPlatesListView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
 }
 
-void AlprClientApp::UpdateVehicleInfoView(QString vehicleInfo)
+void AlprClientApp::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
 {
-    ui->vehicleInfo->setText(vehicleInfo);
+    QString vehicleDetailInfoStr;
+
+    vehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
+    vehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
+    vehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
+    vehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
+
+    ui->lastLicensePlateView->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+    ui->vehicleInfo->setText(vehicleDetailInfoStr);
     ui->vehicleInfo->setWordWrap(true);
 }
 
@@ -128,11 +133,22 @@ void AlprClientApp::UpdateDebugInfoView(QString debugInfo)
     ui->debugInfo->setText(debugInfo);
 }
 
-void AlprClientApp::UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo)
+void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
 {
-    mAlertLicensePlatePixmap.setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
-    ui->alertLicensePlateView->fitInView(ui->alertLicensePlateView->scene()->sceneRect(), Qt::KeepAspectRatio);
-    ui->alertInfo->setText(alertInfo);
+    QString alertVehicleDetailInfoStr;
+
+    if (vehicleDetailJsonObject["status"].toString() != "No Wants / Warrants") {
+        alertVehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Reason : " + vehicleDetailJsonObject["status"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Owner : " + vehicleDetailJsonObject["owner"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Address : " + vehicleDetailJsonObject["address"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
+        alertVehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
+
+        ui->alertLicensePlateView->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+        ui->alertInfo->setText(alertVehicleDetailInfoStr);
+    }
 }
 
 void AlprClientApp::onOpen()
@@ -193,12 +209,12 @@ void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 void AlprClientApp::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
 {
     qDebug() << __FUNCTION__ << " NetworkError : " << status;
-    QPixmap *statusIconPixmap;
+    unique_ptr<QPixmap> statusIconPixmap;
 
     if (status == QNetworkReply::NetworkError::NoError) {
-        statusIconPixmap = new QPixmap(QDir::currentPath()+"/assets/images/greenButton.png");
+        statusIconPixmap = make_unique<QPixmap>(QDir::currentPath()+"/assets/images/greenButton.png");
     } else {
-        statusIconPixmap = new QPixmap(QDir::currentPath()+"/assets/images/redButton.png");
+        statusIconPixmap = make_unique<QPixmap>(QDir::currentPath()+"/assets/images/redButton.png");
     }
 
     ui->networkStatusIcon->setPixmap(*statusIconPixmap);

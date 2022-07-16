@@ -202,16 +202,6 @@
       <string>No license plate information recognized yet</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="lastLicensePlateView">
-     <property name="geometry">
-      <rect>
-       <x>320</x>
-       <y>20</y>
-       <width>171</width>
-       <height>71</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="playbackTextTitle_3">
      <property name="geometry">
       <rect>
@@ -232,6 +222,25 @@
      </property>
      <property name="scaledContents">
       <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lastLicensePlateView">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>20</y>
+       <width>140</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
@@ -327,30 +336,39 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QGraphicsView" name="alertLicensePlateView">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>251</width>
-       <height>71</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="alertInfo">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
-       <width>241</width>
-       <height>391</height>
+       <y>80</y>
+       <width>251</width>
+       <height>521</height>
       </rect>
      </property>
      <property name="text">
-      <string>Alert Information</string>
+      <string>No license plate to warn is not recognized yet</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="alertLicensePlateView">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>140</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

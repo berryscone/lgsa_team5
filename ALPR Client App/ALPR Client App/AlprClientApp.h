@@ -57,9 +57,9 @@ private slots:
     void UpdateNetworkStatusUI(QNetworkReply::NetworkError status);
 
 private:
-    void UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo);
-    void UpdateVehicleInfoView(QString vehicleInfo);
-    void UpdateAlertInfoView(QImage licensePlateImage, QString alertInfo);
+    void UpdateRecentPlatesView(QImage &licensePlateImage, QString &vehicleInfo);
+    void UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
+    void UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
 
     Ui::AlprClientAppClass *ui;
     QThread *mFrameGeneratorThread;
@@ -67,10 +67,12 @@ private:
 
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;
-    QGraphicsPixmapItem mAlertLicensePlatePixmap;
     std::string mFilePath;
 
     MsgHandlerManagerPtr mMsgHandlerManager;
     std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
     std::unique_ptr<FrameGenerator> mFrameGenerator;
+
+    int mLicensePlateImageWidth;
+    int mLicensePlateImageHeight;
 };
