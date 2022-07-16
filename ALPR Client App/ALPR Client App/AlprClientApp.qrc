@@ -3,5 +3,6 @@
         <file>assets/images/greenButton.png</file>
         <file>assets/images/powerButton.png</file>
         <file>assets/images/alertLicensePlate.png</file>
+        <file>assets/images/redButton.png</file>
     </qresource>
 </RCC>

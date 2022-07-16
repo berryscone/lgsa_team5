@@ -38,6 +38,9 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     connect(&VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::SignalVehicleDetailPublish,
             this, &AlprClientApp::UpdateUI);
 
+    connect(&NetworkManager::GetInstance(), &NetworkManager::SignalNetworkStatusChanged,
+            this, &AlprClientApp::UpdateNetworkStatusUI);
+
     //NOTE : frameGenerator runs in a separate thread
     makeFrameGeneratorThread();
 }
@@ -65,6 +68,11 @@ void AlprClientApp::makeFrameGeneratorThread()
 
 void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
 {
+    QJsonArray vehicleDetailArray = vehicle_detail["vehicle_details"].toArray();
+
+//    qDebug() << "vehicle_details count:" << vehicle_detail["count"].toString();
+//    qDebug() << "vehicle_details size:" << vehicleDetailArray.size();
+
     //UpdateRecentPltesView
     QString licensePlatesNumber = vehicle_detail["plate_number"].toString();
     UpdateRecentPlatesView(plate_image, licensePlatesNumber);
@@ -180,6 +188,20 @@ void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
     msgBox.setText(item->text());
     msgBox.setStandardButtons(QMessageBox::Close);
     msgBox.exec();
+}
+
+void AlprClientApp::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
+{
+    qDebug() << __FUNCTION__ << " NetworkError : " << status;
+    QPixmap *statusIconPixmap;
+
+    if (status == QNetworkReply::NetworkError::NoError) {
+        statusIconPixmap = new QPixmap(QDir::currentPath()+"/assets/images/greenButton.png");
+    } else {
+        statusIconPixmap = new QPixmap(QDir::currentPath()+"/assets/images/redButton.png");
+    }
+
+    ui->networkStatusIcon->setPixmap(*statusIconPixmap);
 }
 
 void AlprClientApp::closeEvent(QCloseEvent* event)

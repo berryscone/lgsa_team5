@@ -54,6 +54,7 @@ private slots:
     void UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail);
     void UpdatePlaybackView(QPixmap pixmap);
     void UpdateDebugInfoView(QString debugInfo);
+    void UpdateNetworkStatusUI(QNetworkReply::NetworkError status);
 
 private:
     void UpdateRecentPlatesView(QImage licensePlateImage, QString vehicleInfo);

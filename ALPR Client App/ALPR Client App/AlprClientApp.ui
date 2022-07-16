@@ -263,7 +263,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="networkStatusIcon">
      <property name="geometry">
       <rect>
        <x>230</x>
