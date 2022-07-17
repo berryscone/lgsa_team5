@@ -33,6 +33,7 @@
     <ClCompile Include="network\VehicleCache.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="RecentPlateCustomWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AlprClientApp.h" />
@@ -66,6 +67,7 @@
     <QtMoc Include="handler\VehicleDetailHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
+    <QtMoc Include="RecentPlateCustomWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />

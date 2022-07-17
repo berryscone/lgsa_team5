@@ -57,7 +57,7 @@ private slots:
     void UpdateNetworkStatusUI(QNetworkReply::NetworkError status);
 
 private:
-    void UpdateRecentPlatesView(QImage &licensePlateImage, QString &vehicleInfo);
+    void UpdateRecentPlatesView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
     void UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
     void UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
 

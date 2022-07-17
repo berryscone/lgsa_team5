@@ -1,6 +1,8 @@
 #include "AlprClientApp.h"
 #include "handler/VehicleDetailHandler.h"
 
+#include "RecentPlateCustomWidget.h"
+
 #include <QMessageBox>
 
 AlprClientApp::AlprClientApp(QWidget *parent)
@@ -76,7 +78,7 @@ void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle
 
         //UpdateRecentPltesView
         QString licensePlatesNumber = vehicleDetailJsonObject["plate_number"].toString();
-        UpdateRecentPlatesView(resizePlateImage, licensePlatesNumber);
+        UpdateRecentPlatesView(resizePlateImage, vehicleDetailJsonObject);
 
         //UpdateVehicleInfoView
         UpdateVehicleInfoView(resizePlateImage, vehicleDetailJsonObject);
@@ -94,24 +96,30 @@ void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
     qApp->processEvents();
 }
 
-void AlprClientApp::UpdateRecentPlatesView(QImage &licensePlateImage, QString &vehicleInfo)
+void AlprClientApp::UpdateRecentPlatesView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
 {
-    QLabel* label = new QLabel;
+    QString vehicleDetailInfoStr;
 
-    label->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+    vehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
+    vehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
+    vehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
+    vehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
+
+    RecentPlateCustomWidget *wigetItem = new RecentPlateCustomWidget(licensePlateImage, vehicleDetailInfoStr);
     QListWidgetItem* plate = new QListWidgetItem;
     plate->setSizeHint(QSize(mLicensePlateImageWidth, mLicensePlateImageHeight));
-    plate->setText(vehicleInfo);
+    plate->setText(vehicleDetailJsonObject["plate_number"].toString());
     plate->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     ui->recentPlatesListView->addItem(plate);
-    ui->recentPlatesListView->setItemWidget(plate, label);
+    ui->recentPlatesListView->setItemWidget(plate, wigetItem);
     ui->recentPlatesListView->setSpacing(3);
     ui->recentPlatesListView->setVerticalScrollMode(QListWidget::ScrollPerPixel);
     ui->recentPlatesListView->scrollToBottom();
     ui->recentPlatesListView->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->recentPlatesListView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
+    ui->recentPlatesListView->setAlternatingRowColors(true);
 }
 
 void AlprClientApp::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
@@ -196,12 +204,12 @@ void AlprClientApp::onToggle(bool bIsPause)
 
 void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 {
-    //TODO : item에 존재하는 label도 같이 그려줄 수 있는지 검토 필요
-    //QWidget* itemWidget = ui->recentPlatesListView->itemWidget(item);
-
+    RecentPlateCustomWidget *widgetItem = dynamic_cast<RecentPlateCustomWidget*>(ui->recentPlatesListView->itemWidget(item));
     QMessageBox msgBox;
+
+    msgBox.setIconPixmap(widgetItem->GetLicensePlatePixmap());
     msgBox.setWindowTitle("Detail Vehicle Information");
-    msgBox.setText(item->text());
+    msgBox.setText(widgetItem->GetVehicleDetailInfo());
     msgBox.setStandardButtons(QMessageBox::Close);
     msgBox.exec();
 }
