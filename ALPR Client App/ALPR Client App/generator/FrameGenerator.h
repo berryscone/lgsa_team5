@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QImage>
 #include <QPixmap>
+#include <queue>
 
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::steady_clock::time_point;
@@ -48,7 +49,10 @@ private :
     unsigned int mFrameCount;
     unsigned int mTotalFrameCount;
     double mElapsedDurationMs;
-    unsigned int mFps;
+    double mAvgTimePerFrameMs;
+    double mJitter;
+    double mFps;
+    queue<double> mALPRTimeQ;
 
     void UpdateDebugInfo();
 };
