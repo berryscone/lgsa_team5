@@ -6,6 +6,7 @@ from rest_framework import views, permissions, status
 from rest_framework.authentication import BasicAuthentication
 
 from .gen import set_vehicle_detail, set_vehicle_detail_in_video, plate_numbers_in_video
+from .gen_from_text_file import set_vehicle_detail_from_bulk_file, bulk_size
 from .models import VehicleDetail
 from .serializers import VehicleDetailSerializer
 
@@ -39,21 +40,22 @@ class VehicleDetailView(views.APIView):
         print("start")
         start = time.time()
 
-        for i in range(len(plate_numbers_in_video)):
-            vehicle = VehicleDetail()
-            set_vehicle_detail_in_video(i, vehicle)
-            vehicle.save()
+        f = open("vehicleDataForTheDemo.txt", 'r', encoding='Windows-1252')
 
-        bulk_size = 10000
+        index = 0
 
-        for i in range(2500):
+        while True:
             bulk_list = []
-            for j in range(bulk_size):
-                vehicle = VehicleDetail()
-                set_vehicle_detail(vehicle)
-                bulk_list.append(vehicle)
+            end_of_file = set_vehicle_detail_from_bulk_file(f, bulk_list)
             VehicleDetail.objects.bulk_create(bulk_list)
-            print((i + 1) * bulk_size)
+
+            index += 1
+            print(index * bulk_size)
+
+            if end_of_file:
+                break
+
+        f.close()
 
         print("end time :", time.time() - start)
         # [End] Create DB code
