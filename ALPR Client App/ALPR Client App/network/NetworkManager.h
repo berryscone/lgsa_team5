@@ -52,8 +52,8 @@ private:
     QUrl mUrl;
     QString mToken;
 
-    const int mStatusTimeoutMs = 3000;
-    const int mMaxRetry = 2;
+    const int mStatusTimeoutMs = 1500;
+    const int mRequestTimeoutMs = 1500;
     std::unique_ptr<QTimer> mStatusTimer;   // QTimer create, start, stop must be done in the same thread
     QNetworkReply::NetworkError mCurrentStatus = QNetworkReply::NetworkError::NoError;
     

@@ -31,7 +31,7 @@ NetworkManager::NetworkManager()
         this, &NetworkManager::StartStatusTimer, 
         Qt::QueuedConnection);
 
-    mManager.setTransferTimeout(3000);
+    mManager.setTransferTimeout(mRequestTimeoutMs);
 }
 
 void NetworkManager::RequestLogin(const QString id, const QString pw, LoginCallback callback)
@@ -78,10 +78,6 @@ void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QStrin
         qDebug() << "New query start for " << plate_number;
     }
 #endif
-
-    if (mCurrentStatus != QNetworkReply::NetworkError::NoError && retry_cnt == 0) {
-        return;
-    }
 
     QUrlQuery query;
     query.addQueryItem("license-plate-number", plate_number);
@@ -136,8 +132,8 @@ void NetworkManager::OnLoginFinished(LoginCallback callback, QNetworkReply* repl
     QJsonObject obj = doc.object();
 
     if (status_code == 200) {
+        qDebug() << "Login Success";
         mToken = obj["token"].toString();
-        qDebug() << __FUNCTION__ << " - Authentication Token: " << mToken;
         callback(true, "");
 
         this->moveToThread(&mThread);
@@ -147,13 +143,13 @@ void NetworkManager::OnLoginFinished(LoginCallback callback, QNetworkReply* repl
     else if (error == QNetworkReply::NetworkError::AuthenticationRequiredError) {
         // TODO: 에러 원인 문자열 변경
         const QString detail = obj["detail"].toString();
-        qDebug() << __FUNCTION__ << " - Authentication Fail: " << detail;
+        qDebug() << "Login Fail: " << detail;
         callback(false, detail);
     }
     else {
         // TODO: 에러 원인 문자열 변경
         const QString detail = reply->errorString();
-        qDebug() << __FUNCTION__ << " - Authentication Error: " << detail;
+        qDebug() << "Login Fail: " << detail;
         callback(false, detail);
     }
 }
@@ -168,22 +164,20 @@ void NetworkManager::OnVehicleQueryFinished(const cv::Mat plate_image, const QSt
     if (error == QNetworkReply::NetworkError::NoError && status_code == 200) {
         QByteArray data = reply->readAll();
         QJsonObject json_data = QJsonDocument::fromJson(data).object();
+        QJsonArray vehicleDetailArray = json_data["vehicle_details"].toArray();
         
 #ifdef USE_VEHICLE_QUERY_CACHE
         mCache.putQueryResult(plate_number, json_data);
 #endif
+
+        qDebug() << "Server Response: " << plate_number << " => " << vehicleDetailArray.size();
         emit SignalVehicleDetailProvide(plate_image, json_data);
     }
-    else if (retry_cnt <= mMaxRetry) {
-        const int retry_delay = (retry_cnt + 1) * 500;
-        QTimer::singleShot(retry_delay, this, [this, plate_image, plate_number, retry_cnt]() {
-            qDebug() << __FUNCTION__ << " : retry query (" << retry_cnt << ")";
-            emit SignalRetryVehicleDetail(plate_image, plate_number, retry_cnt + 1);
-            });
-    }
     else {
-        UpdateStatus(error);
+        qDebug() << "Request Failed: " << plate_number << " => " << error;
     }
+
+    UpdateStatus(error);
 }
 
 void NetworkManager::OnHealthCheckFinished(QNetworkReply* reply)
@@ -202,6 +196,7 @@ void NetworkManager::OnHealthCheckFinished(QNetworkReply* reply)
         newStatus = error;
     }
 
+    qDebug() << "Health Check - " << newStatus;
     UpdateStatus(newStatus);
 }
 
@@ -219,7 +214,6 @@ void NetworkManager::StartStatusTimer()
         qDebug() << "Create Network Status Timer";
     }
     mStatusTimer->start(mStatusTimeoutMs);
-    qDebug() << "Start Network Status Timer";
 }
 
 void NetworkManager::ResetStatusTimer()
@@ -231,7 +225,6 @@ void NetworkManager::ResetStatusTimer()
 
 void NetworkManager::OnStatusTimeout()
 {
-    qDebug() << "Expire Network Status Timer";
     RequestHealthCheck();
     StartStatusTimer();
 }
@@ -239,8 +232,8 @@ void NetworkManager::OnStatusTimeout()
 void NetworkManager::UpdateStatus(const QNetworkReply::NetworkError status)
 {
     if (mCurrentStatus != status) {
-        emit SignalNetworkStatusChanged(status);
-        qDebug() << __FUNCTION__ << " : " << "network status changed from " << mCurrentStatus << " to " << status;
         mCurrentStatus = status;
+        emit SignalNetworkStatusChanged(status);
+        qDebug() << "network status changed: " << mCurrentStatus << " => " << status;
     }
 }
