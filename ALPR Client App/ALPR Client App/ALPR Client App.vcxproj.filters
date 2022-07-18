@@ -95,6 +95,12 @@
     <Filter Include="Network">
       <UniqueIdentifier>{54422c8a-d010-4575-b27b-2a5b8dc44f00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{a55f3154-6744-4182-b295-3d69fde794b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Images">
+      <UniqueIdentifier>{57c46807-3a1d-49e9-9047-2500e48d95d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model\DebugInfoModel.h">
@@ -105,25 +111,65 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="assets\images\alertLicensePlate.png" />
-    <Image Include="assets\images\openButton.png" />
-    <Image Include="assets\images\openButtonDisabled.png" />
-    <Image Include="assets\images\openButtonHover.png" />
-    <Image Include="assets\images\openButtonPressed.png" />
-    <Image Include="assets\images\pauseButton.png" />
-    <Image Include="assets\images\pauseButtonDisabled.png" />
-    <Image Include="assets\images\pauseButtonHover.png" />
-    <Image Include="assets\images\pauseButtonPressed.png" />
-    <Image Include="assets\images\playButton.png" />
-    <Image Include="assets\images\playButtonDisabled.png" />
-    <Image Include="assets\images\playButtonHover.png" />
-    <Image Include="assets\images\playButtonPressed.png" />
-    <Image Include="assets\images\stopButton.png" />
-    <Image Include="assets\images\stopButtonDisabled.png" />
-    <Image Include="assets\images\stopButtonHover.png" />
-    <Image Include="assets\images\stopButtonPressed.png" />
-    <Image Include="assets\images\greenButton.png" />
-    <Image Include="assets\images\powerButton.png" />
-    <Image Include="assets\images\redButton.png" />
+    <Image Include="assets\images\alertLicensePlate.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\openButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\openButtonDisabled.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\openButtonHover.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\openButtonPressed.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\pauseButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\pauseButtonDisabled.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\pauseButtonHover.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\pauseButtonPressed.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\playButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\playButtonDisabled.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\playButtonHover.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\playButtonPressed.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\powerButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\redButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\stopButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\stopButtonDisabled.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\stopButtonHover.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\stopButtonPressed.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
+    <Image Include="assets\images\greenButton.png">
+      <Filter>Assets\Images</Filter>
+    </Image>
   </ItemGroup>
 </Project>
