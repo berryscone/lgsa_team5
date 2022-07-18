@@ -12,24 +12,32 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
     QFileInfo file_info(context.file ? context.file : "");
     const int line = context.line;
 
+    QString stream;
+    QTextStream msgStream(&stream);
+
     switch (type) {
     case QtDebugMsg:
-        log_stream << "D " << curtime << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+        msgStream << "D ";
         break;
     case QtWarningMsg:
-        log_stream << "W " << curtime << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+        msgStream << "W ";
         break;
     case QtCriticalMsg:
-        log_stream << "C " << curtime << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+        msgStream << "C ";
         break;
     case QtFatalMsg:
-        log_stream << "F " << curtime << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+        msgStream << "F ";
         break;
     case QtInfoMsg:
-        log_stream << "I " << curtime << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+        msgStream << "I ";
         break;
     }
+    msgStream << curtime << " " << localMsg << " (" << file_info.fileName() << ":" << line << ")" << endl;
+
+    QString finalMsg = msgStream.readAll();
+    log_stream << finalMsg;
     log_stream.flush();
+    OutputDebugStringA(finalMsg.toStdString().c_str());
 }
 
 int main(int argc, char *argv[])
