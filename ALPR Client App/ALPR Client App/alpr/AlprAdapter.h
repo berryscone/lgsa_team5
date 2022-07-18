@@ -11,8 +11,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
-#include <queue>
-
 #include "network/NetworkInterfaces.h"
 #include "network/NetworkManager.h"
 
@@ -40,8 +38,6 @@ private:
     bool mUseMotiondetection;
     int mFrameno;
     char mText[1024] = "";
-
-    queue<string> mPlateStringQ;
 
     IVehicleQueryProvider& mVehicleQueryProvider;
 };

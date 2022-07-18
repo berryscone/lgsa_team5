@@ -6,8 +6,6 @@ using namespace alpr;
 using namespace std;
 using namespace cv;
 
-#define MAX_PLATE_STRING_Q 100
-
 AlprAdapter::AlprAdapter() :
     mUseMotiondetection(0),
     mVehicleQueryProvider(NetworkManager::GetInstance())
@@ -57,41 +55,11 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         cv::Mat licensePlateImage = frame(cropRect);
         QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
 
-        //Queue Search
-        BOOL HaveSamePlate;
-
         for (int i = 0; i < alprResults.plates.size(); ++i) {
-            unsigned int q_cnt, j;
-            string tempStr;
-
-            HaveSamePlate = FALSE;
-            q_cnt = mPlateStringQ.size();
-
-            for (j = 0; j < q_cnt; j++) {
-                tempStr = mPlateStringQ.front();
-                mPlateStringQ.pop();
-                mPlateStringQ.push(tempStr);
-                if (tempStr == alprResults.plates[i].bestPlate.characters.c_str()) {
-                    HaveSamePlate = TRUE;
-                }
-            }
-            if (HaveSamePlate == FALSE) {
-                if (q_cnt == MAX_PLATE_STRING_Q) {
-                    mPlateStringQ.pop();
-                }
-                mPlateStringQ.push(alprResults.plates[i].bestPlate.characters.c_str());
-                qDebug() << alprResults.plates[i].bestPlate.characters.c_str() << "JH";
-                emit SignalRequestVehicleQuery(licensePlateImage,
-                    alprResults.plates[i].bestPlate.characters.c_str());
-            }
-        }
-        /*
-        for (int i = 0; i < alprResults.plates.size(); ++i) {
-            qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
+            //qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
             emit SignalRequestVehicleQuery(licensePlateImage,
                 alprResults.plates[i].bestPlate.characters.c_str());
         }
-        */
     }
 }
 
