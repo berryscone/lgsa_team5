@@ -22,8 +22,10 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     ui->vehicleInfo->setWordWrap(true);
     ui->alertInfo->setWordWrap(true);
 
-    connect(ui->openButton, &QPushButton::clicked, this, &AlprClientApp::onOpen);
-    connect(ui->toggleButton, SIGNAL(toggled(bool)), this, SLOT(onToggle(bool)));
+    // Connect Video Control Widgets
+    connect(ui->openButton, &QPushButton::clicked, this, &AlprClientApp::OnOpen);
+    connect(ui->stopButton, &QPushButton::clicked, this, &AlprClientApp::OnStop);
+    connect(ui->toggleButton, &QPushButton::toggled, this, &AlprClientApp::OnToggle);
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
@@ -42,29 +44,21 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     connect(&NetworkManager::GetInstance(), &NetworkManager::SignalNetworkStatusChanged,
             this, &AlprClientApp::UpdateNetworkStatusUI);
 
-    //NOTE : frameGenerator runs in a separate thread
-    makeFrameGeneratorThread();
+    InitFrameGenerator();
 }
 
-void AlprClientApp::makeFrameGeneratorThread()
+void AlprClientApp::InitFrameGenerator()
 {
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
+    connect(&mFrameGenerator, &FrameGenerator::UpdateLaptopAppUi, this, &AlprClientApp::UpdatePlaybackView);
+    connect(&mFrameGenerator, &FrameGenerator::SignalVideoStopped, this, &AlprClientApp::OnVideoStopped);
 
-    mFrameGeneratorThread = new QThread();
-    mFrameGenerator = std::make_unique<FrameGenerator>();
+    connect(this, &AlprClientApp::startFrameGenerator, &mFrameGenerator, &FrameGenerator::Start);
+    connect(this, &AlprClientApp::pauseFrameGenerator, &mFrameGenerator, &FrameGenerator::Pause);
+    connect(this, &AlprClientApp::resumeFrameGenerator, &mFrameGenerator, &FrameGenerator::Resume);
+    connect(this, &AlprClientApp::stopFrameGenerator, &mFrameGenerator, &FrameGenerator::Stop);
 
-    connect(mFrameGenerator.get(), SIGNAL(UpdateLaptopAppUi(QPixmap)),
-            this, SLOT(UpdatePlaybackView(QPixmap)));
-
-    connect(mFrameGeneratorThread, SIGNAL(started()), mFrameGenerator.get(), SLOT(Start()));
-    connect(mFrameGeneratorThread, SIGNAL(finished()), mFrameGenerator.get(), SLOT(Stop()));
-
-    connect(this, SIGNAL(startFrameGenerator()), mFrameGenerator.get(), SLOT(Start()));
-    connect(this, SIGNAL(pauseFrameGenerator()), mFrameGenerator.get(), SLOT(Pause()));
-    connect(this, SIGNAL(resumeFrameGenerator()), mFrameGenerator.get(), SLOT(Resume()));
-    connect(this, SIGNAL(stopFrameGenerator()), mFrameGenerator.get(), SLOT(Stop()));
-
-    mFrameGenerator->moveToThread(mFrameGeneratorThread);
+    mFrameGenerator.moveToThread(&mFrameGeneratorThread);
+    mFrameGeneratorThread.start();
 }
 
 void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
@@ -159,47 +153,76 @@ void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &
     }
 }
 
-void AlprClientApp::onOpen()
+void AlprClientApp::OnOpen()
 {
-#if 0
-    mFilePath = "D:/hjh_world/CMU/StudioProject/beaver1.avi";
-#else
     QFileDialog fd;
     fd.show();
     fd.exec();
     QString strFileName = fd.selectedFiles().at(0);
-    mFilePath = strFileName.toStdString();
-#endif
-    mFrameGenerator->SetOpenFilePath(mFilePath);
+    mFrameGenerator.SetOpenFilePath(strFileName);
+    // TODO: 다이얼로그 취소한 경우 예외처리
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
 
-    mFrameGeneratorThread->start();
     emit startFrameGenerator();
     mMsgHandlerManager->Start();
 
     mbIsStart = true;
 
-    //TODO : 사용자가 open 버튼을 다시 눌러서 다른 파일을 선택하려고 할 경우 동작 지원을 하려면 추가 수정 필요
-    //       일단 UX로 해결 : 재생이 시작되면 open button을 비활성화
-    ui->openButton->setEnabled(false);
-    ui->toggleButton->setText("Pause");
+    SetControllerRun();
 }
 
-void AlprClientApp::onToggle(bool bIsPause)
+void AlprClientApp::OnStop()
+{
+    emit stopFrameGenerator();
+    SetControllerStop();
+}
+
+void AlprClientApp::OnToggle(bool bIsPause)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
     if (bIsPause) {
         emit pauseFrameGenerator();
         mMsgHandlerManager->Stop();
-        ui->toggleButton->setText("Play");
+        SetToggleButtonToPlay();
 
     } else {
         emit resumeFrameGenerator();
         mMsgHandlerManager->Start();
-        ui->toggleButton->setText("Pause");
+        SetToggleButtonToPause();
     }
+}
+
+void AlprClientApp::OnVideoStopped()
+{
+    SetControllerStop();
+}
+
+void AlprClientApp::SetControllerRun()
+{
+    ui->openButton->setEnabled(false);
+    ui->toggleButton->setEnabled(true);
+    ui->stopButton->setEnabled(true);
+    SetToggleButtonToPause();
+}
+
+void AlprClientApp::SetControllerStop()
+{
+    ui->openButton->setEnabled(true);
+    ui->toggleButton->setEnabled(false);
+    ui->stopButton->setEnabled(false);
+    SetToggleButtonToPlay();
+}
+
+void AlprClientApp::SetToggleButtonToPause()
+{
+    ui->toggleButton->setText("Pause");
+}
+
+void AlprClientApp::SetToggleButtonToPlay()
+{
+    ui->toggleButton->setText("Play");
 }
 
 void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
