@@ -162,11 +162,19 @@ void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &
 void AlprClientApp::OnOpen()
 {
     QFileDialog fd;
+#if 0
     fd.show();
     fd.exec();
     QString strFileName = fd.selectedFiles().at(0);
     mFrameGenerator.SetOpenFilePath(strFileName);
-    // TODO: 다이얼로그 취소한 경우 예외처리
+#else   // 다이얼로그 취소한 경우 예외처리
+    QString strFileName = fd.getOpenFileName(0, tr("Open Video File..."), "", "");
+
+    if (strFileName.isEmpty())  
+        return;
+
+    mFrameGenerator.SetOpenFilePath(strFileName);
+#endif    
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
 
