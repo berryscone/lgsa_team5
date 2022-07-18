@@ -148,7 +148,7 @@ void NetworkManager::OnLoginFinished(LoginCallback callback, QNetworkReply* repl
     }
     else {
         // TODO: 에러 원인 문자열 변경
-        const QString detail = reply->errorString();
+        const QString detail = "No server response";
         qDebug() << "Login Fail: " << detail;
         callback(false, detail);
     }

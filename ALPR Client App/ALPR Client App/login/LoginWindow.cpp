@@ -22,18 +22,30 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::OnLogin()
 {
-    mLoginProvider.RequestLogin(
-        ui->lineEdit_id->text(),
-        ui->lineEdit_pw->text(),
-        std::bind(&LoginWindow::OnLoginFinished, this, std::placeholders::_1, std::placeholders::_2));
+    QString id = ui->lineEdit_id->text().trimmed();
+    QString pw = ui->lineEdit_pw->text().trimmed();
 
-    // TODO: UI 에 모래시계 처럼 백그라운드 동작을 알릴 수 있는 표현 추가
+    if (id.isEmpty()) {
+        ui->label_result->setText("ID must be provided");
+        return;
+    }
+
+    if (pw.isEmpty()) {
+        ui->label_result->setText("Password must be provided");
+        return;
+    }
+
+    ui->lineEdit_id->setEnabled(false);
+    ui->lineEdit_pw->setEnabled(false);
+    ui->loginBtn->setEnabled(false);
+
+    ui->label_result->setText("");
+    mLoginProvider.RequestLogin(id, pw,
+        std::bind(&LoginWindow::OnLoginFinished, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void LoginWindow::OnLoginFinished(const bool success, const QString detail)
 {
-    // TODO: OnLogin 에서 동작시킨 백그라운드 동작 UI 를 제거
-
     if (success) {
         ui->label_result->setText("Success");
         LaunchProgram();
@@ -42,6 +54,10 @@ void LoginWindow::OnLoginFinished(const bool success, const QString detail)
         ui->label_result->setText(detail);
         ui->lineEdit_id->clear();
         ui->lineEdit_pw->clear();
+
+        ui->lineEdit_id->setEnabled(true);
+        ui->lineEdit_pw->setEnabled(true);
+        ui->loginBtn->setEnabled(true);
     }
 }
 
