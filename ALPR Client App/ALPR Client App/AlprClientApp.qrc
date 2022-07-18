@@ -4,5 +4,21 @@
         <file>assets/images/powerButton.png</file>
         <file>assets/images/alertLicensePlate.png</file>
         <file>assets/images/redButton.png</file>
+        <file>assets/images/openButton.png</file>
+        <file>assets/images/openButtonDisabled.png</file>
+        <file>assets/images/openButtonHover.png</file>
+        <file>assets/images/openButtonPressed.png</file>
+        <file>assets/images/pauseButton.png</file>
+        <file>assets/images/pauseButtonDisabled.png</file>
+        <file>assets/images/pauseButtonHover.png</file>
+        <file>assets/images/pauseButtonPressed.png</file>
+        <file>assets/images/playButton.png</file>
+        <file>assets/images/playButtonDisabled.png</file>
+        <file>assets/images/playButtonHover.png</file>
+        <file>assets/images/playButtonPressed.png</file>
+        <file>assets/images/stopButton.png</file>
+        <file>assets/images/stopButtonDisabled.png</file>
+        <file>assets/images/stopButtonHover.png</file>
+        <file>assets/images/stopButtonPressed.png</file>
     </qresource>
 </RCC>

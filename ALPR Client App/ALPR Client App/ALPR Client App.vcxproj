@@ -150,6 +150,25 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png" />
+    <Image Include="assets\images\greenButton.png" />
+    <Image Include="assets\images\openButton.png" />
+    <Image Include="assets\images\openButtonDisabled.png" />
+    <Image Include="assets\images\openButtonHover.png" />
+    <Image Include="assets\images\openButtonPressed.png" />
+    <Image Include="assets\images\pauseButton.png" />
+    <Image Include="assets\images\pauseButtonDisabled.png" />
+    <Image Include="assets\images\pauseButtonHover.png" />
+    <Image Include="assets\images\pauseButtonPressed.png" />
+    <Image Include="assets\images\playButton.png" />
+    <Image Include="assets\images\playButtonDisabled.png" />
+    <Image Include="assets\images\playButtonHover.png" />
+    <Image Include="assets\images\playButtonPressed.png" />
+    <Image Include="assets\images\powerButton.png" />
+    <Image Include="assets\images\redButton.png" />
+    <Image Include="assets\images\stopButton.png" />
+    <Image Include="assets\images\stopButtonDisabled.png" />
+    <Image Include="assets\images\stopButtonHover.png" />
+    <Image Include="assets\images\stopButtonPressed.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

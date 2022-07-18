@@ -5,6 +5,8 @@
 
 #include <QMessageBox>
 
+#define USE_IMAGE_BUTTON
+
 AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
@@ -45,6 +47,10 @@ AlprClientApp::AlprClientApp(QWidget *parent)
             this, &AlprClientApp::UpdateNetworkStatusUI);
 
     InitFrameGenerator();
+
+#ifdef USE_IMAGE_BUTTON
+    SetFrameGeneratorButtonStyle();
+#endif
 }
 
 void AlprClientApp::InitFrameGenerator()
@@ -217,12 +223,139 @@ void AlprClientApp::SetControllerStop()
 
 void AlprClientApp::SetToggleButtonToPause()
 {
+#ifdef USE_IMAGE_BUTTON
+    ui->toggleButton->setStyleSheet(
+        "                                                               \
+        QPushButton {                                                   \
+            border-image: url(:/assets/images/pauseButton.png);         \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:disabled {                                          \
+            border-image: url(:/assets/images/pauseButtonDisabled.png); \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:hover {                                             \
+            border-image: url(:/assets/images/pauseButtonHover.png);    \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:pressed {                                           \
+            border-image: url(:/assets/images/pauseButtonPressed.png);  \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        ");
+#else
     ui->toggleButton->setText("Pause");
+#endif
 }
 
 void AlprClientApp::SetToggleButtonToPlay()
 {
+#ifdef USE_IMAGE_BUTTON
+    ui->toggleButton->setStyleSheet(
+        "                                                               \
+        QPushButton {                                                   \
+            border-image: url(:/assets/images/playButton.png);          \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:disabled {                                          \
+            border-image: url(:/assets/images/playButtonDisabled.png);  \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:hover {                                             \
+            border-image: url(:/assets/images/playButtonHover.png);     \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:pressed {                                           \
+            border-image: url(:/assets/images/playButtonPressed.png);   \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        ");
+#else
     ui->toggleButton->setText("Play");
+#endif
+}
+
+void AlprClientApp::SetFrameGeneratorButtonStyle()
+{
+    int imageButtonWidth = 24;
+    int imageButtonHeight = 24;
+
+    ui->openButton->setStyleSheet(
+        "                                                               \
+        QPushButton {                                                   \
+            border-image: url(:/assets/images/openButton.png);          \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:disabled {                                          \
+            border-image: url(:/assets/images/openButtonDisabled.png);  \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:hover {                                             \
+            border-image: url(:/assets/images/openButtonHover.png);     \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:pressed {                                           \
+            border-image: url(:/assets/images/openButtonPressed.png);   \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        ");
+
+    ui->openButton->setFixedWidth(imageButtonWidth);
+    ui->openButton->setFixedHeight(imageButtonHeight);
+    ui->openButton->setText("");
+
+    ui->toggleButton->setStyleSheet(
+        "                                                               \
+        QPushButton {                                                   \
+            border-image: url(:/assets/images/playButton.png);          \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:disabled {                                          \
+            border-image: url(:/assets/images/playButtonDisabled.png);  \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:hover {                                             \
+            border-image: url(:/assets/images/playButtonHover.png);     \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:pressed {                                           \
+            border-image: url(:/assets/images/playButtonPressed.png);   \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        ");
+
+    ui->toggleButton->setFixedWidth(imageButtonWidth);
+    ui->toggleButton->setFixedHeight(imageButtonHeight);
+    ui->toggleButton->setText("");
+
+    ui->stopButton->setStyleSheet(
+        "                                                               \
+        QPushButton {                                                   \
+            border-image: url(:/assets/images/stopButton.png);          \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:disabled {                                          \
+            border-image: url(:/assets/images/stopButtonDisabled.png);  \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:hover {                                             \
+            border-image: url(:/assets/images/stopButtonHover.png);     \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        QPushButton:pressed {                                           \
+            border-image: url(:/assets/images/stopButtonPressed.png);   \
+            background-repeat: no-repeat;                               \
+        }                                                               \
+        ");
+
+    ui->stopButton->setFixedWidth(imageButtonWidth);
+    ui->stopButton->setFixedHeight(imageButtonHeight);
+    ui->stopButton->setText("");
+
+    ui->horizontalLayout->addWidget(ui->openButton);
+    ui->horizontalLayout->addWidget(ui->toggleButton);
+    ui->horizontalLayout->addWidget(ui->stopButton);
+    ui->horizontalLayout->setAlignment(Qt::AlignLeft);
 }
 
 void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)

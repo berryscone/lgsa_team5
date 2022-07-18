@@ -68,6 +68,8 @@ private:
     void SetToggleButtonToPause();
     void SetToggleButtonToPlay();
 
+    void SetFrameGeneratorButtonStyle();
+
     Ui::AlprClientAppClass *ui;
 
     QThread mFrameGeneratorThread;
