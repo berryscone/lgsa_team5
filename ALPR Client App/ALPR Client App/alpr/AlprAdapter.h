@@ -25,10 +25,8 @@ signals:
 
 public:
     AlprAdapter();
-    ~AlprAdapter() = default;
+    ~AlprAdapter();
 
-    void Create(std::string &country, std::string &configFile, std::string &runtimeDir);
-    void Destroy();
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:

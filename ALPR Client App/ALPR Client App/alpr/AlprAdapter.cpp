@@ -12,26 +12,26 @@ AlprAdapter::AlprAdapter() :
     mUseMotiondetection(0),
     mVehicleQueryProvider(NetworkManager::GetInstance())
 {
+    std::string country = "us";
+    std::string currentPath = QDir::currentPath().toStdString();
+    std::string configFile = currentPath + "/data/openalpr.conf";
+    std::string runtimeDir = currentPath + "/data/runtime_data";
+
+    mAlpr = std::make_unique<alpr::Alpr>(country, configFile, runtimeDir);
+    mAlpr->setTopN(2);
+    if (!mAlpr->isLoaded()) {
+        // TODO: Handle Exception
+        qCritical() << "Error loading OpenALPR";
+        return;
+    }
+
     connect(this, &AlprAdapter::SignalRequestVehicleQuery, 
         &mVehicleQueryProvider, &IVehicleQueryProvider::RequestVehicleQuery);
 }
 
-void AlprAdapter::Create(std::string &country, std::string &configFile, std::string &runtimeDir)
+AlprAdapter::~AlprAdapter()
 {
-    mAlpr = std::make_unique<alpr::Alpr>(country, configFile, runtimeDir);
-
-    mAlpr->setTopN(2);
-
-    if (mAlpr->isLoaded() == false) {
-        std::cerr << "Error loading OpenALPR" << std::endl;
-        return;
-    }
-}
-
-void AlprAdapter::Destroy()
-{
-    qDebug() << "AlprAdapter::Destroy";
-    mAlpr.release();
+    // mAlpr.release();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
@@ -132,51 +132,24 @@ bool AlprAdapter::DetectAndShowCore(std::unique_ptr<alpr::Alpr> & alpr, cv::Mat 
     getTimeMonotonic(&endTime);
     double totalProcessingTime = diffclock(startTime, endTime);
 
-    //std::cout << "Total Time to process image: " << totalProcessingTime << "ms." << std::endl;
+    for (int i = 0; i < results.plates.size(); i++) {
+        char textbuffer[1024];
+        std::vector<cv::Point2f> pointset;
+        for (int z = 0; z < 4; z++)
+            pointset.push_back(Point2i(results.plates[i].plate_points[z].x, results.plates[i].plate_points[z].y));
+        cv::Rect rect = cv::boundingRect(pointset);
 
-    if (writeJson) {
-        std::cout << alpr->toJson(results) << std::endl;
-    } else {
-        for (int i = 0; i < results.plates.size(); i++) {
-            char textbuffer[1024];
-            std::vector<cv::Point2f> pointset;
-            for (int z = 0; z < 4; z++)
-                pointset.push_back(Point2i(results.plates[i].plate_points[z].x, results.plates[i].plate_points[z].y));
-            cv::Rect rect = cv::boundingRect(pointset);
+        QRect qRect(rect.x, rect.y, rect.width, rect.height);
+        detectedRectLists.push_back(qRect);
 
-            QRect qRect(rect.x, rect.y, rect.width, rect.height);
-            detectedRectLists.push_back(qRect);
+        cv::rectangle(frame, rect, cv::Scalar(0, 255, 0),2);
+        sprintf_s(textbuffer, "%s - %.2f", results.plates[i].bestPlate.characters.c_str(), results.plates[i].bestPlate.overall_confidence);
 
-            cv::rectangle(frame, rect, cv::Scalar(0, 255, 0),2);
-            sprintf_s(textbuffer, "%s - %.2f", results.plates[i].bestPlate.characters.c_str(), results.plates[i].bestPlate.overall_confidence);
-
-            cv::putText(frame, textbuffer,
-                cv::Point(rect.x, rect.y-5), //top-left position
-                FONT_HERSHEY_COMPLEX_SMALL, 1,
-                Scalar(0, 255, 0), 0, LINE_AA, false);
-#if 0
-            std::cout << "plate" << i << ": " << results.plates[i].topNPlates.size() << " results";
-            if (measureProcessingTime)
-                std::cout << " -- Processing Time = " << results.plates[i].processing_time_ms << "ms.";
-            std::cout << std::endl;
-
-            if (results.plates[i].regionConfidence > 0)
-                std::cout << "State ID: " << results.plates[i].region << " (" << results.plates[i].regionConfidence << "% confidence)" << std::endl;
-
-            for (int k = 0; k < results.plates[i].topNPlates.size(); k++)
-            {
-                // Replace the multiline newline character with a dash
-                std::string no_newline = results.plates[i].topNPlates[k].characters;
-                std::replace(no_newline.begin(), no_newline.end(), '\n', '-');
-
-                std::cout << "    - " << no_newline << "\t confidence: " << results.plates[i].topNPlates[k].overall_confidence;
-                if (templatePattern.size() > 0 || results.plates[i].regionConfidence > 0)
-                    std::cout << "\t pattern_match: " << results.plates[i].topNPlates[k].matches_template;
-
-                std::cout << std::endl;
-            }
-#endif
-        }
+        cv::putText(frame, textbuffer,
+            cv::Point(rect.x, rect.y-5), //top-left position
+            FONT_HERSHEY_COMPLEX_SMALL, 1,
+            Scalar(0, 255, 0), 0, LINE_AA, false);
     }
+
     return results.plates.size() > 0;
 }

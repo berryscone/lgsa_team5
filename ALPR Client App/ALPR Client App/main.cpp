@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 {
     qRegisterMetaType<cv::Mat>("cv::Mat");
 
+    // Make log file
     QFile log_file("Alpr.log");
     if (!log_file.open(QIODevice::Append | QIODevice::Text)) {
         qCritical() << "Unable to open Alpr.log";
@@ -53,8 +54,9 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageOutput);
     qInfo() << "--------- ALPR Start ---------";
 
-    QApplication a(argc, argv);
-    LoginWindow w;
-    w.show();
-    return a.exec();
+    // Run application
+    QApplication app(argc, argv);
+    LoginWindow login_window;
+    login_window.show();
+    return app.exec();
 }

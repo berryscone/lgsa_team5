@@ -15,9 +15,15 @@ NetworkManager& NetworkManager::GetInstance()
 
 NetworkManager::NetworkManager()
 {
-    // TODO: 데모용 배포할 때 URL 바꿀 것 또는 외부에서 입력 가능하게 export
-    mUrl.setUrl("https://peaceful-atoll-24696.herokuapp.com/");
-    // mUrl.setUrl("http://localhost:8000/");
+    // Read setting file
+    QSettings settings("Alpr.ini", QSettings::IniFormat);
+    QString url = settings.value("url").toString();
+    if (url.trimmed().isEmpty()) {
+        qDebug() << "No url provided";
+        url = "https://peaceful-atoll-24696.herokuapp.com/";
+    }
+    mUrl.setUrl(url);
+    qDebug() << "URL: " << url;
 
     connect(this, &NetworkManager::SignalVehicleDetailProvide,
         &VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::OnVehicleDetailProvided,
@@ -141,13 +147,11 @@ void NetworkManager::OnLoginFinished(LoginCallback callback, QNetworkReply* repl
         mThread.start();
     }
     else if (error == QNetworkReply::NetworkError::AuthenticationRequiredError) {
-        // TODO: 에러 원인 문자열 변경
         const QString detail = obj["detail"].toString();
         qDebug() << "Login Fail: " << detail;
         callback(false, detail);
     }
     else {
-        // TODO: 에러 원인 문자열 변경
         const QString detail = "No server response";
         qDebug() << "Login Fail: " << detail;
         callback(false, detail);

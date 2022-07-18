@@ -15,18 +15,19 @@ class OpenCvAdapter : public QObject
     Q_OBJECT
 
 public:
-    OpenCvAdapter();
+    OpenCvAdapter() = default;
     ~OpenCvAdapter() = default;
 
-    void Create(std::string &filePath);
+    void Create(const std::string &filePath);
     void Destroy();
     void UpdateFrame(cv::Mat &frame);
 
     double GetFrameRate();
+    inline int GetTotalFrames() { return mTotalFrames; }
+    int GetCurrentFrame();
 
 private:
     cv::VideoCapture mVideoFrame;
-    std::string mFilePath;
     int mFrameRate;
-    int mDelay;
+    int mTotalFrames;
 };

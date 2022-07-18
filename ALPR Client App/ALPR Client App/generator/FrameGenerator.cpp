@@ -16,67 +16,36 @@ using namespace cv;
 #define MAX_ALPR_TIME_Q 100
 
 FrameGenerator::FrameGenerator() :
-    mFilePath(""),
-    mIsInitialized(false),
     mFrameCount(0),
-    mTotalFrameCount(0),
     mElapsedDurationMs(0.0),
     mAvgTimePerFrameMs(0.0),
     mJitter(0.0),
     mFps(0)
 {
-
 }
 
-void FrameGenerator::SetOpenFilePath(std::string &filePath)
+void FrameGenerator::SetOpenFilePath(const QString filePath)
 {
-    mFilePath = filePath;
-}
-
-void FrameGenerator::Initialize()
-{
-    std::string country = "us";
-    std::string currentPath = QDir::currentPath().toStdString();
-    std::string configFile = currentPath + "/data/openalpr.conf";
-    std::string runtimeDir = currentPath + "/data/runtime_data";
-
-    if (mFilePath.empty()) {
-        qDebug() << "filePath is empty()";
-        return;
-    }
-
-    mOpenCvAdapter = std::make_unique<OpenCvAdapter>();
-    mAlprAdapter = std::make_unique<AlprAdapter>();
-
-    mOpenCvAdapter->Create(mFilePath);
-    mAlprAdapter->Create(country, configFile, runtimeDir);
-}
-
-void FrameGenerator::Finalize()
-{
-    mQtimer->stop();
-    mOpenCvAdapter->Destroy();
-    mAlprAdapter->Destroy();
+    const std::string filePathStdStr = filePath.toStdString();
+    mOpenCvAdapter.Create(filePathStdStr);
+    mMsPerFrame = 1000 / mOpenCvAdapter.GetFrameRate();
 }
 
 void FrameGenerator::Start()
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    if (mIsInitialized) {
-        qDebug() << "FrameGeneartor is already initialized";
-        return;
-    }
-
-    Initialize();
-
     mQtimer = std::make_unique<QTimer>(this);
-    connect(mQtimer.get(), SIGNAL(timeout()), this, SLOT(processFrameAndUpdateGUI()));
-    mQtimer->setInterval(1000/mOpenCvAdapter->GetFrameRate());
+    connect(mQtimer.get(), &QTimer::timeout, this, &FrameGenerator::processFrameAndUpdateGUI);
+    mQtimer->setInterval(mMsPerFrame);
     mQtimer->setTimerType(Qt::PreciseTimer);
     mQtimer->start();
+}
 
-    mIsInitialized = true;
+void FrameGenerator::Pause()
+{
+    qDebug() << "Function Name: " << Q_FUNC_INFO << ", tid:" << QThread::currentThreadId();
+    mQtimer->stop();
 }
 
 void FrameGenerator::Resume()
@@ -85,18 +54,11 @@ void FrameGenerator::Resume()
     mQtimer->start();
 }
 
-void FrameGenerator::Pause()
-{
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    mQtimer->stop();
-}
-
 void FrameGenerator::Stop()
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
-    Finalize();
-    mIsInitialized = false;
+    mQtimer->stop();
+    mOpenCvAdapter.Destroy();
 }
 
 void FrameGenerator::processFrameAndUpdateGUI()
@@ -106,11 +68,11 @@ void FrameGenerator::processFrameAndUpdateGUI()
 
     UpdateDebugInfo();
 
-    mOpenCvAdapter->UpdateFrame(frame);
+    mOpenCvAdapter.UpdateFrame(frame);
 
-    //TODO : alpr worker¸¦ ¸¸µé¾î¼­ workerThread¿¡¼­ ALPR Ã³¸®¸¦ ÇÏµµ·Ï ÇØ¾ßÇÔ
+    //TODO : alpr workerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ workerThreadï¿½ï¿½ï¿½ï¿½ ALPR Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ïµï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½ï¿½
     TimePoint beforeAlprTime = mClock.now();
-    mAlprAdapter->DetectAndShow(frame, detectedRectLists);
+    mAlprAdapter.DetectAndShow(frame, detectedRectLists);
     TimePoint AfterAlprTime = mClock.now();
     auto count = std::chrono::duration_cast<std::chrono::milliseconds>(AfterAlprTime - beforeAlprTime).count();
     mALPRTimeQ.push((double)count);
@@ -151,8 +113,12 @@ void FrameGenerator::processFrameAndUpdateGUI()
 
     emit UpdateLaptopAppUi(mVideoFrame);
 
-    //NOTE : frame dataÀÇ °æ¿ì ui thread·Î ¹Ù·Î Àü´ÞÇÏ´Â°Ô ³ªÀ»°Å °°À½
-    //FrameModel::GetInstance().SetFrameData(qImage);
+    const int current_frame = mOpenCvAdapter.GetCurrentFrame();
+    const int total_frames = mOpenCvAdapter.GetTotalFrames();
+    if (current_frame >= total_frames) {
+        Stop();
+        emit SignalVideoStopped();
+    }
 }
 
 void FrameGenerator::UpdateDebugInfo()
@@ -175,15 +141,10 @@ void FrameGenerator::UpdateDebugInfo()
     else {
         mFrameCount++;
     }
-    mTotalFrameCount++;
     
-
-    if (mTotalFrameCount >= UINT_MAX) {
-        qDebug() << "mTotalFrameCount overflow";
-        mTotalFrameCount = 0;
-    }
-
-    QTextStream(&debugInfoStr) << "FPS:" << QString::number(mFps, 'f', 0) << ",  Avg.Time/Frame(ms):" << QString::number(mAvgTimePerFrameMs, 'f', 2) << ",  Jitter(ms):" << QString::number(mJitter, 'f', 2) << ",  Frame No.:" << mTotalFrameCount;
+    const int current_frame = mOpenCvAdapter.GetCurrentFrame() - 1;
+    QTextStream(&debugInfoStr) << "FPS:" << QString::number(mFps, 'f', 0) << ",  Avg.Time/Frame(ms):" << QString::number(mAvgTimePerFrameMs, 'f', 2) << 
+        ",  Jitter(ms):" << QString::number(mJitter, 'f', 2) << ",  Frame No.:" << current_frame;
     convertStr = debugInfoStr.toStdString();
 
     DebugInfoModel::GetInstance().SetDebugInfoData(convertStr);

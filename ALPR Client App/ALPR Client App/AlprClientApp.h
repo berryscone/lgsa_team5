@@ -38,7 +38,7 @@ protected:
     void closeEvent(QCloseEvent* event);
 
 private:
-    void makeFrameGeneratorThread();
+    void InitFrameGenerator();
 
 signals:
     void startFrameGenerator();
@@ -47,9 +47,11 @@ signals:
     void stopFrameGenerator();
 
 private slots:
-    void onOpen();
-    void onToggle(bool bIsPause);
+    void OnOpen();
+    void OnStop();
+    void OnToggle(bool bIsPause);
     void OnRecentPlatesViewItemClicked(QListWidgetItem* item);
+    void OnVideoStopped();
 
     void UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail);
     void UpdatePlaybackView(QPixmap pixmap);
@@ -61,8 +63,15 @@ private:
     void UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
     void UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
 
+    void SetControllerRun();
+    void SetControllerStop();
+    void SetToggleButtonToPause();
+    void SetToggleButtonToPlay();
+
     Ui::AlprClientAppClass *ui;
-    QThread *mFrameGeneratorThread;
+
+    QThread mFrameGeneratorThread;
+    FrameGenerator mFrameGenerator;
     bool mbIsStart;
 
     QGraphicsPixmapItem mPlaybackPixmap;
@@ -71,7 +80,6 @@ private:
 
     MsgHandlerManagerPtr mMsgHandlerManager;
     std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
-    std::unique_ptr<FrameGenerator> mFrameGenerator;
 
     int mLicensePlateImageWidth;
     int mLicensePlateImageHeight;

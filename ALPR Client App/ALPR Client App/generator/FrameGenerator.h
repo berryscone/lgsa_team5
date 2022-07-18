@@ -19,36 +19,32 @@ public:
     FrameGenerator();
     ~FrameGenerator() = default;
 
-    void SetOpenFilePath(std::string &filePath);
+    void SetOpenFilePath(const QString filePath);
 
 signals :
     void UpdateLaptopAppUi(QPixmap pixmap);
+    void SignalVideoStopped();
 
 public slots:
     void Start();
-    void Resume();
     void Pause();
+    void Resume();
     void Stop();
     void processFrameAndUpdateGUI();
 
 private :
-    void Initialize();
-    void Finalize();
-
     std::unique_ptr<QTimer> mQtimer;
-    std::unique_ptr<OpenCvAdapter> mOpenCvAdapter;
-    std::unique_ptr<AlprAdapter> mAlprAdapter;
+    OpenCvAdapter mOpenCvAdapter;
+    AlprAdapter mAlprAdapter;
 
-    std::string mFilePath;
     QPixmap mVideoFrame;
-    bool mIsInitialized;
 
     //to check FPS
     Clock mClock;
     TimePoint mPrevTime;
     unsigned int mFrameCount;
-    unsigned int mTotalFrameCount;
     double mElapsedDurationMs;
+    int mMsPerFrame;
     double mAvgTimePerFrameMs;
     double mJitter;
     double mFps;
