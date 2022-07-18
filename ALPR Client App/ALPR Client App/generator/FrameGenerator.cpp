@@ -146,8 +146,6 @@ void FrameGenerator::processFrameAndUpdateGUI()
     }
     mJitter = sqrt(sqr_time / q_cnt);
 
-    mTotalFrameCount++;
-
     QImage qImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
     mVideoFrame = QPixmap::fromImage(qImage.copy(qImage.rect()));
 
@@ -166,16 +164,18 @@ void FrameGenerator::UpdateDebugInfo()
     auto count = std::chrono::duration_cast<std::chrono::milliseconds>(currTime - mPrevTime).count();
 
     mPrevTime = currTime;
-    mFrameCount++;
-    mTotalFrameCount++;
     mElapsedDurationMs += count;
     //mAvgTimePerFrameMs = mElapsedDurationMs / mFrameCount;
 
-    if (mElapsedDurationMs > 1000) {
+    if (mElapsedDurationMs >= 1000) {
         mElapsedDurationMs = 0.0;
         mFps = mFrameCount;
         mFrameCount = 0;
     }
+    else {
+        mFrameCount++;
+    }
+    mTotalFrameCount++;
     
 
     if (mTotalFrameCount >= UINT_MAX) {
