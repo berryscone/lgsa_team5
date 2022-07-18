@@ -21,5 +21,6 @@ private:
 	VehicleDetailHandler();
 
 	QThread mThread;
+	QString mLastPlateNumber;
 };
 

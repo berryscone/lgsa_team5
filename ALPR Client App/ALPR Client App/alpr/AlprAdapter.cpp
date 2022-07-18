@@ -56,7 +56,6 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
 
         for (int i = 0; i < alprResults.plates.size(); ++i) {
-            //qDebug() << alprResults.plates[i].bestPlate.characters.c_str();
             emit SignalRequestVehicleQuery(licensePlateImage,
                 alprResults.plates[i].bestPlate.characters.c_str());
         }
