@@ -27,9 +27,9 @@ N/A
 <hr>
 
 ## ADRs
-- [ADR1](ADR1.md)
-- [ADR2](ADR2.md)
-- [ADR3](ADR3.md)
+- [ADR1 : Adapt MVC pattern using Qt C++ framework](ADR1.md)
+- [ADR2 : Separate Frame Generator and ALPR modules](ADR2.md)
+- [ADR3 : Proxy pattern for network](ADR3.md)
 <hr>
 
 ## Related Views 
