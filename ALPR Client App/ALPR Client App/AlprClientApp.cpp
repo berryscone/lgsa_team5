@@ -196,15 +196,19 @@ void AlprClientApp::OnToggle(bool bIsPause)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    if (bIsPause) {
-        emit pauseFrameGenerator();
-        mMsgHandlerManager->Stop();
-        SetToggleButtonToPlay();
+    if (ui->toggleButton->isEnabled())  // open -> pause -> stop -> open -> pause 할 때 정상적으로 toggle 동작되지 않는 현상 수정
+    {
+        if (bIsPause) {
+            emit pauseFrameGenerator();
+            mMsgHandlerManager->Stop();
+            SetToggleButtonToPlay();
 
-    } else {
-        emit resumeFrameGenerator();
-        mMsgHandlerManager->Start();
-        SetToggleButtonToPause();
+        }
+        else {
+            emit resumeFrameGenerator();
+            mMsgHandlerManager->Start();
+            SetToggleButtonToPause();
+        }
     }
 }
 
@@ -225,6 +229,8 @@ void AlprClientApp::SetControllerStop()
 {
     ui->openButton->setEnabled(true);
     ui->toggleButton->setEnabled(false);
+    if (ui->toggleButton->isChecked())  // open -> pause -> stop -> open -> pause 할 때 정상적으로 toggle 동작되지 않는 현상 수정
+        ui->toggleButton->toggle();
     ui->stopButton->setEnabled(false);
     SetToggleButtonToPlay();
 }
