@@ -30,4 +30,5 @@ public slots:
 private:
     Ui::LoginWindow *ui;
     ILoginProvider& mLoginProvider;
+    const QString mUrl;
 };
