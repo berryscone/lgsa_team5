@@ -4,7 +4,7 @@
 #include <QString>
 #include <QtWidgets/QMainWindow>
 
-#include "AlprClientApp.h"
+#include "MainWindow.h"
 #include "network/NetworkInterfaces.h"
 #include "network/NetworkManager.h"
 

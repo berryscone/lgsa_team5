@@ -107,15 +107,14 @@
   <ItemGroup>
     <ClCompile Include="alpr\AlprAdapter.cpp" />
     <ClCompile Include="handler\VehicleDetailHandler.cpp" />
-    <ClCompile Include="login\LoginWindow.cpp" />
     <ClCompile Include="model\DebugInfoModel.cpp" />
     <ClCompile Include="network\NetworkManager.cpp" />
     <ClCompile Include="network\VehicleCache.cpp" />
-    <ClCompile Include="RecentPlateCustomWidget.cpp" />
+    <ClCompile Include="UserInterface\LoginWindow.cpp" />
+    <ClCompile Include="UserInterface\MainWindow.cpp" />
+    <ClCompile Include="UserInterface\RecentPlateWidget.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
-    <QtMoc Include="AlprClientApp.h" />
-    <ClCompile Include="AlprClientApp.cpp" />
     <ClCompile Include="generator\FrameGenerator.cpp" />
     <ClCompile Include="generator\OpenCvAdapter.cpp" />
     <ClCompile Include="handler\DebugInfoMsgHandler.cpp" />
@@ -140,10 +139,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="network\VehicleCache.h" />
-    <QtMoc Include="RecentPlateCustomWidget.h" />
+    <QtMoc Include="UserInterface\RecentPlateWidget.h" />
+    <QtMoc Include="UserInterface\MainWindow.h" />
+    <QtMoc Include="UserInterface\LoginWindow.h" />
     <QtMoc Include="network\NetworkInterfaces.h" />
     <QtMoc Include="network\NetworkManager.h" />
-    <QtMoc Include="login\LoginWindow.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />
     <QtMoc Include="handler\VehicleDetailHandler.h" />
     <ClInclude Include="model\DebugInfoModel.h" />

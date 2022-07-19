@@ -34,30 +34,24 @@ AlprAdapter::~AlprAdapter()
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)
 {
-    alpr::AlprResults alprResults;
-
     if (mFrameno == 0) {
         mMotiondetector.ResetMotionDetection(&frame);
         mFrameno++;
     }
 
+    cv::Mat orgFrame;
+    frame.copyTo(orgFrame);
+    alpr::AlprResults alprResults;
     DetectAndShowCore(mAlpr, frame, "", false, detectedRectLists, alprResults);
-
-    cv::putText(frame, mText,
-        cv::Point(10, frame.rows - 10), //top-left position
-        FONT_HERSHEY_COMPLEX_SMALL, 0.5,
-        Scalar(0, 255, 0), 0, LINE_AA, false);
 
     if (detectedRectLists.size() > 0) {
         Rect cropRect{detectedRectLists.at(0).x(), detectedRectLists.at(0).y(), detectedRectLists.at(0).width(), detectedRectLists.at(0).height()};
-
-        AdjustCropRect(frame, cropRect);
-        cv::Mat licensePlateImage = frame(cropRect);
-        QString licensePlateStr = alprResults.plates[0].bestPlate.characters.c_str();
+        AdjustCropRect(orgFrame, cropRect);
+        cv::Mat licensePlateImage = orgFrame(cropRect);
 
         for (int i = 0; i < alprResults.plates.size(); ++i) {
-            emit SignalRequestVehicleQuery(licensePlateImage,
-                alprResults.plates[i].bestPlate.characters.c_str());
+            const QString plateNumber(alprResults.plates[i].bestPlate.characters.c_str());
+            emit SignalRequestVehicleQuery(licensePlateImage, plateNumber);
         }
     }
 }

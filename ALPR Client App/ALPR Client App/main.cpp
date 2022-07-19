@@ -1,5 +1,6 @@
-#include "login/LoginWindow.h"
 #include <QtWidgets/QApplication>
+#include "UserInterface/LoginWindow.h"
+#include "UserInterface/MainWindow.h"
 
 
 QTextStream log_stream;
