@@ -15,8 +15,6 @@
 #include <QFileDialog>
 #include "ui_AlprClientApp.h"
 
-#include "handler/MsgHandlerManager.h"
-#include "handler/DebugInfoMsgHandler.h"
 #include "generator/FrameGenerator.h"
 
 #include <memory>
@@ -78,9 +76,6 @@ private:
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;
     std::string mFilePath;
-
-    MsgHandlerManagerPtr mMsgHandlerManager;
-    std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
 
     QPixmap mIconNetIndicatorRed;
     QPixmap mIconNetIndicatorGreen;

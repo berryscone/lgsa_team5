@@ -107,7 +107,6 @@
   <ItemGroup>
     <ClCompile Include="alpr\AlprAdapter.cpp" />
     <ClCompile Include="handler\VehicleDetailHandler.cpp" />
-    <ClCompile Include="model\DebugInfoModel.cpp" />
     <ClCompile Include="network\NetworkManager.cpp" />
     <ClCompile Include="network\VehicleCache.cpp" />
     <ClCompile Include="UserInterface\LoginWindow.cpp" />
@@ -117,19 +116,8 @@
     <QtUic Include="AlprClientApp.ui" />
     <ClCompile Include="generator\FrameGenerator.cpp" />
     <ClCompile Include="generator\OpenCvAdapter.cpp" />
-    <ClCompile Include="handler\DebugInfoMsgHandler.cpp" />
-    <ClCompile Include="handler\MsgHandlerManager.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="LoginWindow.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="handler\DebugInfoMsgHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="handler\IMsgHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="handler\MsgHandlerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="generator\FrameGenerator.h" />
@@ -146,7 +134,6 @@
     <QtMoc Include="network\NetworkManager.h" />
     <QtMoc Include="alpr\AlprAdapter.h" />
     <QtMoc Include="handler\VehicleDetailHandler.h" />
-    <ClInclude Include="model\DebugInfoModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png" />

@@ -1,5 +1,4 @@
 #include "FrameGenerator.h"
-#include "model/DebugInfoModel.h"
 
 #include <climits>
 
@@ -131,7 +130,6 @@ void FrameGenerator::UpdateDebugInfo()
 
     mPrevTime = currTime;
     mElapsedDurationMs += count;
-    //mAvgTimePerFrameMs = mElapsedDurationMs / mFrameCount;
 
     if (mElapsedDurationMs >= 1000) {
         mElapsedDurationMs = 0.0;
@@ -145,7 +143,6 @@ void FrameGenerator::UpdateDebugInfo()
     const int current_frame = mOpenCvAdapter.GetCurrentFrame() - 1;
     QTextStream(&debugInfoStr) << "FPS:" << QString::number(mFps, 'f', 0) << ",  Avg.Time/Frame(ms):" << QString::number(mAvgTimePerFrameMs, 'f', 2) << 
         ",  Jitter(ms):" << QString::number(mJitter, 'f', 2) << ",  Frame No.:" << current_frame;
-    convertStr = debugInfoStr.toStdString();
 
-    DebugInfoModel::GetInstance().SetDebugInfoData(convertStr);
+    emit SignalUpdateDebugInfo(debugInfoStr);
 }

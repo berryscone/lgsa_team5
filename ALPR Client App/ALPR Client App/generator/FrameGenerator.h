@@ -23,6 +23,7 @@ public:
 
 signals :
     void UpdateLaptopAppUi(QPixmap pixmap);
+    void SignalUpdateDebugInfo(QString info);
     void SignalVideoStopped();
 
 public slots:

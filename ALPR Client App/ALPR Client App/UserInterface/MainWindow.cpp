@@ -29,16 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->push_stop, &QPushButton::clicked, this, &MainWindow::OnStop);
     connect(ui->push_pause, &QPushButton::toggled, this, &MainWindow::OnToggle);
 
-    mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
-    mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
-
-    mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
-
     connect(ui->list_recent_plates, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(OnRecentPlatesViewItemClicked(QListWidgetItem*)));
-
-    connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
-            this, SLOT(UpdateDebugInfoView(QString)));
 
     connect(&VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::SignalVehicleDetailPublish,
             this, &MainWindow::UpdateUI);
@@ -57,6 +49,7 @@ void MainWindow::InitFrameGenerator()
 {
     connect(&mFrameGenerator, &FrameGenerator::UpdateLaptopAppUi, this, &MainWindow::UpdatePlaybackView);
     connect(&mFrameGenerator, &FrameGenerator::SignalVideoStopped, this, &MainWindow::OnVideoStopped);
+    connect(&mFrameGenerator, &FrameGenerator::SignalUpdateDebugInfo, this, &MainWindow::UpdateDebugInfoView);
 
     connect(this, &MainWindow::startFrameGenerator, &mFrameGenerator, &FrameGenerator::Start);
     connect(this, &MainWindow::pauseFrameGenerator, &mFrameGenerator, &FrameGenerator::Pause);
@@ -178,8 +171,6 @@ void MainWindow::OnOpen()
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
 
     emit startFrameGenerator();
-    mMsgHandlerManager->Start();
-
     SetControllerRun();
 }
 
@@ -195,13 +186,11 @@ void MainWindow::OnToggle(bool checked)
 
     if (checked) {
         emit pauseFrameGenerator();
-        mMsgHandlerManager->Stop();
         SetToggleButtonToPlay();
 
     }
     else {
         emit resumeFrameGenerator();
-        mMsgHandlerManager->Start();
         SetToggleButtonToPause();
     }
 }
@@ -396,8 +385,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     qDebug() << "call closeEvent tid:" << QThread::currentThreadId();
 
     emit stopFrameGenerator();
-    mMsgHandlerManager->Stop();
-
     QApplication::quit();
 }
 

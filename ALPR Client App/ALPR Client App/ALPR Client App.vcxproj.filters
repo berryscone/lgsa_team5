@@ -2,20 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="handler\DebugInfoMsgHandler.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="handler\MsgHandlerManager.cpp">
-      <Filter>Handler</Filter>
-    </ClCompile>
     <ClCompile Include="generator\FrameGenerator.cpp">
       <Filter>Generator</Filter>
     </ClCompile>
     <ClCompile Include="generator\OpenCvAdapter.cpp">
       <Filter>Generator</Filter>
-    </ClCompile>
-    <ClCompile Include="model\DebugInfoModel.cpp">
-      <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="alpr\AlprAdapter.cpp">
       <Filter>Alpr</Filter>
@@ -40,15 +31,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="handler\DebugInfoMsgHandler.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
-    <QtMoc Include="handler\IMsgHandler.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
-    <QtMoc Include="handler\MsgHandlerManager.h">
-      <Filter>Handler</Filter>
-    </QtMoc>
     <QtMoc Include="generator\FrameGenerator.h">
       <Filter>Generator</Filter>
     </QtMoc>
@@ -85,9 +67,6 @@
     <QtUic Include="LoginWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Model">
-      <UniqueIdentifier>{ae7312be-456a-4711-b0b3-97811080f1f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Generator">
       <UniqueIdentifier>{108ee767-8f26-40eb-87a8-e776c08eef20}</UniqueIdentifier>
     </Filter>
@@ -111,9 +90,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="model\DebugInfoModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="network\VehicleCache.h">
       <Filter>Network</Filter>
     </ClInclude>
