@@ -5,12 +5,11 @@
 
 #include <QMessageBox>
 
-#define USE_IMAGE_BUTTON
+// #define USE_IMAGE_BUTTON
 
 AlprClientApp::AlprClientApp(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
-    , mbIsStart(false)
     , mLicensePlateImageWidth(140)
     , mLicensePlateImageHeight(50)
 {
@@ -18,23 +17,27 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("ALPR Client App");
 
-    ui->playbackView->setScene(new QGraphicsScene(this));
-    ui->playbackView->scene()->addItem(&mPlaybackPixmap);
+    mIconNetIndicatorRed = QPixmap(":/assets/images/redButton.png");
+    mIconNetIndicatorGreen = QPixmap(":/assets/images/greenButton.png");
+    ui->label_net_status_indicator->setPixmap(mIconNetIndicatorGreen);
 
-    ui->vehicleInfo->setWordWrap(true);
-    ui->alertInfo->setWordWrap(true);
+    ui->graphics_playback->setScene(new QGraphicsScene(this));
+    ui->graphics_playback->scene()->addItem(&mPlaybackPixmap);
+
+    ui->label_alert_info->setWordWrap(true);
+    ui->label_vehicle_info->setWordWrap(true);
 
     // Connect Video Control Widgets
-    connect(ui->openButton, &QPushButton::clicked, this, &AlprClientApp::OnOpen);
-    connect(ui->stopButton, &QPushButton::clicked, this, &AlprClientApp::OnStop);
-    connect(ui->toggleButton, &QPushButton::toggled, this, &AlprClientApp::OnToggle);
+    connect(ui->push_open, &QPushButton::clicked, this, &AlprClientApp::OnOpen);
+    connect(ui->push_stop, &QPushButton::clicked, this, &AlprClientApp::OnStop);
+    connect(ui->push_pause, &QPushButton::toggled, this, &AlprClientApp::OnToggle);
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
 
     mMsgHandlerManager->AddMsgHandler(mDebugInfoMsgHandler.get());
 
-    connect(ui->recentPlatesListView, SIGNAL(itemClicked(QListWidgetItem*)),
+    connect(ui->list_recent_plates, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(OnRecentPlatesViewItemClicked(QListWidgetItem*)));
 
     connect(mDebugInfoMsgHandler.get(), SIGNAL(UpdateLaptopAppUi(QString)),
@@ -91,7 +94,7 @@ void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle
 void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
 {   
     mPlaybackPixmap.setPixmap(pixmap);
-    ui->playbackView->fitInView(&mPlaybackPixmap, Qt::KeepAspectRatio);
+    ui->graphics_playback->fitInView(&mPlaybackPixmap, Qt::KeepAspectRatio);
 
     qApp->processEvents();
 }
@@ -112,14 +115,14 @@ void AlprClientApp::UpdateRecentPlatesView(QImage &licensePlateImage, QJsonObjec
     plate->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    ui->recentPlatesListView->addItem(plate);
-    ui->recentPlatesListView->setItemWidget(plate, wigetItem);
-    ui->recentPlatesListView->setSpacing(3);
-    ui->recentPlatesListView->setVerticalScrollMode(QListWidget::ScrollPerPixel);
-    ui->recentPlatesListView->scrollToBottom();
-    ui->recentPlatesListView->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
-    ui->recentPlatesListView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
-    ui->recentPlatesListView->setAlternatingRowColors(true);
+    ui->list_recent_plates->addItem(plate);
+    ui->list_recent_plates->setItemWidget(plate, wigetItem);
+    ui->list_recent_plates->setSpacing(3);
+    ui->list_recent_plates->setVerticalScrollMode(QListWidget::ScrollPerPixel);
+    ui->list_recent_plates->scrollToBottom();
+    ui->list_recent_plates->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+    ui->list_recent_plates->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
+    ui->list_recent_plates->setAlternatingRowColors(true);
 }
 
 void AlprClientApp::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
@@ -131,14 +134,14 @@ void AlprClientApp::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject
     vehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
     vehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
 
-    ui->lastLicensePlateView->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
-    ui->vehicleInfo->setText(vehicleDetailInfoStr);
-    ui->vehicleInfo->setWordWrap(true);
+    ui->label_last_plate->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+    ui->label_vehicle_info->setText(vehicleDetailInfoStr);
+    ui->label_vehicle_info->setWordWrap(true);
 }
 
 void AlprClientApp::UpdateDebugInfoView(QString debugInfo)
 {
-    ui->debugInfo->setText(debugInfo);
+    ui->label_debug_info->setText(debugInfo);
 }
 
 void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
@@ -154,34 +157,25 @@ void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &
         alertVehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
         alertVehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
 
-        ui->alertLicensePlateView->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
-        ui->alertInfo->setText(alertVehicleDetailInfoStr);
+        ui->label_alert_plate->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
+        ui->label_alert_info->setText(alertVehicleDetailInfoStr);
     }
 }
 
 void AlprClientApp::OnOpen()
 {
     QFileDialog fd;
-#if 0
-    fd.show();
-    fd.exec();
-    QString strFileName = fd.selectedFiles().at(0);
-    mFrameGenerator.SetOpenFilePath(strFileName);
-#else   // 다이얼로그 취소한 경우 예외처리
     QString strFileName = fd.getOpenFileName(0, tr("Open Video File..."), "", "");
-
-    if (strFileName.isEmpty())  
+    if (strFileName.isEmpty()) {
+        qDebug() << "File Open Canceled";
         return;
-
+    }
     mFrameGenerator.SetOpenFilePath(strFileName);
-#endif    
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
 
     emit startFrameGenerator();
     mMsgHandlerManager->Start();
-
-    mbIsStart = true;
 
     SetControllerRun();
 }
@@ -192,23 +186,20 @@ void AlprClientApp::OnStop()
     SetControllerStop();
 }
 
-void AlprClientApp::OnToggle(bool bIsPause)
+void AlprClientApp::OnToggle(bool checked)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
-    if (ui->toggleButton->isEnabled())  // open -> pause -> stop -> open -> pause 할 때 정상적으로 toggle 동작되지 않는 현상 수정
-    {
-        if (bIsPause) {
-            emit pauseFrameGenerator();
-            mMsgHandlerManager->Stop();
-            SetToggleButtonToPlay();
+    if (checked) {
+        emit pauseFrameGenerator();
+        mMsgHandlerManager->Stop();
+        SetToggleButtonToPlay();
 
-        }
-        else {
-            emit resumeFrameGenerator();
-            mMsgHandlerManager->Start();
-            SetToggleButtonToPause();
-        }
+    }
+    else {
+        emit resumeFrameGenerator();
+        mMsgHandlerManager->Start();
+        SetToggleButtonToPause();
     }
 }
 
@@ -219,26 +210,24 @@ void AlprClientApp::OnVideoStopped()
 
 void AlprClientApp::SetControllerRun()
 {
-    ui->openButton->setEnabled(false);
-    ui->toggleButton->setEnabled(true);
-    ui->stopButton->setEnabled(true);
+    ui->push_open->setEnabled(false);
+    ui->push_pause->setEnabled(true);
+    ui->push_stop->setEnabled(true);
     SetToggleButtonToPause();
 }
 
 void AlprClientApp::SetControllerStop()
 {
-    ui->openButton->setEnabled(true);
-    ui->toggleButton->setEnabled(false);
-    if (ui->toggleButton->isChecked())  // open -> pause -> stop -> open -> pause 할 때 정상적으로 toggle 동작되지 않는 현상 수정
-        ui->toggleButton->toggle();
-    ui->stopButton->setEnabled(false);
+    ui->push_open->setEnabled(true);
+    ui->push_pause->setEnabled(false);
+    ui->push_stop->setEnabled(false);
     SetToggleButtonToPlay();
 }
 
 void AlprClientApp::SetToggleButtonToPause()
 {
 #ifdef USE_IMAGE_BUTTON
-    ui->toggleButton->setStyleSheet(
+    ui->push_pause->setStyleSheet(
         "                                                               \
         QPushButton {                                                   \
             border-image: url(:/assets/images/pauseButton.png);         \
@@ -258,14 +247,15 @@ void AlprClientApp::SetToggleButtonToPause()
         }                                                               \
         ");
 #else
-    ui->toggleButton->setText("Pause");
+    ui->push_pause->setText("Pause");
+    ui->push_pause->clicked(true);
 #endif
 }
 
 void AlprClientApp::SetToggleButtonToPlay()
 {
 #ifdef USE_IMAGE_BUTTON
-    ui->toggleButton->setStyleSheet(
+    ui->push_pause->setStyleSheet(
         "                                                               \
         QPushButton {                                                   \
             border-image: url(:/assets/images/playButton.png);          \
@@ -285,19 +275,20 @@ void AlprClientApp::SetToggleButtonToPlay()
         }                                                               \
         ");
 #else
-    ui->toggleButton->setText("Play");
-#endif
+    ui->push_pause->setText("Play");
+    ui->push_pause->clicked(false);
 }
+#endif
 
 void AlprClientApp::SetFrameGeneratorButtonStyle()
 {
     int imageButtonWidth = 24;
     int imageButtonHeight = 24;
 
-    ui->openButton->setStyleSheet(
+    ui->push_open->setStyleSheet(
         "                                                               \
         QPushButton {                                                   \
-            border-image: url(:/assets/images/openButton.png);          \
+            border-image: url(:/assets/images/push_open.png);          \
             background-repeat: no-repeat;                               \
         }                                                               \
         QPushButton:disabled {                                          \
@@ -314,11 +305,11 @@ void AlprClientApp::SetFrameGeneratorButtonStyle()
         }                                                               \
         ");
 
-    ui->openButton->setFixedWidth(imageButtonWidth);
-    ui->openButton->setFixedHeight(imageButtonHeight);
-    ui->openButton->setText("");
+    ui->push_open->setFixedWidth(imageButtonWidth);
+    ui->push_open->setFixedHeight(imageButtonHeight);
+    ui->push_open->setText("");
 
-    ui->toggleButton->setStyleSheet(
+    ui->push_pause->setStyleSheet(
         "                                                               \
         QPushButton {                                                   \
             border-image: url(:/assets/images/playButton.png);          \
@@ -338,14 +329,14 @@ void AlprClientApp::SetFrameGeneratorButtonStyle()
         }                                                               \
         ");
 
-    ui->toggleButton->setFixedWidth(imageButtonWidth);
-    ui->toggleButton->setFixedHeight(imageButtonHeight);
-    ui->toggleButton->setText("");
+    ui->push_pause->setFixedWidth(imageButtonWidth);
+    ui->push_pause->setFixedHeight(imageButtonHeight);
+    ui->push_pause->setText("");
 
-    ui->stopButton->setStyleSheet(
+    ui->push_stop->setStyleSheet(
         "                                                               \
         QPushButton {                                                   \
-            border-image: url(:/assets/images/stopButton.png);          \
+            border-image: url(:/assets/images/push_stop.png);          \
             background-repeat: no-repeat;                               \
         }                                                               \
         QPushButton:disabled {                                          \
@@ -362,19 +353,19 @@ void AlprClientApp::SetFrameGeneratorButtonStyle()
         }                                                               \
         ");
 
-    ui->stopButton->setFixedWidth(imageButtonWidth);
-    ui->stopButton->setFixedHeight(imageButtonHeight);
-    ui->stopButton->setText("");
+    ui->push_stop->setFixedWidth(imageButtonWidth);
+    ui->push_stop->setFixedHeight(imageButtonHeight);
+    ui->push_stop->setText("");
 
-    ui->horizontalLayout->addWidget(ui->openButton);
-    ui->horizontalLayout->addWidget(ui->toggleButton);
-    ui->horizontalLayout->addWidget(ui->stopButton);
+    ui->horizontalLayout->addWidget(ui->push_open);
+    ui->horizontalLayout->addWidget(ui->push_pause);
+    ui->horizontalLayout->addWidget(ui->push_stop);
     ui->horizontalLayout->setAlignment(Qt::AlignLeft);
 }
 
 void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 {
-    RecentPlateCustomWidget *widgetItem = dynamic_cast<RecentPlateCustomWidget*>(ui->recentPlatesListView->itemWidget(item));
+    RecentPlateCustomWidget *widgetItem = dynamic_cast<RecentPlateCustomWidget*>(ui->list_recent_plates->itemWidget(item));
     QMessageBox msgBox;
 
     msgBox.setIconPixmap(widgetItem->GetLicensePlatePixmap());
@@ -387,15 +378,12 @@ void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 void AlprClientApp::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
 {
     qDebug() << __FUNCTION__ << " NetworkError : " << status;
-    unique_ptr<QPixmap> statusIconPixmap;
 
     if (status == QNetworkReply::NetworkError::NoError) {
-        statusIconPixmap = make_unique<QPixmap>(QDir::currentPath()+"/assets/images/greenButton.png");
+        ui->label_net_status_indicator->setPixmap(mIconNetIndicatorGreen);
     } else {
-        statusIconPixmap = make_unique<QPixmap>(QDir::currentPath()+"/assets/images/redButton.png");
+        ui->label_net_status_indicator->setPixmap(mIconNetIndicatorRed);
     }
-
-    ui->networkStatusIcon->setPixmap(*statusIconPixmap);
 }
 
 void AlprClientApp::closeEvent(QCloseEvent* event)

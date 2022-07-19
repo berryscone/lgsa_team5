@@ -1,5 +1,6 @@
-#include "login/LoginWindow.h"
 #include <QtWidgets/QApplication>
+#include "login/LoginWindow.h"
+#include "AlprClientApp.h"
 
 
 QTextStream log_stream;
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
 
     // Run application
     QApplication app(argc, argv);
+    // AlprClientApp login_window;
     LoginWindow login_window;
     login_window.show();
     return app.exec();

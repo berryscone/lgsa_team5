@@ -6,400 +6,264 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1087</width>
-    <height>710</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>AlprClientAppClass</string>
+   <string>ALPR Client Application</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>80</y>
-      <width>501</width>
-      <height>391</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <widget class="QGraphicsView" name="playbackView">
-     <property name="geometry">
-      <rect>
-       <x>11</x>
-       <y>9</y>
-       <width>480</width>
-       <height>371</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="playbackTextTitle">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>40</y>
-      <width>131</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>PlayBack View</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QFrame" name="frame_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>261</width>
-      <height>621</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QListWidget" name="recentPlatesListView">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>241</width>
-       <height>601</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-     <property name="lineWidth">
-      <number>2</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="playbackTextTitle_2">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>40</y>
-      <width>131</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Recent Plates</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QFrame" name="frame_3">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>476</y>
-      <width>501</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>486</y>
-      <width>481</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="openButton">
-       <property name="text">
-        <string>Open</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="toggleButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Play</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stopButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Stop</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QFrame" name="frame_4">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>537</y>
-      <width>501</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="vehicleInfo">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>291</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>No license plate information recognized yet</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="playbackTextTitle_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>281</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Infomation of Recognized Plate Number</string>
-     </property>
-     <property name="scaledContents">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lastLicensePlateView">
-     <property name="geometry">
-      <rect>
-       <x>320</x>
-       <y>20</y>
-       <width>140</width>
-       <height>50</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Network Status</string>
-    </property>
-   </widget>
-   <widget class="QFrame" name="frame_5">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>7</y>
-      <width>261</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="networkStatusIcon">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>5</y>
-       <width>21</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Assets.qrc">:/assets/images/greenButton.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_6">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>660</y>
-      <width>501</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="debugInfo">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>481</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>DebugInfo</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_7">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>80</y>
-      <width>271</width>
-      <height>621</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="alertInfo">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>251</width>
-       <height>521</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>No license plate to warn is not recognized yet</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="alertLicensePlateView">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>140</width>
-       <height>50</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="playbackTextTitle_4">
-    <property name="geometry">
-     <rect>
-      <x>890</x>
-      <y>30</y>
-      <width>131</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Alert Info</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,12,1,6" columnstretch="1,2,1" rowminimumheight="0,0,0,0,0">
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_recent_plate">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Recent Plates</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_alert">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Alert</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="push_open">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Open</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="push_pause">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Puase</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="push_stop">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Stop</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_playback">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Playback</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QGraphicsView" name="graphics_playback"/>
+      </item>
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_net_status_indicator">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Network Status</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="1">
+       <layout class="QGridLayout" name="gridLayout_8" rowstretch="5,1" columnstretch="3,1">
+        <item row="1" column="0" colspan="2">
+         <widget class="QLabel" name="label_debug_info">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Debug Info</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_vehicle_info">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Last Vehicle Info</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_last_plate">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Last Vehicle Plate</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0" rowspan="3">
+       <widget class="QListWidget" name="list_recent_plates"/>
+      </item>
+      <item row="2" column="2" rowspan="3">
+       <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,10">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_alert_plate">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Alert Plate</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_alert_info">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Alert Info</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources>

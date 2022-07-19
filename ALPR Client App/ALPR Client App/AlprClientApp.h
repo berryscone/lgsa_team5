@@ -49,7 +49,7 @@ signals:
 private slots:
     void OnOpen();
     void OnStop();
-    void OnToggle(bool bIsPause);
+    void OnToggle(bool checked);
     void OnRecentPlatesViewItemClicked(QListWidgetItem* item);
     void OnVideoStopped();
 
@@ -74,7 +74,6 @@ private:
 
     QThread mFrameGeneratorThread;
     FrameGenerator mFrameGenerator;
-    bool mbIsStart;
 
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;
@@ -82,6 +81,9 @@ private:
 
     MsgHandlerManagerPtr mMsgHandlerManager;
     std::unique_ptr<DebugInfoMsgHandler> mDebugInfoMsgHandler;
+
+    QPixmap mIconNetIndicatorRed;
+    QPixmap mIconNetIndicatorGreen;
 
     int mLicensePlateImageWidth;
     int mLicensePlateImageHeight;
