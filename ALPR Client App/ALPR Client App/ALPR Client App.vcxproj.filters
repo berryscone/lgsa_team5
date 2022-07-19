@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AlprClientApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="handler\DebugInfoMsgHandler.cpp">
       <Filter>Handler</Filter>
@@ -21,9 +20,6 @@
     <ClCompile Include="alpr\AlprAdapter.cpp">
       <Filter>Alpr</Filter>
     </ClCompile>
-    <ClCompile Include="login\LoginWindow.cpp">
-      <Filter>Login</Filter>
-    </ClCompile>
     <ClCompile Include="network\NetworkManager.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -33,10 +29,17 @@
     <ClCompile Include="network\VehicleCache.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="RecentPlateCustomWidget.cpp" />
+    <ClCompile Include="UserInterface\LoginWindow.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\MainWindow.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\RecentPlateWidget.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="AlprClientApp.h" />
     <QtMoc Include="handler\DebugInfoMsgHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
@@ -55,9 +58,6 @@
     <QtMoc Include="alpr\AlprAdapter.h">
       <Filter>Alpr</Filter>
     </QtMoc>
-    <QtMoc Include="login\LoginWindow.h">
-      <Filter>Login</Filter>
-    </QtMoc>
     <QtMoc Include="network\NetworkInterfaces.h">
       <Filter>Network</Filter>
     </QtMoc>
@@ -67,7 +67,15 @@
     <QtMoc Include="handler\VehicleDetailHandler.h">
       <Filter>Handler</Filter>
     </QtMoc>
-    <QtMoc Include="RecentPlateCustomWidget.h" />
+    <QtMoc Include="UserInterface\LoginWindow.h">
+      <Filter>UserInterface</Filter>
+    </QtMoc>
+    <QtMoc Include="UserInterface\MainWindow.h">
+      <Filter>UserInterface</Filter>
+    </QtMoc>
+    <QtMoc Include="UserInterface\RecentPlateWidget.h">
+      <Filter>UserInterface</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />
@@ -89,9 +97,6 @@
     <Filter Include="Alpr">
       <UniqueIdentifier>{7287d9ae-5e29-49a1-b971-281a0edfb49f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Login">
-      <UniqueIdentifier>{b918cc77-3a78-4f71-918a-68c572de82a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Network">
       <UniqueIdentifier>{54422c8a-d010-4575-b27b-2a5b8dc44f00}</UniqueIdentifier>
     </Filter>
@@ -100,6 +105,9 @@
     </Filter>
     <Filter Include="Assets\Images">
       <UniqueIdentifier>{57c46807-3a1d-49e9-9047-2500e48d95d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface">
+      <UniqueIdentifier>{0567ec9d-f164-40cc-b24e-31c4c4b2fd7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,14 +1,6 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include "ui_AlprClientApp.h"
-
-#include "handler/MsgHandlerManager.h"
-#include "handler/DebugInfoMsgHandler.h"
-#include "generator/FrameGenerator.h"
-
-#include <memory>
-
+#include <QtWidgets>
 #include <QMainWindow>
 #include <QDebug>
 #include <QGraphicsScene>
@@ -21,18 +13,26 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QFileDialog>
+#include "ui_AlprClientApp.h"
+
+#include "handler/MsgHandlerManager.h"
+#include "handler/DebugInfoMsgHandler.h"
+#include "generator/FrameGenerator.h"
+
+#include <memory>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class AlprClientAppClass; };
 QT_END_NAMESPACE
 
-class AlprClientApp : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    AlprClientApp(QWidget *parent = nullptr);
-    ~AlprClientApp();
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
 protected:
     void closeEvent(QCloseEvent* event);
@@ -59,7 +59,7 @@ private slots:
     void UpdateNetworkStatusUI(QNetworkReply::NetworkError status);
 
 private:
-    void UpdateRecentPlatesView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
+    void UpdateRecentPlatesView(QImage& plateImage, QString requestPlate, bool isExact, QJsonObject& detail);
     void UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
     void UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
 

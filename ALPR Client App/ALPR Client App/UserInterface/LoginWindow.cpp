@@ -63,7 +63,7 @@ void LoginWindow::OnLoginFinished(const bool success, const QString detail)
 
 void LoginWindow::LaunchProgram()
 {
-    AlprClientApp* alprClientAppWindow = new AlprClientApp();
+    MainWindow* alprClientAppWindow = new MainWindow();
     this->hide();
     alprClientAppWindow->show();
 }

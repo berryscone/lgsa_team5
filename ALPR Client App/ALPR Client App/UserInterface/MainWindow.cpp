@@ -1,13 +1,13 @@
-#include "AlprClientApp.h"
+#include "MainWindow.h"
 #include "handler/VehicleDetailHandler.h"
 
-#include "RecentPlateCustomWidget.h"
+#include "UserInterface/RecentPlateWidget.h"
 
 #include <QMessageBox>
 
 // #define USE_IMAGE_BUTTON
 
-AlprClientApp::AlprClientApp(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::AlprClientAppClass())
     , mLicensePlateImageWidth(140)
@@ -24,13 +24,10 @@ AlprClientApp::AlprClientApp(QWidget *parent)
     ui->graphics_playback->setScene(new QGraphicsScene(this));
     ui->graphics_playback->scene()->addItem(&mPlaybackPixmap);
 
-    ui->label_alert_info->setWordWrap(true);
-    ui->label_vehicle_info->setWordWrap(true);
-
     // Connect Video Control Widgets
-    connect(ui->push_open, &QPushButton::clicked, this, &AlprClientApp::OnOpen);
-    connect(ui->push_stop, &QPushButton::clicked, this, &AlprClientApp::OnStop);
-    connect(ui->push_pause, &QPushButton::toggled, this, &AlprClientApp::OnToggle);
+    connect(ui->push_open, &QPushButton::clicked, this, &MainWindow::OnOpen);
+    connect(ui->push_stop, &QPushButton::clicked, this, &MainWindow::OnStop);
+    connect(ui->push_pause, &QPushButton::toggled, this, &MainWindow::OnToggle);
 
     mMsgHandlerManager = std::make_unique<MsgHandlerManager>();
     mDebugInfoMsgHandler = std::make_unique<DebugInfoMsgHandler>();
@@ -44,10 +41,10 @@ AlprClientApp::AlprClientApp(QWidget *parent)
             this, SLOT(UpdateDebugInfoView(QString)));
 
     connect(&VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::SignalVehicleDetailPublish,
-            this, &AlprClientApp::UpdateUI);
+            this, &MainWindow::UpdateUI);
 
     connect(&NetworkManager::GetInstance(), &NetworkManager::SignalNetworkStatusChanged,
-            this, &AlprClientApp::UpdateNetworkStatusUI);
+            this, &MainWindow::UpdateNetworkStatusUI);
 
     InitFrameGenerator();
 
@@ -56,32 +53,36 @@ AlprClientApp::AlprClientApp(QWidget *parent)
 #endif
 }
 
-void AlprClientApp::InitFrameGenerator()
+void MainWindow::InitFrameGenerator()
 {
-    connect(&mFrameGenerator, &FrameGenerator::UpdateLaptopAppUi, this, &AlprClientApp::UpdatePlaybackView);
-    connect(&mFrameGenerator, &FrameGenerator::SignalVideoStopped, this, &AlprClientApp::OnVideoStopped);
+    connect(&mFrameGenerator, &FrameGenerator::UpdateLaptopAppUi, this, &MainWindow::UpdatePlaybackView);
+    connect(&mFrameGenerator, &FrameGenerator::SignalVideoStopped, this, &MainWindow::OnVideoStopped);
 
-    connect(this, &AlprClientApp::startFrameGenerator, &mFrameGenerator, &FrameGenerator::Start);
-    connect(this, &AlprClientApp::pauseFrameGenerator, &mFrameGenerator, &FrameGenerator::Pause);
-    connect(this, &AlprClientApp::resumeFrameGenerator, &mFrameGenerator, &FrameGenerator::Resume);
-    connect(this, &AlprClientApp::stopFrameGenerator, &mFrameGenerator, &FrameGenerator::Stop);
+    connect(this, &MainWindow::startFrameGenerator, &mFrameGenerator, &FrameGenerator::Start);
+    connect(this, &MainWindow::pauseFrameGenerator, &mFrameGenerator, &FrameGenerator::Pause);
+    connect(this, &MainWindow::resumeFrameGenerator, &mFrameGenerator, &FrameGenerator::Resume);
+    connect(this, &MainWindow::stopFrameGenerator, &mFrameGenerator, &FrameGenerator::Stop);
 
     mFrameGenerator.moveToThread(&mFrameGeneratorThread);
     mFrameGeneratorThread.start();
 }
 
-void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
+void MainWindow::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
 {
     QJsonArray vehicleDetailArray = vehicle_detail["vehicle_details"].toArray();
-    QImage resizePlateImage = plate_image;
-    resizePlateImage = resizePlateImage.scaled(mLicensePlateImageWidth, mLicensePlateImageHeight);
+    const QString requestPlate = vehicle_detail["plate_number"].toString();
+    const bool isExact = vehicle_detail["is_exact"].toBool();
+    QImage resizePlateImage = plate_image.scaled(mLicensePlateImageWidth, mLicensePlateImageHeight);
 
-    if (vehicleDetailArray.size() > 0) {
-        QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(0).toObject();
+    for (int i = 0; i < vehicleDetailArray.size(); ++i) {
+        if (i > 0 && !isExact) {
+            break;
+        }
+
+        QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(i).toObject();
 
         //UpdateRecentPltesView
-        QString licensePlatesNumber = vehicleDetailJsonObject["plate_number"].toString();
-        UpdateRecentPlatesView(resizePlateImage, vehicleDetailJsonObject);
+        UpdateRecentPlatesView(resizePlateImage, requestPlate, isExact, vehicleDetailJsonObject);
 
         //UpdateVehicleInfoView
         UpdateVehicleInfoView(resizePlateImage, vehicleDetailJsonObject);
@@ -91,7 +92,7 @@ void AlprClientApp::UpdateUI(const QImage plate_image, const QJsonObject vehicle
     }
 }
 
-void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
+void MainWindow::UpdatePlaybackView(QPixmap pixmap)
 {   
     mPlaybackPixmap.setPixmap(pixmap);
     ui->graphics_playback->fitInView(&mPlaybackPixmap, Qt::KeepAspectRatio);
@@ -99,70 +100,72 @@ void AlprClientApp::UpdatePlaybackView(QPixmap pixmap)
     qApp->processEvents();
 }
 
-void AlprClientApp::UpdateRecentPlatesView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
+void MainWindow::UpdateRecentPlatesView(QImage& plateImage, QString requestPlate, bool isExact, QJsonObject& detail)
 {
-    QString vehicleDetailInfoStr;
-
-    vehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
-    vehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
-    vehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
-    vehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
-
-    RecentPlateCustomWidget *wigetItem = new RecentPlateCustomWidget(licensePlateImage, vehicleDetailInfoStr);
+    RecentPlateWidget* wigetItem = new RecentPlateWidget(plateImage, requestPlate, isExact, detail);
     QListWidgetItem* plate = new QListWidgetItem;
     plate->setSizeHint(QSize(mLicensePlateImageWidth, mLicensePlateImageHeight));
-    plate->setText(vehicleDetailJsonObject["plate_number"].toString());
-    plate->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     ui->list_recent_plates->addItem(plate);
     ui->list_recent_plates->setItemWidget(plate, wigetItem);
-    ui->list_recent_plates->setSpacing(3);
-    ui->list_recent_plates->setVerticalScrollMode(QListWidget::ScrollPerPixel);
     ui->list_recent_plates->scrollToBottom();
-    ui->list_recent_plates->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
-    ui->list_recent_plates->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
-    ui->list_recent_plates->setAlternatingRowColors(true);
 }
 
-void AlprClientApp::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
+void MainWindow::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
 {
-    QString vehicleDetailInfoStr;
+    const QString number = vehicleDetailJsonObject["plate_number"].toString();
+    ui->line_info_number->setText(number);
 
-    vehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
-    vehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
-    vehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
-    vehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
+    const QString make = vehicleDetailJsonObject["make"].toString();
+    ui->line_info_make->setText(make);
 
-    ui->label_last_plate->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
-    ui->label_vehicle_info->setText(vehicleDetailInfoStr);
-    ui->label_vehicle_info->setWordWrap(true);
+    const QString model = vehicleDetailJsonObject["model"].toString();
+    ui->line_info_model->setText(model);
+
+    const QString color = vehicleDetailJsonObject["color"].toString();
+    ui->line_info_color->setText(color);
+
+    ui->label_last_plate->setPixmap(QPixmap::fromImage(licensePlateImage));
 }
 
-void AlprClientApp::UpdateDebugInfoView(QString debugInfo)
+void MainWindow::UpdateDebugInfoView(QString debugInfo)
 {
     ui->label_debug_info->setText(debugInfo);
 }
 
-void AlprClientApp::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
+void MainWindow::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
 {
-    QString alertVehicleDetailInfoStr;
-
-    if (vehicleDetailJsonObject["status"].toString() != "No Wants / Warrants") {
-        alertVehicleDetailInfoStr.append("Number : " + vehicleDetailJsonObject["plate_number"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Reason : " + vehicleDetailJsonObject["status"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Owner : " + vehicleDetailJsonObject["owner"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Address : " + vehicleDetailJsonObject["address"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Make : " + vehicleDetailJsonObject["make"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Model : " + vehicleDetailJsonObject["model"].toString() + "\n");
-        alertVehicleDetailInfoStr.append("Color : " + vehicleDetailJsonObject["color"].toString());
-
-        ui->label_alert_plate->setPixmap(QPixmap(QPixmap::fromImage(licensePlateImage)));
-        ui->label_alert_info->setText(alertVehicleDetailInfoStr);
+    const QString status = vehicleDetailJsonObject["status"].toString();
+    if (status == "No Wants / Warrants") {
+        return;
     }
+
+    ui->frame_alert->setStyleSheet("");
+    ui->label_alert_plate->setPixmap(QPixmap::fromImage(licensePlateImage));
+
+    const QString number = vehicleDetailJsonObject["plate_number"].toString();
+    ui->line_alert_number->setText(number);
+
+    ui->line_alert_reason->setText(status);
+
+    const QString make = vehicleDetailJsonObject["make"].toString();
+    ui->line_alert_make->setText(make);
+
+    const QString model = vehicleDetailJsonObject["model"].toString();
+    ui->line_alert_model->setText(model);
+
+    const QString color = vehicleDetailJsonObject["color"].toString();
+    ui->line_alert_color->setText(color);
+
+    const QString owner = vehicleDetailJsonObject["owner"].toString();
+    ui->line_alert_owner->setText(owner);
+
+    const QString address = vehicleDetailJsonObject["address"].toString();
+    ui->text_alert_address->setText(address);
 }
 
-void AlprClientApp::OnOpen()
+void MainWindow::OnOpen()
 {
     QFileDialog fd;
     QString strFileName = fd.getOpenFileName(0, tr("Open Video File..."), "", "");
@@ -180,13 +183,13 @@ void AlprClientApp::OnOpen()
     SetControllerRun();
 }
 
-void AlprClientApp::OnStop()
+void MainWindow::OnStop()
 {
     emit stopFrameGenerator();
     SetControllerStop();
 }
 
-void AlprClientApp::OnToggle(bool checked)
+void MainWindow::OnToggle(bool checked)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
@@ -203,12 +206,12 @@ void AlprClientApp::OnToggle(bool checked)
     }
 }
 
-void AlprClientApp::OnVideoStopped()
+void MainWindow::OnVideoStopped()
 {
     SetControllerStop();
 }
 
-void AlprClientApp::SetControllerRun()
+void MainWindow::SetControllerRun()
 {
     ui->push_open->setEnabled(false);
     ui->push_pause->setEnabled(true);
@@ -216,7 +219,7 @@ void AlprClientApp::SetControllerRun()
     SetToggleButtonToPause();
 }
 
-void AlprClientApp::SetControllerStop()
+void MainWindow::SetControllerStop()
 {
     ui->push_open->setEnabled(true);
     ui->push_pause->setEnabled(false);
@@ -224,7 +227,7 @@ void AlprClientApp::SetControllerStop()
     SetToggleButtonToPlay();
 }
 
-void AlprClientApp::SetToggleButtonToPause()
+void MainWindow::SetToggleButtonToPause()
 {
 #ifdef USE_IMAGE_BUTTON
     ui->push_pause->setStyleSheet(
@@ -252,7 +255,7 @@ void AlprClientApp::SetToggleButtonToPause()
 #endif
 }
 
-void AlprClientApp::SetToggleButtonToPlay()
+void MainWindow::SetToggleButtonToPlay()
 {
 #ifdef USE_IMAGE_BUTTON
     ui->push_pause->setStyleSheet(
@@ -280,7 +283,7 @@ void AlprClientApp::SetToggleButtonToPlay()
 }
 #endif
 
-void AlprClientApp::SetFrameGeneratorButtonStyle()
+void MainWindow::SetFrameGeneratorButtonStyle()
 {
     int imageButtonWidth = 24;
     int imageButtonHeight = 24;
@@ -357,15 +360,16 @@ void AlprClientApp::SetFrameGeneratorButtonStyle()
     ui->push_stop->setFixedHeight(imageButtonHeight);
     ui->push_stop->setText("");
 
-    ui->horizontalLayout->addWidget(ui->push_open);
-    ui->horizontalLayout->addWidget(ui->push_pause);
-    ui->horizontalLayout->addWidget(ui->push_stop);
-    ui->horizontalLayout->setAlignment(Qt::AlignLeft);
+    ui->hbox_control->addWidget(ui->push_open);
+    ui->hbox_control->addWidget(ui->push_pause);
+    ui->hbox_control->addWidget(ui->push_stop);
+    ui->hbox_control->setAlignment(Qt::AlignLeft);
 }
 
-void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
+void MainWindow::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 {
-    RecentPlateCustomWidget *widgetItem = dynamic_cast<RecentPlateCustomWidget*>(ui->list_recent_plates->itemWidget(item));
+    /*
+    RecentPlateWidget *widgetItem = dynamic_cast<RecentPlateWidget*>(ui->list_recent_plates->itemWidget(item));
     QMessageBox msgBox;
 
     msgBox.setIconPixmap(widgetItem->GetLicensePlatePixmap());
@@ -373,9 +377,10 @@ void AlprClientApp::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
     msgBox.setText(widgetItem->GetVehicleDetailInfo());
     msgBox.setStandardButtons(QMessageBox::Close);
     msgBox.exec();
+    */
 }
 
-void AlprClientApp::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
+void MainWindow::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
 {
     qDebug() << __FUNCTION__ << " NetworkError : " << status;
 
@@ -386,7 +391,7 @@ void AlprClientApp::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
     }
 }
 
-void AlprClientApp::closeEvent(QCloseEvent* event)
+void MainWindow::closeEvent(QCloseEvent* event)
 {
     qDebug() << "call closeEvent tid:" << QThread::currentThreadId();
 
@@ -396,7 +401,7 @@ void AlprClientApp::closeEvent(QCloseEvent* event)
     QApplication::quit();
 }
 
-AlprClientApp::~AlprClientApp()
+MainWindow::~MainWindow()
 {
     delete ui;
 }
