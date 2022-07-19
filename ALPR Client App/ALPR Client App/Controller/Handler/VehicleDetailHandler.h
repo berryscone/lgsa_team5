@@ -1,8 +1,7 @@
 #pragma once
-#include <QtCore>
-#include <QImage>
-
 #include <opencv2/opencv.hpp>
+
+#include "Model/VehicleDetail.h"
 
 
 class VehicleDetailHandler : public QObject
@@ -12,7 +11,7 @@ public:
 	static VehicleDetailHandler& GetInstance();
 
 signals:
-	void SignalVehicleDetailPublish(const QImage plate_image, const QJsonObject vehicle_detail);
+	void SignalVehicleDetailPublish(VehicleDetail vehicleDetail);
 
 public slots:
 	void OnVehicleDetailProvided(const cv::Mat plate_image, const QJsonObject vehicle_detail);

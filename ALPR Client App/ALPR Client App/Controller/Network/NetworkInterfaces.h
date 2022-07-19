@@ -7,8 +7,6 @@
 #include <opencv2/opencv.hpp>
 
 
-using LoginCallback = std::function<void(const bool success, const QString detail)>;
-
 class ILoginProvider abstract
 {
 public:

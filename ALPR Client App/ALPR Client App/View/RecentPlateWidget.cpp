@@ -1,22 +1,22 @@
 #include "RecentPlateWidget.h"
 
 
-RecentPlateWidget::RecentPlateWidget(QImage plateImage, QString requestPlate, bool isExact, QJsonObject plateDetail)
+RecentPlateWidget::RecentPlateWidget(const VehicleDetail& vehicleDetail)
+    : mVehicleDetail(mVehicleDetail)
 {
-    mPlateDetail = plateDetail;
-
     mLabelPlateImage = new QLabel();
-    mLabelPlateImage->setPixmap(QPixmap::fromImage(plateImage).scaled(140, 50));
+    mLabelPlateImage->setPixmap(QPixmap::fromImage(vehicleDetail.image).scaled(140, 50));
 
-    mLabelPlateRequest = new QLabel(requestPlate);
+    mLabelPlateRequest = new QLabel(vehicleDetail.requestNumber);
+
+    if (vehicleDetail.exactMatch) {
+        mLabelPlateRequest->setText("");
+    }
     mLabelPlateRequest->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    QString responsePlate = plateDetail["plate_number"].toString();
-    mLabelPlateResponse = new QLabel(responsePlate);
+    mLabelPlateResponse = new QLabel(vehicleDetail.number);
     mLabelPlateResponse->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
-    const QString status = plateDetail["status"].toString();
-    const bool alert = status != "No Wants / Warrants";
+    mLabelPlateResponse->setStyleSheet("QLabel {font-weight: bold;}");
 
     mLayout = new QHBoxLayout();
     mLayout->setContentsMargins(2, 2, 2, 2);
@@ -24,18 +24,11 @@ RecentPlateWidget::RecentPlateWidget(QImage plateImage, QString requestPlate, bo
     mLayout->addWidget(mLabelPlateRequest);
     mLayout->addWidget(mLabelPlateResponse);
 
-    if (isExact) {
-        mLabelPlateResponse->setStyleSheet("QLabel {font-weight: bold; color: blue;}");
-    }
-    else {
-        mLabelPlateResponse->setStyleSheet("QLabel {font-weight: bold;}");
-    }
-
-    if (alert) {
-        setStyleSheet("RecentPlateWidget {border: 2px solid red;}");
-    }
-    else {
+    if (vehicleDetail.status == VehicleDetail::Status::Normal) {
         setStyleSheet("RecentPlateWidget {border: 2px solid green;}");
+    }
+    else {
+        setStyleSheet("RecentPlateWidget {border: 2px solid red;}");
     }
 
     setLayout(mLayout);

@@ -1,9 +1,9 @@
 #include "MainWindow.h"
-#include "handler/VehicleDetailHandler.h"
-
-#include "UserInterface/RecentPlateWidget.h"
 
 #include <QMessageBox>
+
+#include "View/RecentPlateWidget.h"
+#include "Controller/Network/NetworkManager.h"
 
 // #define USE_IMAGE_BUTTON
 
@@ -60,28 +60,15 @@ void MainWindow::InitFrameGenerator()
     mFrameGeneratorThread.start();
 }
 
-void MainWindow::UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail)
+void MainWindow::UpdateUI(const VehicleDetail vehicleDetail)
 {
-    QJsonArray vehicleDetailArray = vehicle_detail["vehicle_details"].toArray();
-    const QString requestPlate = vehicle_detail["plate_number"].toString();
-    const bool isExact = vehicle_detail["is_exact"].toBool();
-    QImage resizePlateImage = plate_image.scaled(mLicensePlateImageWidth, mLicensePlateImageHeight);
-
-    for (int i = 0; i < vehicleDetailArray.size(); ++i) {
-        if (i > 0 && !isExact) {
-            break;
-        }
-
-        QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(i).toObject();
-
-        //UpdateRecentPltesView
-        UpdateRecentPlatesView(resizePlateImage, requestPlate, isExact, vehicleDetailJsonObject);
-
-        //UpdateVehicleInfoView
-        UpdateVehicleInfoView(resizePlateImage, vehicleDetailJsonObject);
-
-        //UpdateAlertInfoView
-        UpdateAlertInfoView(resizePlateImage, vehicleDetailJsonObject);
+    if (vehicleDetail.status == VehicleDetail::Normal) {
+        UpdateRecentPlatesView(vehicleDetail);
+        UpdateVehicleInfoView(vehicleDetail);
+    }
+    else {
+        UpdateRecentPlatesView(vehicleDetail);
+        UpdateAlertInfoView(vehicleDetail);
     }
 }
 
@@ -93,9 +80,9 @@ void MainWindow::UpdatePlaybackView(QPixmap pixmap)
     qApp->processEvents();
 }
 
-void MainWindow::UpdateRecentPlatesView(QImage& plateImage, QString requestPlate, bool isExact, QJsonObject& detail)
+void MainWindow::UpdateRecentPlatesView(const VehicleDetail& vehicleDetail)
 {
-    RecentPlateWidget* wigetItem = new RecentPlateWidget(plateImage, requestPlate, isExact, detail);
+    RecentPlateWidget* wigetItem = new RecentPlateWidget(vehicleDetail);
     QListWidgetItem* plate = new QListWidgetItem;
     plate->setSizeHint(QSize(mLicensePlateImageWidth, mLicensePlateImageHeight));
     plate->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -105,21 +92,13 @@ void MainWindow::UpdateRecentPlatesView(QImage& plateImage, QString requestPlate
     ui->list_recent_plates->scrollToBottom();
 }
 
-void MainWindow::UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
+void MainWindow::UpdateVehicleInfoView(const VehicleDetail& vehicleDetail)
 {
-    const QString number = vehicleDetailJsonObject["plate_number"].toString();
-    ui->line_info_number->setText(number);
-
-    const QString make = vehicleDetailJsonObject["make"].toString();
-    ui->line_info_make->setText(make);
-
-    const QString model = vehicleDetailJsonObject["model"].toString();
-    ui->line_info_model->setText(model);
-
-    const QString color = vehicleDetailJsonObject["color"].toString();
-    ui->line_info_color->setText(color);
-
-    ui->label_last_plate->setPixmap(QPixmap::fromImage(licensePlateImage));
+    ui->line_info_number->setText(vehicleDetail.number);
+    ui->line_info_make->setText(vehicleDetail.make);
+    ui->line_info_model->setText(vehicleDetail.model);
+    ui->line_info_color->setText(vehicleDetail.color);
+    ui->label_last_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image));
 }
 
 void MainWindow::UpdateDebugInfoView(QString debugInfo)
@@ -127,35 +106,16 @@ void MainWindow::UpdateDebugInfoView(QString debugInfo)
     ui->label_debug_info->setText(debugInfo);
 }
 
-void MainWindow::UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject)
+void MainWindow::UpdateAlertInfoView(const VehicleDetail& vehicleDetail)
 {
-    const QString status = vehicleDetailJsonObject["status"].toString();
-    if (status == "No Wants / Warrants") {
-        return;
-    }
-
-    ui->frame_alert->setStyleSheet("");
-    ui->label_alert_plate->setPixmap(QPixmap::fromImage(licensePlateImage));
-
-    const QString number = vehicleDetailJsonObject["plate_number"].toString();
-    ui->line_alert_number->setText(number);
-
-    ui->line_alert_reason->setText(status);
-
-    const QString make = vehicleDetailJsonObject["make"].toString();
-    ui->line_alert_make->setText(make);
-
-    const QString model = vehicleDetailJsonObject["model"].toString();
-    ui->line_alert_model->setText(model);
-
-    const QString color = vehicleDetailJsonObject["color"].toString();
-    ui->line_alert_color->setText(color);
-
-    const QString owner = vehicleDetailJsonObject["owner"].toString();
-    ui->line_alert_owner->setText(owner);
-
-    const QString address = vehicleDetailJsonObject["address"].toString();
-    ui->text_alert_address->setText(address);
+    ui->label_alert_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image));
+    ui->line_alert_number->setText(vehicleDetail.number);
+    ui->line_alert_reason->setText(vehicleDetail.rawStatus);
+    ui->line_alert_make->setText(vehicleDetail.make);
+    ui->line_alert_model->setText(vehicleDetail.model);
+    ui->line_alert_color->setText(vehicleDetail.color);
+    ui->line_alert_owner->setText(vehicleDetail.owner);
+    ui->text_alert_address->setText(vehicleDetail.address);
 }
 
 void MainWindow::OnOpen()
@@ -357,8 +317,7 @@ void MainWindow::SetFrameGeneratorButtonStyle()
 
 void MainWindow::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
 {
-    /*
-    RecentPlateWidget *widgetItem = dynamic_cast<RecentPlateWidget*>(ui->list_recent_plates->itemWidget(item));
+    RecentPlateWidget* widgetItem = dynamic_cast<RecentPlateWidget*>(ui->list_recent_plates->itemWidget(item));
     QMessageBox msgBox;
 
     msgBox.setIconPixmap(widgetItem->GetLicensePlatePixmap());
@@ -366,7 +325,6 @@ void MainWindow::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
     msgBox.setText(widgetItem->GetVehicleDetailInfo());
     msgBox.setStandardButtons(QMessageBox::Close);
     msgBox.exec();
-    */
 }
 
 void MainWindow::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)

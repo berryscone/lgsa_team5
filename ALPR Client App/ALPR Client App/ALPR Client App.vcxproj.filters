@@ -2,61 +2,61 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="generator\FrameGenerator.cpp">
-      <Filter>Generator</Filter>
+    <ClCompile Include="model\VehicleDetail.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="generator\OpenCvAdapter.cpp">
-      <Filter>Generator</Filter>
+    <ClCompile Include="Controller\Alpr\AlprAdapter.cpp">
+      <Filter>Controller\Alpr</Filter>
     </ClCompile>
-    <ClCompile Include="alpr\AlprAdapter.cpp">
-      <Filter>Alpr</Filter>
+    <ClCompile Include="Controller\Alpr\FrameGenerator.cpp">
+      <Filter>Controller\Alpr</Filter>
     </ClCompile>
-    <ClCompile Include="network\NetworkManager.cpp">
-      <Filter>Network</Filter>
+    <ClCompile Include="Controller\Alpr\OpenCvAdapter.cpp">
+      <Filter>Controller\Alpr</Filter>
     </ClCompile>
-    <ClCompile Include="handler\VehicleDetailHandler.cpp">
-      <Filter>Handler</Filter>
+    <ClCompile Include="Controller\Handler\VehicleDetailHandler.cpp">
+      <Filter>Controller\Handler</Filter>
     </ClCompile>
-    <ClCompile Include="network\VehicleCache.cpp">
-      <Filter>Network</Filter>
+    <ClCompile Include="Controller\Network\NetworkManager.cpp">
+      <Filter>Controller\Network</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\LoginWindow.cpp">
-      <Filter>UserInterface</Filter>
+    <ClCompile Include="Controller\Network\VehicleCache.cpp">
+      <Filter>Controller\Network</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\MainWindow.cpp">
-      <Filter>UserInterface</Filter>
+    <ClCompile Include="View\LoginWindow.cpp">
+      <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\RecentPlateWidget.cpp">
-      <Filter>UserInterface</Filter>
+    <ClCompile Include="View\MainWindow.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\RecentPlateWidget.cpp">
+      <Filter>View</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="generator\FrameGenerator.h">
-      <Filter>Generator</Filter>
+    <QtMoc Include="Controller\Alpr\AlprAdapter.h">
+      <Filter>Controller\Alpr</Filter>
     </QtMoc>
-    <QtMoc Include="generator\OpenCvAdapter.h">
-      <Filter>Generator</Filter>
+    <QtMoc Include="View\LoginWindow.h">
+      <Filter>View</Filter>
     </QtMoc>
-    <QtMoc Include="alpr\AlprAdapter.h">
-      <Filter>Alpr</Filter>
+    <QtMoc Include="View\MainWindow.h">
+      <Filter>View</Filter>
     </QtMoc>
-    <QtMoc Include="network\NetworkInterfaces.h">
-      <Filter>Network</Filter>
+    <QtMoc Include="View\RecentPlateWidget.h">
+      <Filter>View</Filter>
     </QtMoc>
-    <QtMoc Include="network\NetworkManager.h">
-      <Filter>Network</Filter>
+    <QtMoc Include="Controller\Network\NetworkManager.h">
+      <Filter>Controller\Network</Filter>
     </QtMoc>
-    <QtMoc Include="handler\VehicleDetailHandler.h">
-      <Filter>Handler</Filter>
+    <QtMoc Include="Controller\Handler\VehicleDetailHandler.h">
+      <Filter>Controller\Handler</Filter>
     </QtMoc>
-    <QtMoc Include="UserInterface\LoginWindow.h">
-      <Filter>UserInterface</Filter>
+    <QtMoc Include="Controller\Alpr\FrameGenerator.h">
+      <Filter>Controller\Alpr</Filter>
     </QtMoc>
-    <QtMoc Include="UserInterface\MainWindow.h">
-      <Filter>UserInterface</Filter>
-    </QtMoc>
-    <QtMoc Include="UserInterface\RecentPlateWidget.h">
-      <Filter>UserInterface</Filter>
+    <QtMoc Include="Controller\Alpr\OpenCvAdapter.h">
+      <Filter>Controller\Alpr</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -67,31 +67,37 @@
     <QtUic Include="LoginWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Generator">
-      <UniqueIdentifier>{108ee767-8f26-40eb-87a8-e776c08eef20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Handler">
-      <UniqueIdentifier>{dbc55267-6a99-4616-a50b-82d4c848e13d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Alpr">
-      <UniqueIdentifier>{7287d9ae-5e29-49a1-b971-281a0edfb49f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Network">
-      <UniqueIdentifier>{54422c8a-d010-4575-b27b-2a5b8dc44f00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>{a55f3154-6744-4182-b295-3d69fde794b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets\Images">
       <UniqueIdentifier>{57c46807-3a1d-49e9-9047-2500e48d95d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInterface">
-      <UniqueIdentifier>{0567ec9d-f164-40cc-b24e-31c4c4b2fd7d}</UniqueIdentifier>
+    <Filter Include="Model">
+      <UniqueIdentifier>{fb2753a0-2b8e-44bf-82e7-a5622e9ee286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{bdc81167-c2e4-493a-ba06-393ac63bbaca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{d4cc1f5d-a7ce-40f6-b2ba-7e61e1d91f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\Handler">
+      <UniqueIdentifier>{832d91ce-0536-4f5a-826d-7be0d7fe4366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\Network">
+      <UniqueIdentifier>{2c2cf8ba-80b7-48c8-b261-4dca2bb34f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\Alpr">
+      <UniqueIdentifier>{efb38d63-b9f3-429e-b154-827b212d8e96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="network\VehicleCache.h">
-      <Filter>Network</Filter>
+    <ClInclude Include="model\VehicleDetail.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Network\VehicleCache.h">
+      <Filter>Controller\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

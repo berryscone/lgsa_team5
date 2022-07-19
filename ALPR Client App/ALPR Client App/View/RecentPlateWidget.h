@@ -6,12 +6,15 @@
 #include <QHBoxLayout>
 #include <QJsonObject>
 
+#include "Model/VehicleDetail.h"
+
+
 class RecentPlateWidget : public QFrame
 {
     Q_OBJECT
 
 public:
-    RecentPlateWidget(QImage plateImage, QString requestPlate, bool isExact, QJsonObject plateDetail);
+    RecentPlateWidget(const VehicleDetail& vehicleDetail);
     ~RecentPlateWidget();
 
     QPixmap GetLicensePlatePixmap() const;
@@ -23,5 +26,5 @@ private:
     QLabel* mLabelPlateResponse;
     QHBoxLayout *mLayout;
     
-    QJsonObject mPlateDetail;
+    const VehicleDetail mVehicleDetail;
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <QtWidgets>
 #include <QMainWindow>
 #include <QDebug>
@@ -13,11 +15,11 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QFileDialog>
+#include <QtNetwork>
 #include "ui_AlprClientApp.h"
 
-#include "generator/FrameGenerator.h"
-
-#include <memory>
+#include "Controller/Alpr/FrameGenerator.h"
+#include "Controller/Handler/VehicleDetailHandler.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -51,15 +53,15 @@ private slots:
     void OnRecentPlatesViewItemClicked(QListWidgetItem* item);
     void OnVideoStopped();
 
-    void UpdateUI(const QImage plate_image, const QJsonObject vehicle_detail);
+    void UpdateUI(const VehicleDetail vehicleDetail);
     void UpdatePlaybackView(QPixmap pixmap);
     void UpdateDebugInfoView(QString debugInfo);
     void UpdateNetworkStatusUI(QNetworkReply::NetworkError status);
 
 private:
-    void UpdateRecentPlatesView(QImage& plateImage, QString requestPlate, bool isExact, QJsonObject& detail);
-    void UpdateVehicleInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
-    void UpdateAlertInfoView(QImage &licensePlateImage, QJsonObject &vehicleDetailJsonObject);
+    void UpdateRecentPlatesView(const VehicleDetail& vehicleDetail);
+    void UpdateVehicleInfoView(const VehicleDetail& vehicleDetail);
+    void UpdateAlertInfoView(const VehicleDetail& vehicleDetail);
 
     void SetControllerRun();
     void SetControllerStop();

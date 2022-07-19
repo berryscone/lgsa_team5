@@ -6,7 +6,7 @@
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QMainWindow(parent),
-    mLoginProvider(NetworkManager::GetInstance()),
+    mNetworkManager(NetworkManager::GetInstance()),
     ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
@@ -40,7 +40,7 @@ void LoginWindow::OnLogin()
     ui->loginBtn->setEnabled(false);
 
     ui->label_result->setText("");
-    mLoginProvider.RequestLogin(id, pw,
+    mNetworkManager.RequestLogin(id, pw,
         std::bind(&LoginWindow::OnLoginFinished, this, std::placeholders::_1, std::placeholders::_2));
 }
 

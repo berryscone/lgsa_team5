@@ -1,6 +1,7 @@
 #include <QtWidgets/QApplication>
-#include "UserInterface/LoginWindow.h"
-#include "UserInterface/MainWindow.h"
+#include "View/LoginWindow.h"
+#include "View/MainWindow.h"
+#include "Model/VehicleDetail.h"
 
 
 QTextStream log_stream;
@@ -44,6 +45,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
 int main(int argc, char *argv[])
 {
     qRegisterMetaType<cv::Mat>("cv::Mat");
+    qRegisterMetaType<VehicleDetail>("VehicleDetail");
 
     // Make log file
     QFile log_file("Alpr.log");

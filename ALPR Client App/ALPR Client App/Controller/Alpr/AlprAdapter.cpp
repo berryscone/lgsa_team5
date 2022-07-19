@@ -1,6 +1,7 @@
-#include "AlprAdapter.h"
-
 #include <QDebug>
+
+#include "AlprAdapter.h"
+#include "Controller/Network/NetworkManager.h"
 
 using namespace alpr;
 using namespace std;
@@ -8,7 +9,7 @@ using namespace cv;
 
 AlprAdapter::AlprAdapter() :
     mUseMotiondetection(0),
-    mVehicleQueryProvider(NetworkManager::GetInstance())
+    mNetworkManager(NetworkManager::GetInstance())
 {
     std::string country = "us";
     std::string currentPath = QDir::currentPath().toStdString();
@@ -24,7 +25,7 @@ AlprAdapter::AlprAdapter() :
     }
 
     connect(this, &AlprAdapter::SignalRequestVehicleQuery, 
-        &mVehicleQueryProvider, &IVehicleQueryProvider::RequestVehicleQuery);
+        &mNetworkManager, &NetworkManager::RequestVehicleQuery);
 }
 
 AlprAdapter::~AlprAdapter()

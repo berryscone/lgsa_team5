@@ -4,9 +4,9 @@
 #include <QString>
 #include <QtWidgets/QMainWindow>
 
-#include "MainWindow.h"
-#include "network/NetworkInterfaces.h"
-#include "network/NetworkManager.h"
+#include "View/MainWindow.h"
+#include "Controller/Network/NetworkManager.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginWindow; }
@@ -29,6 +29,6 @@ public slots:
 
 private:
     Ui::LoginWindow *ui;
-    ILoginProvider& mLoginProvider;
+    NetworkManager& mNetworkManager;
     const QString mUrl;
 };

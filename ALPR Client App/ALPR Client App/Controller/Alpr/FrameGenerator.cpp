@@ -1,5 +1,3 @@
-#include "FrameGenerator.h"
-
 #include <climits>
 
 #include <QDebug>
@@ -7,6 +5,9 @@
 #include <QVector>
 #include <QTextStream>
 #include <QThread>
+
+#include "FrameGenerator.h"
+
 
 using namespace std;
 using namespace cv;

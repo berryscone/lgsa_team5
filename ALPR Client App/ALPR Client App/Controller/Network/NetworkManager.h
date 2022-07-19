@@ -1,25 +1,23 @@
 #pragma once
 #include <memory>
 
-#include <QDebug>
-#include <QObject>
-#include <QNetworkAccessManager>
+#include <opencv2/opencv.hpp>
+
+#include <QtCore>
 #include <QtNetwork>
 
-#include "NetworkInterfaces.h"
-#include <network/VehicleCache.h>
+#include "VehicleCache.h"
 
 
-class NetworkManager :
-    public IVehicleQueryProvider,
-    public ILoginProvider
+using LoginCallback = std::function<void(const bool success, const QString detail)>;
+
+class NetworkManager : public QObject
 {
     Q_OBJECT
 
 public:
     static NetworkManager& GetInstance();
-    virtual ~NetworkManager() = default;
-    virtual void RequestLogin(const QString id, const QString pw, LoginCallback callback);
+    void RequestLogin(const QString id, const QString pw, LoginCallback callback);
 
 signals:
     void SignalLoginCallback(const bool success, const QString detail);
@@ -28,7 +26,7 @@ signals:
     void SignalRetryVehicleDetail(const cv::Mat plate_image, const QString plate_number, const int retry_cnt);
 
 public slots:
-    virtual void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number, const int retry_cnt = 0);
+    void RequestVehicleQuery(const cv::Mat plate_image, const QString plate_number, const int retry_cnt = 0);
 
 private slots:
     void StartStatusTimer();

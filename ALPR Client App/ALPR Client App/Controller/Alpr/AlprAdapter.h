@@ -11,8 +11,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "network/NetworkInterfaces.h"
-#include "network/NetworkManager.h"
+#include "Controller/Network/NetworkManager.h"
+
 
 class AlprAdapter : public QObject
 {
@@ -39,5 +39,5 @@ private:
     int mFrameno;
     char mText[1024] = "";
 
-    IVehicleQueryProvider& mVehicleQueryProvider;
+    NetworkManager& mNetworkManager;
 };

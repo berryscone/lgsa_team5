@@ -105,35 +105,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="alpr\AlprAdapter.cpp" />
-    <ClCompile Include="handler\VehicleDetailHandler.cpp" />
-    <ClCompile Include="network\NetworkManager.cpp" />
-    <ClCompile Include="network\VehicleCache.cpp" />
-    <ClCompile Include="UserInterface\LoginWindow.cpp" />
-    <ClCompile Include="UserInterface\MainWindow.cpp" />
-    <ClCompile Include="UserInterface\RecentPlateWidget.cpp" />
+    <ClCompile Include="Controller\Alpr\AlprAdapter.cpp" />
+    <ClCompile Include="Controller\Alpr\FrameGenerator.cpp" />
+    <ClCompile Include="Controller\Alpr\OpenCvAdapter.cpp" />
+    <ClCompile Include="Controller\Handler\VehicleDetailHandler.cpp" />
+    <ClCompile Include="Controller\Network\NetworkManager.cpp" />
+    <ClCompile Include="Controller\Network\VehicleCache.cpp" />
+    <ClCompile Include="model\VehicleDetail.cpp" />
+    <ClCompile Include="View\LoginWindow.cpp" />
+    <ClCompile Include="View\MainWindow.cpp" />
+    <ClCompile Include="View\RecentPlateWidget.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
-    <ClCompile Include="generator\FrameGenerator.cpp" />
-    <ClCompile Include="generator\OpenCvAdapter.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="LoginWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="generator\FrameGenerator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="generator\OpenCvAdapter.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="network\VehicleCache.h" />
-    <QtMoc Include="UserInterface\RecentPlateWidget.h" />
-    <QtMoc Include="UserInterface\MainWindow.h" />
-    <QtMoc Include="UserInterface\LoginWindow.h" />
-    <QtMoc Include="network\NetworkInterfaces.h" />
-    <QtMoc Include="network\NetworkManager.h" />
-    <QtMoc Include="alpr\AlprAdapter.h" />
-    <QtMoc Include="handler\VehicleDetailHandler.h" />
+    <QtMoc Include="View\RecentPlateWidget.h" />
+    <QtMoc Include="View\MainWindow.h" />
+    <QtMoc Include="View\LoginWindow.h" />
+    <QtMoc Include="Controller\Alpr\AlprAdapter.h" />
+    <QtMoc Include="Controller\Alpr\FrameGenerator.h" />
+    <QtMoc Include="Controller\Alpr\OpenCvAdapter.h" />
+    <QtMoc Include="Controller\Handler\VehicleDetailHandler.h" />
+    <QtMoc Include="Controller\Network\NetworkManager.h" />
+    <ClInclude Include="Controller\Network\VehicleCache.h" />
+    <ClInclude Include="model\VehicleDetail.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png" />

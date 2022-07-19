@@ -1,7 +1,6 @@
-#include <QThread>
-
 #include "NetworkManager.h"
-#include "handler/VehicleDetailHandler.h"
+#include "Controller/Handler/VehicleDetailHandler.h"
+
 
 NetworkManager& NetworkManager::GetInstance()
 {
@@ -160,7 +159,6 @@ void NetworkManager::OnVehicleQueryFinished(const cv::Mat plate_image, const QSt
         
         mCache.putQueryResult(plate_number, json_data);
 
-        qDebug() << "Server Response: " << plate_number << " => " << vehicleDetailArray.size();
         emit SignalVehicleDetailProvide(plate_image, json_data);
     }
     else {
