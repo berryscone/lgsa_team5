@@ -34,8 +34,8 @@
 <hr>
 
 ## ADRs
-- [ADR4](ADR4.md)
-- [ADR5](ADR5.md)
+- [ADR4 : Introduce Concurrency](ADR4.md)
+- [ADR5 : Proxy pattern for local cache](ADR5.md)
 <hr>
 
 ## Related Views 
