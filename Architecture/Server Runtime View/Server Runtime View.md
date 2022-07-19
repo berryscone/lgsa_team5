@@ -22,7 +22,7 @@ N/A
 <hr>
 
 ## ADRs
-- [ADR6](ADR6.md)
+- [ADR6: Using Django](ADR6.md)
 <hr>
 
 ## Related Views 
