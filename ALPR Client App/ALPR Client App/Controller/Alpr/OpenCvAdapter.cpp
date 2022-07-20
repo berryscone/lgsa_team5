@@ -6,29 +6,30 @@ using namespace alpr;
 using namespace std;
 using namespace cv;
 
-void OpenCvAdapter::Create(const std::string &filePath)
+bool OpenCvAdapter::Create(const std::string &filePath)
 {
     if (mVideoFrame.isOpened()) {
         mVideoFrame.release();
-        return;
+        return false;
     }
 
     if (filePath.empty()) {
-        return;
+        return false;
     }
 
     if (!mVideoFrame.open(filePath)) {
         qDebug() << "Video Error! Make sure you entered a correct and supported mVideoFrame file path";
-        return;
+        return false;
     }
 
     if (!mVideoFrame.isOpened()) {
         qDebug() << "Video Error! Make sure you entered a correct and supported mVideoFrame file path";
-        return;
+        return false;
     }
 
     mFrameRate = static_cast<int>(mVideoFrame.get(CAP_PROP_FPS));
     mTotalFrames = static_cast<int>(mVideoFrame.get(CAP_PROP_FRAME_COUNT));
+    return true;
 }
 
 void OpenCvAdapter::Destroy()

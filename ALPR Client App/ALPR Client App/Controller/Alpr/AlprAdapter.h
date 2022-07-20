@@ -24,8 +24,7 @@ signals:
 
 public:
     AlprAdapter();
-    ~AlprAdapter();
-
+    void Finalize();
     void DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists);
 
 private:

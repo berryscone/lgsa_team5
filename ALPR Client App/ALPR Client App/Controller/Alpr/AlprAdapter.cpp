@@ -29,9 +29,9 @@ AlprAdapter::AlprAdapter() :
         &mNetworkManager, &NetworkManager::RequestVehicleQuery);
 }
 
-AlprAdapter::~AlprAdapter()
-{
-    // mAlpr.release();
+void AlprAdapter::Finalize() {
+    mAlpr.release();
+    mNetworkManager.Finalize();
 }
 
 void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectLists)

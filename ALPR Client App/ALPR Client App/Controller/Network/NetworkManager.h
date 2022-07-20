@@ -17,6 +17,7 @@ class NetworkManager : public QObject
 
 public:
     static NetworkManager& GetInstance();
+    void Finalize();
     void RequestLogin(const QString id, const QString pw, LoginCallback callback);
 
 signals:
@@ -43,7 +44,6 @@ private:
 
     void OnSslErrors(const QList<QSslError>& errors, QNetworkReply* reply);
     void UpdateStatus(const QNetworkReply::NetworkError status);
-
 
     QThread mThread;
     QNetworkAccessManager mManager;

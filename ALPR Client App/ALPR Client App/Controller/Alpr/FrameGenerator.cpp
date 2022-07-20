@@ -15,6 +15,11 @@ using namespace cv;
 
 #define MAX_ALPR_TIME_Q 100
 
+FrameGenerator& FrameGenerator::GetInstance() {
+    static FrameGenerator instance;
+    return instance;
+}
+
 FrameGenerator::FrameGenerator() :
     mFrameCount(0),
     mElapsedDurationMs(0.0),
@@ -22,42 +27,58 @@ FrameGenerator::FrameGenerator() :
     mJitter(0.0),
     mFps(0)
 {
+    moveToThread(&mThread);
+    mThread.start();
 }
 
-void FrameGenerator::SetOpenFilePath(const QString filePath)
+void FrameGenerator::Finalize() {
+    mThread.quit();
+    mThread.wait();
+    mAlprAdapter.Finalize();
+}
+
+bool FrameGenerator::SetOpenFilePath(const QString filePath)
 {
     const std::string filePathStdStr = filePath.toStdString();
-    mOpenCvAdapter.Create(filePathStdStr);
+    if (!mOpenCvAdapter.Create(filePathStdStr)) {
+        return false;
+    }
     mMsPerFrame = 1000 / mOpenCvAdapter.GetFrameRate();
+    return true;
 }
 
 void FrameGenerator::Start()
 {
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-
+    if (mQtimer) {
+        mQtimer.release();
+    }
     mQtimer = std::make_unique<QTimer>(this);
     connect(mQtimer.get(), &QTimer::timeout, this, &FrameGenerator::processFrameAndUpdateGUI);
-    mQtimer->setInterval(mMsPerFrame);
+    connect(&mThread, &QThread::finished, mQtimer.get(), &QTimer::stop);
     mQtimer->setTimerType(Qt::PreciseTimer);
+    mQtimer->setInterval(mMsPerFrame);
     mQtimer->start();
 }
 
 void FrameGenerator::Pause()
 {
-    qDebug() << "Function Name: " << Q_FUNC_INFO << ", tid:" << QThread::currentThreadId();
-    mQtimer->stop();
+    if (mQtimer) {
+        mQtimer->stop();
+    }
 }
 
 void FrameGenerator::Resume()
-{ 
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    mQtimer->start();
+{
+    if (mQtimer) {
+        mQtimer->start();
+    }
 }
 
 void FrameGenerator::Stop()
 {
-    qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
-    mQtimer->stop();
+    if (mQtimer) {
+        disconnect(mQtimer.get(), &QTimer::timeout, this, &FrameGenerator::processFrameAndUpdateGUI);
+    }
     mOpenCvAdapter.Destroy();
 }
 

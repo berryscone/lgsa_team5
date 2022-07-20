@@ -14,6 +14,11 @@ VehicleDetailHandler::VehicleDetailHandler() :
 	mThread.start();
 }
 
+VehicleDetailHandler::~VehicleDetailHandler() {
+	mThread.quit();
+	mThread.wait();
+}
+
 void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, const QJsonObject vehicle_detail)
 {
 	const QString requestNumber = vehicle_detail["plate_number"].toString();

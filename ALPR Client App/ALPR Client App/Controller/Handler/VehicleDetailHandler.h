@@ -19,6 +19,7 @@ public slots:
 
 private:
 	VehicleDetailHandler();
+	~VehicleDetailHandler();
 
 	QThread mThread;
 	QString mLastPlateNumber;

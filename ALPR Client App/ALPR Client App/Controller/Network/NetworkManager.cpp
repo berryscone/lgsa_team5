@@ -35,6 +35,11 @@ NetworkManager::NetworkManager()
     mManager.setTransferTimeout(mRequestTimeoutMs);
 }
 
+void NetworkManager::Finalize() {
+    mThread.quit();
+    mThread.wait();
+}
+
 void NetworkManager::RequestLogin(const QString id, const QString pw, LoginCallback callback)
 {
     QUrl login_url(mUrl);
@@ -197,6 +202,7 @@ void NetworkManager::StartStatusTimer()
 {
     if (!mStatusTimer) {
         mStatusTimer = std::unique_ptr<QTimer>(new QTimer);
+        connect(&mThread, &QThread::finished, mStatusTimer.get(), &QTimer::stop);
         mStatusTimer->callOnTimeout(this, &NetworkManager::OnStatusTimeout);
         mStatusTimer->setSingleShot(true);
         qDebug() << "Create Network Status Timer";

@@ -18,7 +18,7 @@ public:
     OpenCvAdapter() = default;
     ~OpenCvAdapter() = default;
 
-    void Create(const std::string &filePath);
+    bool Create(const std::string &filePath);
     void Destroy();
     void UpdateFrame(cv::Mat &frame);
 

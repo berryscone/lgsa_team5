@@ -10,6 +10,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::AlprClientAppClass()),
+    mFrameGenerator(FrameGenerator::GetInstance()),
     mVehicleDetailDialog(this)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
@@ -44,6 +45,11 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 }
 
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
 void MainWindow::InitFrameGenerator()
 {
     connect(&mFrameGenerator, &FrameGenerator::UpdateLaptopAppUi, this, &MainWindow::UpdatePlaybackView);
@@ -54,9 +60,6 @@ void MainWindow::InitFrameGenerator()
     connect(this, &MainWindow::pauseFrameGenerator, &mFrameGenerator, &FrameGenerator::Pause);
     connect(this, &MainWindow::resumeFrameGenerator, &mFrameGenerator, &FrameGenerator::Resume);
     connect(this, &MainWindow::stopFrameGenerator, &mFrameGenerator, &FrameGenerator::Stop);
-
-    mFrameGenerator.moveToThread(&mFrameGeneratorThread);
-    mFrameGeneratorThread.start();
 }
 
 void MainWindow::UpdateUI(const VehicleDetail vehicleDetail)
@@ -97,7 +100,7 @@ void MainWindow::UpdateVehicleInfoView(const VehicleDetail& vehicleDetail)
     ui->line_info_make->setText(vehicleDetail.make);
     ui->line_info_model->setText(vehicleDetail.model);
     ui->line_info_color->setText(vehicleDetail.color);
-    ui->label_last_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image));
+    ui->label_last_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image).scaledToWidth(140));
 }
 
 void MainWindow::UpdateDebugInfoView(QString debugInfo)
@@ -107,7 +110,7 @@ void MainWindow::UpdateDebugInfoView(QString debugInfo)
 
 void MainWindow::UpdateAlertInfoView(const VehicleDetail& vehicleDetail)
 {
-    ui->label_alert_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image));
+    ui->label_alert_plate->setPixmap(QPixmap::fromImage(vehicleDetail.image).scaledToWidth(180));
     ui->line_alert_number->setText(vehicleDetail.number);
     ui->line_alert_reason->setText(vehicleDetail.rawStatus);
     ui->line_alert_make->setText(vehicleDetail.make);
@@ -120,12 +123,15 @@ void MainWindow::UpdateAlertInfoView(const VehicleDetail& vehicleDetail)
 void MainWindow::OnOpen()
 {
     QFileDialog fd;
-    QString strFileName = fd.getOpenFileName(0, tr("Open Video File..."), "", "");
+    QString strFileName = fd.getOpenFileName(this, tr("Open Video File..."), "", "Video (*.avi)");
     if (strFileName.isEmpty()) {
         qDebug() << "File Open Canceled";
         return;
     }
-    mFrameGenerator.SetOpenFilePath(strFileName);
+    if (!mFrameGenerator.SetOpenFilePath(strFileName)) {
+        QMessageBox::warning(this, "Error", "Invalid file format");
+        return;
+    }
 
     qDebug() << "call onOpen tid:" << QThread::currentThreadId() << ", mFilePath:" << mFilePath.data();
 
@@ -144,13 +150,13 @@ void MainWindow::OnToggle(bool checked)
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
 
     if (checked) {
+        ui->push_pause->setText("Play");
         emit pauseFrameGenerator();
-        SetToggleButtonToPlay();
 
     }
     else {
+        ui->push_pause->setText("Pause");
         emit resumeFrameGenerator();
-        SetToggleButtonToPause();
     }
 }
 
@@ -162,17 +168,19 @@ void MainWindow::OnVideoStopped()
 void MainWindow::SetControllerRun()
 {
     ui->push_open->setEnabled(false);
-    ui->push_pause->setEnabled(true);
     ui->push_stop->setEnabled(true);
-    SetToggleButtonToPause();
+    ui->push_pause->setEnabled(true);
+    ui->push_pause->setText("Pause");
+    ui->push_pause->setChecked(false);
 }
 
 void MainWindow::SetControllerStop()
 {
     ui->push_open->setEnabled(true);
-    ui->push_pause->setEnabled(false);
     ui->push_stop->setEnabled(false);
-    SetToggleButtonToPlay();
+    ui->push_pause->setEnabled(false);
+    ui->push_pause->setText("Play");
+    ui->push_pause->setChecked(false);
 }
 
 void MainWindow::SetToggleButtonToPause()
@@ -199,7 +207,7 @@ void MainWindow::SetToggleButtonToPause()
         ");
 #else
     ui->push_pause->setText("Pause");
-    ui->push_pause->clicked(true);
+    ui->push_pause->setChecked(true);
 #endif
 }
 
@@ -227,7 +235,7 @@ void MainWindow::SetToggleButtonToPlay()
         ");
 #else
     ui->push_pause->setText("Play");
-    ui->push_pause->clicked(false);
+    ui->push_pause->setChecked(false);
 #endif
 }
 
@@ -341,13 +349,7 @@ void MainWindow::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    qDebug() << "call closeEvent tid:" << QThread::currentThreadId();
-
-    emit stopFrameGenerator();
-    QApplication::quit();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
+    mFrameGenerator.Finalize();
+    qInstallMessageHandler(nullptr);
+    QMainWindow::closeEvent(event);
 }

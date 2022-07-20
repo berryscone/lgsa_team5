@@ -17,10 +17,10 @@ class FrameGenerator : public QObject
     Q_OBJECT
 
 public:
-    FrameGenerator();
-    ~FrameGenerator() = default;
+    static FrameGenerator& GetInstance();
+    void Finalize();
 
-    void SetOpenFilePath(const QString filePath);
+    bool SetOpenFilePath(const QString filePath);
 
 signals :
     void UpdateLaptopAppUi(QPixmap pixmap);
@@ -35,10 +35,13 @@ public slots:
     void processFrameAndUpdateGUI();
 
 private :
+    FrameGenerator();
+    void UpdateDebugInfo();
+
+    QThread mThread;
     std::unique_ptr<QTimer> mQtimer;
     OpenCvAdapter mOpenCvAdapter;
     AlprAdapter mAlprAdapter;
-
     QPixmap mVideoFrame;
 
     //to check FPS
@@ -51,6 +54,4 @@ private :
     double mJitter;
     double mFps;
     std::queue<double> mALPRTimeQ;
-
-    void UpdateDebugInfo();
 };

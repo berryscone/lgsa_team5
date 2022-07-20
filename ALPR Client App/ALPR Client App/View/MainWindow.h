@@ -73,8 +73,7 @@ private:
 
     Ui::AlprClientAppClass *ui;
 
-    QThread mFrameGeneratorThread;
-    FrameGenerator mFrameGenerator;
+    FrameGenerator& mFrameGenerator;
     VehicleDetailDialog mVehicleDetailDialog;
 
     QGraphicsPixmapItem mPlaybackPixmap;
