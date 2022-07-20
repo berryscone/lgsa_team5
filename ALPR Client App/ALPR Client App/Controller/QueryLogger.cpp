@@ -7,11 +7,11 @@ QueryLogger& QueryLogger::GetInstance() {
 }
 
 void QueryLogger::LogRequest(const QString& plateNumber) {
-    mLogStream << "REQUEST " << GetUnixTime() << " " << plateNumber << endl;
+    mLogStream << "REQUEST  " << GetUnixTime() << " " << plateNumber << endl;
 }
 
-void QueryLogger::LogResponse(const QStringList& plateNumbers) {
-    mLogStream << "RESPONSE " << GetUnixTime();
+void QueryLogger::LogResponse(const QString& requestedPlateNumber, const QStringList& plateNumbers) {
+    mLogStream << "RESPONSE " << GetUnixTime() << " " << requestedPlateNumber << " =>";
     for (int i = 0; i < plateNumbers.size(); ++i) {
         mLogStream << " " << plateNumbers.at(i);
     }

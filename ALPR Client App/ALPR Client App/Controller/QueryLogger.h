@@ -7,7 +7,7 @@ class QueryLogger
 public:
 	static QueryLogger& GetInstance();
 	void LogRequest(const QString& plateNumber);
-	void LogResponse(const QStringList& plateNumbers);
+	void LogResponse(const QString& requestedPlateNumber, const QStringList& plateNumbers);
 
 private:
 	QueryLogger();

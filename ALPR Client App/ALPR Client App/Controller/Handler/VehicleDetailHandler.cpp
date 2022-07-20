@@ -22,14 +22,17 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 
 	QStringList responseList;
 	for (int i = 0; i < vehicleDetailArray.size(); ++i) {
-		if (i > 0 && !exact) {
-			break;
-		}
-
 		QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(i).toObject();
 		VehicleDetail vehicleDetail = VehicleDetail::Create(plate_image, requestNumber, exact, vehicleDetailJsonObject);
 		responseList.append(vehicleDetail.number);
-		
+
+		if (i > 0 && !exact) {
+			if (i < 4) {
+				continue;
+			}
+			break;
+		}
+
 		if (vehicleDetail.number != mLastPlateNumber) {
 			qDebug() << vehicleDetail.requestNumber << "=>" << vehicleDetail.number << exact;
 			mLastPlateNumber = vehicleDetail.number;
@@ -37,5 +40,8 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 		}
 	}
 
-	mQueryLogger.LogResponse(responseList);
+	if (responseList.size() < vehicleDetailArray.size()) {
+		responseList.append("...");
+	}
+	mQueryLogger.LogResponse(requestNumber, responseList);
 }
