@@ -23,7 +23,8 @@ N/A
 
 ## ADRs
 - [ADR6: Using Django](ADR6.md)
-- [ADR11:Using Postgre SQL](ADR11:Using Postgre SQL.md)
+- [ADR11: Using Postgre SQL](ADR11.md)
+
 <hr>
 
 ## Related Views 
