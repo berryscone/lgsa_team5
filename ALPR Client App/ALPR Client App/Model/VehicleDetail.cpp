@@ -5,7 +5,7 @@ const std::unordered_map<QString, VehicleDetail::Status> VehicleDetail::StrToSta
 	{ "No Wants / Warrants", VehicleDetail::Normal },
 	{ "Owner Wanted", VehicleDetail::OwnerWanted },
 	{ "Unpaid Fines - Tow", VehicleDetail::UnpaidFines },
-	{ "Stolen", VehicleDetail::Normal },
+	{ "Stolen", VehicleDetail::Stolen },
 };
 
 VehicleDetail::VehicleDetail(const VehicleDetail& other) {
