@@ -1,6 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
+#include "Controller/QueryLogger.h"
 #include "Model/VehicleDetail.h"
 
 
@@ -21,5 +22,6 @@ private:
 
 	QThread mThread;
 	QString mLastPlateNumber;
+	QueryLogger& mQueryLogger;
 };
 

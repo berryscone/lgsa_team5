@@ -32,6 +32,9 @@
     <ClCompile Include="View\RecentPlateWidget.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\QueryLogger.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controller\Alpr\AlprAdapter.h">
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Controller\Network\VehicleCache.h">
       <Filter>Controller\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\QueryLogger.h">
+      <Filter>Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

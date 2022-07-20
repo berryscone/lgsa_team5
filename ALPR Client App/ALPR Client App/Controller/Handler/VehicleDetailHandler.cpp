@@ -7,7 +7,8 @@ VehicleDetailHandler& VehicleDetailHandler::GetInstance()
 	return instance;
 }
 
-VehicleDetailHandler::VehicleDetailHandler()
+VehicleDetailHandler::VehicleDetailHandler() :
+	mQueryLogger(QueryLogger::GetInstance())
 {
 	this->moveToThread(&mThread);
 	mThread.start();
@@ -19,6 +20,7 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 	const bool exact = vehicle_detail["is_exact"].toBool();
 	QJsonArray vehicleDetailArray = vehicle_detail["vehicle_details"].toArray();
 
+	QStringList responseList;
 	for (int i = 0; i < vehicleDetailArray.size(); ++i) {
 		if (i > 0 && !exact) {
 			break;
@@ -26,6 +28,7 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 
 		QJsonObject vehicleDetailJsonObject = vehicleDetailArray.at(i).toObject();
 		VehicleDetail vehicleDetail = VehicleDetail::Create(plate_image, requestNumber, exact, vehicleDetailJsonObject);
+		responseList.append(vehicleDetail.number);
 		
 		if (vehicleDetail.number != mLastPlateNumber) {
 			qDebug() << vehicleDetail.requestNumber << "=>" << vehicleDetail.number << exact;
@@ -33,4 +36,6 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 			emit SignalVehicleDetailPublish(vehicleDetail);
 		}
 	}
+
+	mQueryLogger.LogResponse(responseList);
 }

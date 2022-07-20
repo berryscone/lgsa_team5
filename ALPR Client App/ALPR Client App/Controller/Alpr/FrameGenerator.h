@@ -5,7 +5,7 @@
 #include <QImage>
 #include <QPixmap>
 
-#include "OpenCvAdapter.h"
+#include "Controller/Alpr/OpenCvAdapter.h"
 #include "Controller/Alpr/AlprAdapter.h"
 
 

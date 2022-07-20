@@ -111,6 +111,7 @@
     <ClCompile Include="Controller\Handler\VehicleDetailHandler.cpp" />
     <ClCompile Include="Controller\Network\NetworkManager.cpp" />
     <ClCompile Include="Controller\Network\VehicleCache.cpp" />
+    <ClCompile Include="Controller\QueryLogger.cpp" />
     <ClCompile Include="model\VehicleDetail.cpp" />
     <ClCompile Include="View\LoginWindow.cpp" />
     <ClCompile Include="View\MainWindow.cpp" />
@@ -130,6 +131,7 @@
     <QtMoc Include="Controller\Handler\VehicleDetailHandler.h" />
     <QtMoc Include="Controller\Network\NetworkManager.h" />
     <ClInclude Include="Controller\Network\VehicleCache.h" />
+    <ClInclude Include="Controller\QueryLogger.h" />
     <ClInclude Include="model\VehicleDetail.h" />
   </ItemGroup>
   <ItemGroup>
