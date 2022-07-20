@@ -1,36 +1,27 @@
 # ALPR Client Application Runtime View
-![ALPR Client Application Runtime View](runtime_view.png)
+![Team 5 - C amp;C View of ALPR System (2)](https://user-images.githubusercontent.com/74576976/179901021-21c3a2b1-79a2-4b50-914b-0198c5f28e8f.jpg)
+
 <hr>
 
 ## Element Catalog 
 
-### ALPR Process Thread
-- Threads in thread pool. Frame Generator sends each frames to single thread in the pool.
-
-### License Plate Local Cache
-- It stores vehicle detail information from Vehicle Query service
-
-### Network Proxy
-- It hides existence of local cache to NetworkManager
-
-### Handlers
-- Data to update UI are given to each handlers.
-- Each handlers send signal to main window to update UI.
+![Team 5](https://user-images.githubusercontent.com/74576976/179900172-657a80fc-971e-43b5-a471-087272b01409.jpg)
 
 <hr>
 
 ## Behavior 
 ### Login Sequence Diagram
-![](login_seq_diagram.png)
+![Login](https://user-images.githubusercontent.com/74576976/179896438-4ddda6dc-c527-47a7-83c9-310ac2be4f9e.png)
 
-### User Interface Update Sequence Diagram
-![](ui_update_seq_diagram.png)
+### Network Healthy Check Sequence Diagram
+![healthyCheck](https://user-images.githubusercontent.com/74576976/179896692-5aa56e88-51a6-4423-bb1f-dffe3426d179.png)
 
 ### Vehicle Query Sequence Diagram
-![](query_seq_diagram.png)
+![LicensePlateQuery](https://user-images.githubusercontent.com/74576976/179896575-48e29a49-4a15-4d5c-94a7-b824ac8d171d.png)
 
-### User Interface Scenario
-![](user_interface.jpg)
+### User Interface Update Sequence Diagram
+![GUIUpdate](https://user-images.githubusercontent.com/74576976/179896549-057ac517-47aa-4e11-abf2-9c0a9fb5bab8.png)
+
 <hr>
 
 ## ADRs
