@@ -12,6 +12,7 @@
 #include <opencv2/highgui.hpp>
 
 #include "Controller/Network/NetworkManager.h"
+#include "Controller/QueryLogger.h"
 
 
 class AlprAdapter : public QObject
@@ -40,4 +41,5 @@ private:
     char mText[1024] = "";
 
     NetworkManager& mNetworkManager;
+    QueryLogger& mQueryLogger;
 };

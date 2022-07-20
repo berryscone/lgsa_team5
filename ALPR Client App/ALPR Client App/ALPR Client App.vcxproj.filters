@@ -34,6 +34,8 @@
     </ClCompile>
     <ClCompile Include="View\VehicleDetailDialog.cpp">
       <Filter>View</Filter>
+    <ClCompile Include="Controller\QueryLogger.cpp">
+      <Filter>Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="Controller\Network\VehicleCache.h">
       <Filter>Controller\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\QueryLogger.h">
+      <Filter>Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

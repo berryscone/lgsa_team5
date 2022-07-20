@@ -9,7 +9,8 @@ using namespace cv;
 
 AlprAdapter::AlprAdapter() :
     mUseMotiondetection(0),
-    mNetworkManager(NetworkManager::GetInstance())
+    mNetworkManager(NetworkManager::GetInstance()),
+    mQueryLogger(QueryLogger::GetInstance())
 {
     std::string country = "us";
     std::string currentPath = QDir::currentPath().toStdString();
@@ -53,6 +54,7 @@ void AlprAdapter::DetectAndShow(cv::Mat &frame, QVector<QRect> &detectedRectList
         for (int i = 0; i < alprResults.plates.size(); ++i) {
             const QString plateNumber(alprResults.plates[i].bestPlate.characters.c_str());
             emit SignalRequestVehicleQuery(licensePlateImage, plateNumber);
+            mQueryLogger.LogRequest(plateNumber);
         }
     }
 }
