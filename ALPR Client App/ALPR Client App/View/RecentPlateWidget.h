@@ -18,7 +18,7 @@ public:
     ~RecentPlateWidget();
 
     QPixmap GetLicensePlatePixmap() const;
-    QString GetVehicleDetailInfo();
+    const VehicleDetail& GetVehicleDetail() { return mVehicleDetail; };
 
 private:
     QLabel* mLabelPlateImage;

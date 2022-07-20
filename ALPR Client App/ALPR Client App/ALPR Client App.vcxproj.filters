@@ -32,6 +32,9 @@
     <ClCompile Include="View\RecentPlateWidget.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="View\VehicleDetailDialog.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controller\Alpr\AlprAdapter.h">
@@ -58,6 +61,9 @@
     <QtMoc Include="Controller\Alpr\OpenCvAdapter.h">
       <Filter>Controller\Alpr</Filter>
     </QtMoc>
+    <QtMoc Include="View\VehicleDetailDialog.h">
+      <Filter>View</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AlprClientApp.qrc" />
@@ -65,6 +71,7 @@
   <ItemGroup>
     <QtUic Include="AlprClientApp.ui" />
     <QtUic Include="LoginWindow.ui" />
+    <QtUic Include="VehicleDetailDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Assets">

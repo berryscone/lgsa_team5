@@ -7,11 +7,10 @@
 
 // #define USE_IMAGE_BUTTON
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::AlprClientAppClass())
-    , mLicensePlateImageWidth(140)
-    , mLicensePlateImageHeight(50)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::AlprClientAppClass()),
+    mVehicleDetailDialog(this)
 {
     qDebug() << "Function Name: " << Q_FUNC_INFO <<", tid:" << QThread::currentThreadId();
     ui->setupUi(this);
@@ -29,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->push_stop, &QPushButton::clicked, this, &MainWindow::OnStop);
     connect(ui->push_pause, &QPushButton::toggled, this, &MainWindow::OnToggle);
 
-    connect(ui->list_recent_plates, SIGNAL(itemClicked(QListWidgetItem*)),
-            this, SLOT(OnRecentPlatesViewItemClicked(QListWidgetItem*)));
+    connect(ui->list_recent_plates, &QListWidget::itemClicked,
+            this, &MainWindow::OnRecentPlatesViewItemClicked);
 
     connect(&VehicleDetailHandler::GetInstance(), &VehicleDetailHandler::SignalVehicleDetailPublish,
             this, &MainWindow::UpdateUI);
@@ -229,8 +228,8 @@ void MainWindow::SetToggleButtonToPlay()
 #else
     ui->push_pause->setText("Play");
     ui->push_pause->clicked(false);
-}
 #endif
+}
 
 void MainWindow::SetFrameGeneratorButtonStyle()
 {
@@ -315,16 +314,18 @@ void MainWindow::SetFrameGeneratorButtonStyle()
     ui->hbox_control->setAlignment(Qt::AlignLeft);
 }
 
-void MainWindow::OnRecentPlatesViewItemClicked(QListWidgetItem *item)
+void MainWindow::OnRecentPlatesViewItemClicked(QListWidgetItem* item)
 {
-    RecentPlateWidget* widgetItem = dynamic_cast<RecentPlateWidget*>(ui->list_recent_plates->itemWidget(item));
+    RecentPlateWidget* itemWidget = dynamic_cast<RecentPlateWidget*>(ui->list_recent_plates->itemWidget(item));
+    mVehicleDetailDialog.ShowDetail(itemWidget->GetVehicleDetail());
+    /*
     QMessageBox msgBox;
-
-    msgBox.setIconPixmap(widgetItem->GetLicensePlatePixmap());
+    msgBox.setIconPixmap(itemWidget->GetLicensePlatePixmap());
     msgBox.setWindowTitle("Detail Vehicle Information");
-    msgBox.setText(widgetItem->GetVehicleDetailInfo());
+    msgBox.setText(itemWidget->GetVehicleDetailInfo());
     msgBox.setStandardButtons(QMessageBox::Close);
     msgBox.exec();
+    */
 }
 
 void MainWindow::UpdateNetworkStatusUI(QNetworkReply::NetworkError status)

@@ -115,12 +115,15 @@
     <ClCompile Include="View\LoginWindow.cpp" />
     <ClCompile Include="View\MainWindow.cpp" />
     <ClCompile Include="View\RecentPlateWidget.cpp" />
+    <ClCompile Include="View\VehicleDetailDialog.cpp" />
     <QtRcc Include="AlprClientApp.qrc" />
     <QtUic Include="AlprClientApp.ui" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="LoginWindow.ui" />
+    <QtUic Include="VehicleDetailDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="View\VehicleDetailDialog.h" />
     <QtMoc Include="View\RecentPlateWidget.h" />
     <QtMoc Include="View\MainWindow.h" />
     <QtMoc Include="View\LoginWindow.h" />

@@ -20,6 +20,7 @@
 
 #include "Controller/Alpr/FrameGenerator.h"
 #include "Controller/Handler/VehicleDetailHandler.h"
+#include "View/VehicleDetailDialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -74,6 +75,7 @@ private:
 
     QThread mFrameGeneratorThread;
     FrameGenerator mFrameGenerator;
+    VehicleDetailDialog mVehicleDetailDialog;
 
     QGraphicsPixmapItem mPlaybackPixmap;
     QGraphicsPixmapItem mRecentPlatesPixmap;
@@ -82,6 +84,6 @@ private:
     QPixmap mIconNetIndicatorRed;
     QPixmap mIconNetIndicatorGreen;
 
-    int mLicensePlateImageWidth;
-    int mLicensePlateImageHeight;
+    const int mLicensePlateImageWidth = 140;
+    const int mLicensePlateImageHeight = 50;
 };
