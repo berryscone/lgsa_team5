@@ -34,6 +34,7 @@
     </ClCompile>
     <ClCompile Include="View\VehicleDetailDialog.cpp">
       <Filter>View</Filter>
+    </ClCompile>
     <ClCompile Include="Controller\QueryLogger.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
