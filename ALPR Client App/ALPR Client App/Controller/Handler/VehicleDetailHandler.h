@@ -3,6 +3,7 @@
 
 #include "Controller/QueryLogger.h"
 #include "Model/VehicleDetail.h"
+#include <Controller/Handler/DuplicateQueryResultChecker.h>
 
 
 class VehicleDetailHandler : public QObject
@@ -22,7 +23,7 @@ private:
 	~VehicleDetailHandler();
 
 	QThread mThread;
-	QString mLastPlateNumber;
 	QueryLogger& mQueryLogger;
+	DuplicateQueryResultChecker mQueryResultChecker;
 };
 

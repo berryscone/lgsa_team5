@@ -108,6 +108,7 @@
     <ClCompile Include="Controller\Alpr\AlprAdapter.cpp" />
     <ClCompile Include="Controller\Alpr\FrameGenerator.cpp" />
     <ClCompile Include="Controller\Alpr\OpenCvAdapter.cpp" />
+    <ClCompile Include="Controller\Handler\DuplicateQueryResultChecker.cpp" />
     <ClCompile Include="Controller\Handler\VehicleDetailHandler.cpp" />
     <ClCompile Include="Controller\Network\NetworkManager.cpp" />
     <ClCompile Include="Controller\Network\VehicleCache.cpp" />
@@ -135,6 +136,7 @@
     <QtMoc Include="Controller\Network\NetworkManager.h" />
     <ClInclude Include="Controller\Network\VehicleCache.h" />
     <ClInclude Include="Controller\QueryLogger.h" />
+    <ClInclude Include="Controller\Handler\DuplicateQueryResultChecker.h" />
     <ClInclude Include="model\VehicleDetail.h" />
   </ItemGroup>
   <ItemGroup>

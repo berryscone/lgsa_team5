@@ -38,11 +38,16 @@ void VehicleDetailHandler::OnVehicleDetailProvided(const cv::Mat plate_image, co
 			break;
 		}
 
-		if (vehicleDetail.number != mLastPlateNumber) {
-			qDebug() << vehicleDetail.requestNumber << "=>" << vehicleDetail.number << exact;
-			mLastPlateNumber = vehicleDetail.number;
-			emit SignalVehicleDetailPublish(vehicleDetail);
+		if (i == 0) {
+			if (mQueryResultChecker.isDuplicate(vehicleDetail.number)) {
+				break;
+			} else {
+				mQueryResultChecker.addQueryResult(vehicleDetail.number);
+			}
 		}
+
+		qDebug() << vehicleDetail.requestNumber << "=>" << vehicleDetail.number << exact;
+		emit SignalVehicleDetailPublish(vehicleDetail);
 	}
 
 	if (responseList.size() < vehicleDetailArray.size()) {
