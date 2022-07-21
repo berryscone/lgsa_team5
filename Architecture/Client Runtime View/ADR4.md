@@ -1,4 +1,4 @@
-# ADR 4: Introduce Concurrency
+# ADR 4: Concurrency using threads
 ALPR client application requires to provide video frames to UI with at least 25 fps.
 
 ## Decision 
