@@ -81,6 +81,7 @@ void NetworkManager::RequestVehicleQuery(const cv::Mat plate_image, const QStrin
     query.addQueryItem("license-plate-number", plate_number);
 
     QUrl query_url(mUrl);
+    query_url.setPath("/vehicles/");
     query_url.setQuery(query.query());
 
     QString token_auth = "Token " + mToken;
