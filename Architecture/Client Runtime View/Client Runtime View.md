@@ -27,6 +27,8 @@
 ## ADRs
 - [ADR4 : Introduce Concurrency](ADR4.md)
 - [ADR5 : Proxy pattern for local cache](ADR5.md)
+- [ADR9 : Realtime display of Vehicle number](ADR9.md)
+- [ADR12: Using Https](ADR12.md)
 <hr>
 
 ## Related Views 
