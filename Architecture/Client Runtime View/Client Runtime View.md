@@ -1,5 +1,5 @@
 # ALPR Client Application Runtime View
-![Team 5 - C amp;C View of ALPR System (2)](https://user-images.githubusercontent.com/74576976/179901021-21c3a2b1-79a2-4b50-914b-0198c5f28e8f.jpg)
+![Team 5 - C amp;C View of ALPR System (4)](https://user-images.githubusercontent.com/74576976/180132155-290e6371-dbf7-4694-87ba-6a49474eb3ab.jpg)
 
 <hr>
 
