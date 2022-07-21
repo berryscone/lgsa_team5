@@ -11,7 +11,7 @@ public:
 
 private:
 	QueryLogger();
-	inline uint GetUnixTime() { return QDateTime::currentDateTime().toTime_t(); }
+	inline qint64 GetUnixTime() { return QDateTime::currentMSecsSinceEpoch(); }
 
 	QFile mLogFile;
 	QTextStream mLogStream;
