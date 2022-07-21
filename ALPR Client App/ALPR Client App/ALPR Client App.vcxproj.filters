@@ -38,7 +38,9 @@
     <ClCompile Include="Controller\QueryLogger.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\Handler\DuplicateQueryResultChecker.cpp" />
+    <ClCompile Include="Controller\Handler\DuplicateQueryResultChecker.cpp">
+      <Filter>Controller\Handler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controller\Alpr\AlprAdapter.h">
@@ -113,7 +115,9 @@
     <ClInclude Include="Controller\QueryLogger.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Controller\Handler\DuplicateQueryResultChecker.h" />
+    <ClInclude Include="Controller\Handler\DuplicateQueryResultChecker.h">
+      <Filter>Controller\Handler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\alertLicensePlate.png">
